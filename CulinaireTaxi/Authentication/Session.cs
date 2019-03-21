@@ -1,9 +1,7 @@
-﻿using System;
+﻿using CulinaireTaxi.Database;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace CulinaireTaxi
+namespace CulinaireTaxi.Authentication
 {
 
     public class Session {

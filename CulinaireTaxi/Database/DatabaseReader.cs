@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using MySql.Data.MySqlClient;
 
-namespace CulinaireTaxi
+namespace CulinaireTaxi.Database
 {
 
     public class DatabaseReader {
