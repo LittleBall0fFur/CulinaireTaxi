@@ -1,9 +1,11 @@
 ﻿using CulinaireTaxi.Database;
+using System;
 using System.Collections.Generic;
 
 namespace CulinaireTaxi.Authentication
 {
 
+    [Obsolete("This class is now deprecated, use SessionExtension instead.")]
     public class Session {
 
 	private bool _logedin;
