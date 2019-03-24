@@ -2,6 +2,7 @@
 
 namespace CulinaireTaxi.Pages
 {
+
     public class ErrorModel : PageModel
     {
 
@@ -24,5 +25,7 @@ namespace CulinaireTaxi.Pages
 	    HasCode = (code != null);
 	    Code = (code ?? NO_STATUS_CODE);
         }
+
     }
+
 }
