@@ -1,0 +1,81 @@
+@import url('https://fonts.googleapis.com/css?family=Pacifico');
+
+body
+{
+    background-image: url("../images/patterns/dot.png");
+    background-repeat: repeat;
+}
+
+.bg-primary
+{
+    background-color: #47221B !important;
+}
+
+.bg-secondary
+{
+    background-color: #6B4037 !important;
+}
+
+.btn-primary
+{
+    background-color: #8E5E58 !important;
+    border-color: #8E5E58 !important;
+}
+
+.btn-primary:focus, .btn-primary:active
+{
+    box-shadow: 0 0 0 0.2rem rgba(142, 94, 88, 0.5) !important;
+}
+
+.jumbotron
+{
+    background-image: radial-gradient(circle at center, transparent, black), url("../images/backgrounds/front_header.jpg");
+
+    background-size: cover;
+    background-repeat: no-repeat;
+
+    box-shadow: 0 0 16px black inset;
+
+    border-radius: 0;
+}
+
+.navbar
+{
+    width: 100%;
+
+    position: absolute;
+
+    top: 0;
+    left: 0;
+}
+
+.nav-item
+{
+    padding: 0 16px 0 16px;
+}
+
+.nav-link
+{
+    color: white;
+}
+
+.text-shadow
+{
+    text-shadow: 0px 4px 8px black;
+}
+
+.branding
+{
+    font-family: 'Pacifico', cursive;
+    font-size: 6rem;
+}
+
+@media (max-width: 589.98px)
+{
+
+.branding
+{
+    font-size: 4rem;
+}
+
+}
