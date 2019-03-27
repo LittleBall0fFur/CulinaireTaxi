@@ -1,4 +1,13 @@
-﻿<!DOCTYPE html>
+﻿@{ 
+
+    if (!UserAgent.IsAuthenticated)
+    {
+	Context.Response.Redirect("/Login");
+    }
+
+}
+
+<!DOCTYPE html>
 
 <html>
 <head>
