@@ -67,6 +67,8 @@ namespace CulinaireTaxi
 	    app.UseSession();
 	    app.UseCookiePolicy();
 
+	    app.UseStatusCodePagesWithRedirects("/Error/{0}");
+
 	    app.UseMvc();
 	}
     }
