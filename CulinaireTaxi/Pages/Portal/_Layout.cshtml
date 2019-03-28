@@ -1,0 +1,25 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous" />
+
+    <link rel="stylesheet" href="~/css/portal.css" />
+
+    <title>CulinaireTaxi | @ViewBag.Page</title>
+</head>
+<body class="bg-primary">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 offset-lg-3 my-5 bg-secondary rounded">
+                <form class="py-4" method="post">
+		    @RenderBody()
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,11 +1,8 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using CulinaireTaxi.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -31,6 +28,19 @@ namespace CulinaireTaxi
 		options.MinimumSameSitePolicy = SameSiteMode.None;
 	    });
 
+	    services.AddDistributedMemoryCache();
+
+	    services.AddSession(options =>
+	    {
+		options.IdleTimeout = TimeSpan.FromMinutes(120);
+		options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+		options.Cookie.HttpOnly = true;
+		options.Cookie.IsEssential = true;
+	    });
+
+	    services.AddHttpContextAccessor();
+
+	    services.AddScoped<UserAgent>();
 
 	    services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 	}
@@ -50,6 +60,7 @@ namespace CulinaireTaxi
 
 	    app.UseHttpsRedirection();
 	    app.UseStaticFiles();
+	    app.UseSession();
 	    app.UseCookiePolicy();
 
 	    app.UseStatusCodePagesWithRedirects("/Error/{0}");
