@@ -5,6 +5,7 @@ using MySql.Data.MySqlClient;
 namespace CulinaireTaxi.Database
 {
 
+    [Obsolete("")]
     public class DatabaseReader {
 
 	private MySqlConnection _mysqlConnection;

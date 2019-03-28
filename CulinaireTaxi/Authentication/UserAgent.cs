@@ -1,7 +1,7 @@
-﻿using CulinaireTaxi.Extensions;
+﻿using CulinaireTaxi.Database.Entities;
+using CulinaireTaxi.Extensions;
 using Microsoft.AspNetCore.Http;
 using System;
-using Account = System.String;
 
 namespace CulinaireTaxi.Authentication
 {
@@ -12,7 +12,7 @@ namespace CulinaireTaxi.Authentication
     public sealed class UserAgent
     {
 
-	private const string ACCOUNT_KEY = "UserAgent_Account";
+	private const string USER_KEY = "UserAgent_User";
 
 	private ISession m_session;
 
@@ -30,16 +30,16 @@ namespace CulinaireTaxi.Authentication
 	/// <summary>
 	/// The account associated with the current user, null if the user is not logged in.
 	/// </summary>
-	public Account Account
+	public User User
 	{
 	    get
 	    {
-		return m_session.GetObject<Account>(ACCOUNT_KEY);
+		return m_session.GetObject<User>(USER_KEY);
 	    }
 
 	    private set
 	    {
-		m_session.SetObject(ACCOUNT_KEY, value);
+		m_session.SetObject(USER_KEY, value);
 	    }
 	}
 
@@ -77,7 +77,7 @@ namespace CulinaireTaxi.Authentication
 	/// </summary>
 	public void Logout()
 	{
-	    Account = null;
+	    User = null;
 	}
 
     }
