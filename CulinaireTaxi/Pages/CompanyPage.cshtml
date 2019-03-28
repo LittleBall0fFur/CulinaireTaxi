@@ -1,9 +1,8 @@
 ﻿@page
-@model CulinaireTaxi.Pages.IndexModel
+@model CompanyPageModel
 @{
-    Layout = null;
+    var companyName = "Test";
 }
-
 <!DOCTYPE HTML>
 
 <html>
@@ -15,7 +14,7 @@
 
     <link rel="stylesheet" href="~/css/index.css" />
 
-    <title>CulinaireTaxi | Start</title>
+    <title>CulinaireTaxi | @companyName</title>
 </head>
 <body class="bg-primary">
 
@@ -25,10 +24,10 @@
             <div class="collapse navbar-collapse">
                 <ul class="navbar-nav m-auto">
                     <li class="nav-item border-right">
-                        <a class="nav-link" href="/Login">Inloggen</a>
+                        <a class="nav-link" href="/Index">Uitloggen</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/CompanyPage">Over Ons</a>
+                        <a class="nav-link" href="/About">How to use</a>
                     </li>
                     <li class="nav-item border-left">
                         <a class="nav-link" href="/Contact">Contact</a>
@@ -40,7 +39,7 @@
         <div class="container mx-auto mt-5">
             <div class="row">
                 <div class="col text-center">
-                    <h1 class="branding">CulinaireTaxi</h1>
+                    <h1 class="branding">Welcome @companyName</h1>
                     <p class="display-5">"Lorem Ipsum"</p>
                     <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
                     <button class="btn btn-danger" type="button" onclick="alert('Why you no listen (ಥ﹏ಥ)')">DO NOT CLICK</button>
@@ -51,8 +50,9 @@
 
     @* MAIN CONTENT *@
     <div class="container">
+
         <div class="row">
-	    @* FIRST CARD *@
+            @* FIRST CARD *@
             <div class="col-sm pb-2">
                 <div class="card shadow bg-secondary">
                     <div class="card-body">
@@ -62,22 +62,57 @@
                     </div>
                 </div>
             </div>
-	    @* SECOND CARD *@
+            @* SECOND CARD *@
             <div class="col-sm pb-2">
                 <div class="card shadow bg-secondary">
                     <div class="card-body">
-                        <h5 class="card-title">Special title treatment</h5>
-                        <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                        <h5 class="card-title">Reserverings verzoeken</h5>
+                        <table>
+                            <tr>
+                                <th>Naam</th>
+                                <th>Datum</th>
+                                <th>Tijd van aanvang</th>
+                            </tr>
+                            <tr>
+                                <td>Alfreds Futterkiste</td>
+                                <td>Maria Anders</td>
+                                <td>Germany</td>
+                            </tr>
+                            <tr>
+                                <td>Centro comercial Moctezuma</td>
+                                <td>Francisco Chang</td>
+                                <td>Mexico</td>
+                            </tr>
+                            <tr>
+                                <td>Ernst Handel</td>
+                                <td>Roland Mendel</td>
+                                <td>Austria</td>
+                            </tr>
+                            <tr>
+                                <td>Island Trading</td>
+                                <td>Helen Bennett</td>
+                                <td>UK</td>
+                            </tr>
+                            <tr>
+                                <td>Laughing Bacchus Winecellars</td>
+                                <td>Yoshi Tannamuri</td>
+                                <td>Canada</td>
+                            </tr>
+                            <tr>
+                                <td>Magazzini Alimentari Riuniti</td>
+                                <td>Giovanni Rovelli</td>
+                                <td>Italy</td>
+                            </tr>
+                        </table>
                     </div>
                 </div>
             </div>
-	    @* THIRD CARD *@
+            @* THIRD CARD *@
             <div class="col-sm pb-2">
                 <div class="card shadow bg-secondary">
                     <div class="card-body">
                         <h5 class="card-title">Special title treatment</h5>
-                        <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+
                         <a href="#" class="btn btn-primary">Go somewhere</a>
                     </div>
                 </div>
@@ -85,8 +120,32 @@
         </div>
     </div>
 
+
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+    <style>
+        table {
+            font-family: arial, sans-serif;
+            color: #232323;
+            border-collapse: collapse;
+            width: 60%;
+            align-self: center;
+            margin-left: 15px;
+        }
+
+        td, th {
+            border-bottom: 1px solid black;
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:not(:first-child):hover {
+            background-color: hsla(0, 0%, 0%, 0.3);
+            color: whitesmoke;
+        }
+    </style>
+
 </body>
 </html>
