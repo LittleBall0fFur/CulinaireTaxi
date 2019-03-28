@@ -1,0 +1,27 @@
+﻿
+body
+{
+    background-image: url("../images/patterns/dot.png");
+    background-repeat: repeat;
+}
+
+.bg-primary
+{
+    background-color: #47221B !important;
+}
+
+.bg-secondary
+{
+    background-color: #6B4037 !important;
+}
+
+.btn-primary
+{
+    background-color: #8E5E58 !important;
+    border-color: #8E5E58 !important;
+}
+
+.btn-primary:focus, .btn-primary:active
+{
+    box-shadow: 0 0 0 0.2rem rgba(142, 94, 88, 0.5) !important;
+}
