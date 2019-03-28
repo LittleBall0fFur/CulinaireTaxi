@@ -23,7 +23,7 @@ namespace CulinaireTaxi.Authentication
 	{
 	    get
 	    {
-		return (Account != null);
+		return (User != null);
 	    }
 	}
 
