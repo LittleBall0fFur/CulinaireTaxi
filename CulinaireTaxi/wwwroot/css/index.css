@@ -6,20 +6,27 @@ body
     background-repeat: repeat;
 }
 
-.bg-primary
-{
-    background-color: #47221B !important;
+.bg-primary {
+    background-color: #52191c !important;
 }
 
-.bg-secondary
-{
-    background-color: #6B4037 !important;
+.bg-secondary {
+    background-color: #673033 !important;
 }
 
-.btn-primary
-{
-    background-color: #8E5E58 !important;
-    border-color: #8E5E58 !important;
+h5 {
+    border-bottom: 2px solid rgba(0, 0, 0, 0.08);
+    padding: 5px;
+    color: #ccb7ae;
+}
+
+p{
+    color: #d6cfcb;
+}
+
+.btn-primary {
+    background-color: #dc3545 !important;
+    border-color: #dc3545 !important;
 }
 
 .btn-primary:focus, .btn-primary:active
@@ -70,12 +77,4 @@ body
     font-size: 6rem;
 }
 
-@media (max-width: 589.98px)
-{
 
-.branding
-{
-    font-size: 4rem;
-}
-
-}

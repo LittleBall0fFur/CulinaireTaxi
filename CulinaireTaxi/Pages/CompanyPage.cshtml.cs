@@ -9,8 +9,22 @@ namespace CulinaireTaxi.Pages
 {
     public class CompanyPageModel : PageModel
     {
-        public void OnGet()
+        public static DateTime date = DateTime.Today;
+        public static DateTime today = date;
+
+        public void OnPostSub()
         {
+            date = date.AddDays(-1);
+        }
+
+        public void OnPostAdd()
+        {
+            date = date.AddDays(1);
+        }
+
+        public void OnPostToday()
+        {
+            date = today;
         }
     }
 }

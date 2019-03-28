@@ -14,6 +14,8 @@
 
     <link rel="stylesheet" href="~/css/index.css" />
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prefixfree/1.0.7/prefixfree.min.js"></script>
+
     <title>CulinaireTaxi | @companyName</title>
 </head>
 <body class="bg-primary">
@@ -50,9 +52,65 @@
 
     @* MAIN CONTENT *@
     <div class="container">
-
         <div class="row">
             @* FIRST CARD *@
+            <div class="col-sm pb-2">
+                <div class="card shadow bg-secondary">
+                    <div class="card-body">
+                        <div class="calendar">
+                            <div class="calendar_header">
+                                <h5 class="header_copy"> Calendar Plan</h5>
+                            </div>
+                            <div class="calendar_plan">
+                                <div class="cl_plan">
+                                    <div class="cl_title" style="padding-left: 30px;"><form method="post"><input type="submit" value="Today" asp-page-handler="Today" asp-route-sessioncount="15" /></form></div>
+                                    <div class="cl_copy" style="padding-left: 45px;">@CompanyPageModel.date.ToString("D")</div>
+                                    <form method="post"><input type="submit" value="<" asp-page-handler="Sub" asp-route-sessioncount="20" style="float:left; margin-left: -25px;"></form>
+                                    <form method="post"><input type="submit" value=">" asp-page-handler="Add" asp-route-sessioncount="10" style="float:right; margin-right: -25px;"></form>
+                                </div>
+                            </div>
+                            <div class="calendar_events">
+                                <p class="ce_title">Upcoming Events</p>
+                                <div class="event_item">
+                                    <div class="ei_Dot dot_active"></div>
+                                    <div class="ei_Title">10:30 am</div>
+                                    <div class="ei_Copy">Monday briefing with the team</div>
+                                </div>
+                                <div class="event_item">
+                                    <div class="ei_Dot"></div>
+                                    <div class="ei_Title">12:00 pm</div>
+                                    <div class="ei_Copy">Lunch for with the besties</div>
+                                </div>
+                                <div class="event_item">
+                                    <div class="ei_Dot"></div>
+                                    <div class="ei_Title">13:00 pm</div>
+                                    <div class="ei_Copy">Meet with the client for final design <br></div>
+                                </div>
+                                <div class="event_item">
+                                    <div class="ei_Dot"></div>
+                                    <div class="ei_Title">14:30 am</div>
+                                    <div class="ei_Copy">Plan event night to inspire students</div>
+                                </div>
+                                <div class="event_item">
+                                    <div class="ei_Dot"></div>
+                                    <div class="ei_Title">15:30 am</div>
+                                    <div class="ei_Copy">Add some more events to the calendar</div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                </div>
+            </div>
+            @* SECOND CARD *@
+            <div class="col-sm pb-2">
+                <div class="card shadow bg-secondary">
+                    <div class="card-body">
+                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                </div>
+            </div>
+            @* THIRD CARD *@
             <div class="col-sm pb-2">
                 <div class="card shadow bg-secondary">
                     <div class="card-body">
@@ -62,90 +120,127 @@
                     </div>
                 </div>
             </div>
-            @* SECOND CARD *@
-            <div class="col-sm pb-2">
-                <div class="card shadow bg-secondary">
-                    <div class="card-body">
-                        <h5 class="card-title">Reserverings verzoeken</h5>
-                        <table>
-                            <tr>
-                                <th>Naam</th>
-                                <th>Datum</th>
-                                <th>Tijd van aanvang</th>
-                            </tr>
-                            <tr>
-                                <td>Alfreds Futterkiste</td>
-                                <td>Maria Anders</td>
-                                <td>Germany</td>
-                            </tr>
-                            <tr>
-                                <td>Centro comercial Moctezuma</td>
-                                <td>Francisco Chang</td>
-                                <td>Mexico</td>
-                            </tr>
-                            <tr>
-                                <td>Ernst Handel</td>
-                                <td>Roland Mendel</td>
-                                <td>Austria</td>
-                            </tr>
-                            <tr>
-                                <td>Island Trading</td>
-                                <td>Helen Bennett</td>
-                                <td>UK</td>
-                            </tr>
-                            <tr>
-                                <td>Laughing Bacchus Winecellars</td>
-                                <td>Yoshi Tannamuri</td>
-                                <td>Canada</td>
-                            </tr>
-                            <tr>
-                                <td>Magazzini Alimentari Riuniti</td>
-                                <td>Giovanni Rovelli</td>
-                                <td>Italy</td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            @* THIRD CARD *@
-            <div class="col-sm pb-2">
-                <div class="card shadow bg-secondary">
-                    <div class="card-body">
-                        <h5 class="card-title">Special title treatment</h5>
-
-                        <a href="#" class="btn btn-primary">Go somewhere</a>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
-
-
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
     <style>
-        table {
-            font-family: arial, sans-serif;
-            color: #232323;
-            border-collapse: collapse;
-            width: 60%;
-            align-self: center;
-            margin-left: 15px;
+        input {
+            margin-top: -80px;
+            color: #d6cfcb;
+            border: none;
+            text-decoration: none;
+            background-color: rgba(0, 0, 0, 0.00);
+            font-size: 28px;
         }
 
-        td, th {
-            border-bottom: 1px solid black;
-            text-align: left;
-            padding: 8px;
+        .calendar {
+            width: 370px;
         }
 
-        tr:not(:first-child):hover {
-            background-color: hsla(0, 0%, 0%, 0.3);
-            color: whitesmoke;
+        .header_copy {
+            color: $light_grey;
+            font-size: 20px;
+        }
+
+        .calendar_plan {
+            margin: 20px 0 40px;
+        }
+
+        .cl_plan {
+            height: 140px;
+            background-color: #dc3545;
+            box-shadow: 0px 0px 52px -18px rgba(0, 0, 0, 0.75);
+            padding: 30px;
+            color: #fff;
+            border-radius: 3px;
+        }
+
+        .cl_title {
+        }
+
+        .cl_copy {
+            font-size: 20px;
+            margin: 20px 0;
+            display: inline-block;
+        }
+
+        .cl_add {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #fff;
+            cursor: pointer;
+            margin: 0 0 0 65px;
+            color: #c2c2c2;
+            padding: 11px 13px;
+        }
+
+        .calendar_events {
+            color: $light_grey;
+        }
+
+        .ce_title {
+            font-size: 14px;
+        }
+
+        .event_item {
+            margin: 18px 0;
+            padding: 5px;
+            cursor: pointer;
+        }
+
+        &:hover {
+            background-image: linear-gradient(-222deg, #FF8494, #ffa9b7);
+            box-shadow: 0px 0px 52px -18px rgba(0, 0, 0, 0.75);
+        }
+
+        .ei_Dot {
+            background-color: #fff;
+        }
+
+        .ei_Copy, .ei_Title {
+            color: #fff;
+        }
+
+
+        .ei_Dot, .ei_Title {
+            display: inline-block;
+        }
+
+        .ei_Dot {
+            border-radius: 50%;
+            width: 10px;
+            height: 10px;
+            background-color: $light_grey;
+            box-shadow: 0px 0px 52px -18px rgba(0, 0, 0, 0.75);
+        }
+
+        .dot_active {
+            background-color: #FF8494;
+        }
+
+        .ei_Title {
+            margin-left: 10px;
+            color: #363b41;
+        }
+
+        .ei_Copy {
+            font-size: 12px;
+            margin-left: 27px;
+        }
+
+        .dark {
+            background-image: linear-gradient(-222deg, #646464, #454545);
+            color: #fff;
+        }
+
+        .header_title, .ei_Title, .ce_title {
+            color: #fff;
         }
     </style>
-
 </body>
 </html>
