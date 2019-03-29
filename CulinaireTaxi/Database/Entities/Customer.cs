@@ -2,20 +2,13 @@
 namespace CulinaireTaxi.Database.Entities
 {
 
-    public class Customer : User
+    public struct Customer
     {
 
-	public string FirstName
-	{
-	    get;
-	    set;
-	}
+	public long accountId;
 
-	public string LastName
-	{
-	    get;
-	    set;
-	}
+	public string firstName;
+	public string lastName;
 
     }
 

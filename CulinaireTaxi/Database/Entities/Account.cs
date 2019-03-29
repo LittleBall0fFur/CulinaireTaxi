@@ -2,22 +2,27 @@
 namespace CulinaireTaxi.Database.Entities
 {
 
-    public class Account
+    public struct Account
     {
 
-	public readonly long id;
-
-	public string Email
+	public enum Type : byte
 	{
-	    get;
-	    set;
+	    CUSTOMER = 0,
+	    COMPANY
 	}
 
-	public string Password
-	{
-	    get;
-	    set;
-	}
+	public long id;
+
+	public Type type;
+
+	public string email;
+	public string password;
+
+	public string county;
+	public string city;
+	public string street;
+	public string postalCode;
+	public string phoneNumber;
 
     }
 

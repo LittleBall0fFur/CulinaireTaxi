@@ -2,6 +2,7 @@
 using CulinaireTaxi.Extensions;
 using Microsoft.AspNetCore.Http;
 using System;
+using User = System.String; //Placeholder type
 
 namespace CulinaireTaxi.Authentication
 {
