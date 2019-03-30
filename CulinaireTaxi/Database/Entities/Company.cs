@@ -2,7 +2,7 @@
 namespace CulinaireTaxi.Database.Entities
 {
 
-    public struct Company
+    public class Company : User
     {
 
 	public enum Type : byte
@@ -10,8 +10,6 @@ namespace CulinaireTaxi.Database.Entities
 	    RESTAURANT = 0,
 	    TAXI
 	}
-
-	public long accountId;
 
 	public Type type;
 

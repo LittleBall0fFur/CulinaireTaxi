@@ -2,10 +2,8 @@
 namespace CulinaireTaxi.Database.Entities
 {
 
-    public struct Customer
+    public class Customer : User
     {
-
-	public long accountId;
 
 	public string firstName;
 	public string lastName;

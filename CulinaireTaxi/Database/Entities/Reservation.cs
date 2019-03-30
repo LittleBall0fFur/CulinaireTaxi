@@ -3,7 +3,7 @@
 namespace CulinaireTaxi.Database.Entities
 {
 
-    public struct Reservation
+    public class Reservation
     {
 
 	public enum Status : byte

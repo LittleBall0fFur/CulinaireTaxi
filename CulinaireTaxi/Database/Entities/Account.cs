@@ -2,7 +2,7 @@
 namespace CulinaireTaxi.Database.Entities
 {
 
-    public struct Account
+    public class Account
     {
 
 	public enum Type : byte

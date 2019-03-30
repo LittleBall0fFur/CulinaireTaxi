@@ -1,8 +1,9 @@
-﻿using CulinaireTaxi.Database.Entities;
+﻿using static CulinaireTaxi.Database.CulinaireTaxiDB;
+
+using CulinaireTaxi.Database.Entities;
 using CulinaireTaxi.Extensions;
 using Microsoft.AspNetCore.Http;
 using System;
-using User = System.String; //Placeholder type
 
 namespace CulinaireTaxi.Authentication
 {
@@ -70,7 +71,12 @@ namespace CulinaireTaxi.Authentication
 	/// <param name="password">The password of a registered account.</param>
 	public void Login(string email, string password)
 	{
-	    throw new NotImplementedException();
+	    Account account = RetrieveAccount(email);
+
+	    if (account.password == password)
+	    {
+		User = RetrieveUser(account);
+	    }
 	}
 
 	/// <summary>

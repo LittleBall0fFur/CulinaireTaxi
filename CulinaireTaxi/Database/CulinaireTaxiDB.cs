@@ -1,5 +1,6 @@
 ﻿using CulinaireTaxi.Database.Entities;
 using MySql.Data.MySqlClient;
+using System.Data;
 
 namespace CulinaireTaxi.Database
 {
@@ -20,15 +21,15 @@ namespace CulinaireTaxi.Database
 	    {
 		connection.Open();
 
-		using (var CREATE_ACCOUNT_TABLE	    = connection.CreateCommand())
-		using (var CREATE_CUSTOMER_TABLE    = connection.CreateCommand())
-		using (var CREATE_COMPANY_TABLE	    = connection.CreateCommand())
-		using (var CREATE_RATING_TABLE	    = connection.CreateCommand())
-		using (var CREATE_RESERVATION_TABLE = connection.CreateCommand())
+		using (var createAccountTableCMD = connection.CreateCommand())
+		using (var createCustomerTableCMD = connection.CreateCommand())
+		using (var createCompanyTableCMD = connection.CreateCommand())
+		using (var createRatingTableCMD = connection.CreateCommand())
+		using (var createReservationTableCMD = connection.CreateCommand())
 		{
 		    #region CREATE_TABLE_COMMANDS
 
-		    CREATE_ACCOUNT_TABLE.CommandText = 
+		    createAccountTableCMD.CommandText =
 		    "CREATE TABLE IF NOT EXISTS Account" +
 		    "(id BIGINT NOT NULL AUTO_INCREMENT," +
 		    " type TINYINT NOT NULL," +
@@ -41,7 +42,7 @@ namespace CulinaireTaxi.Database
 		    " phone_number VARCHAR(32)," +
 		    " PRIMARY KEY (id))";
 
-		    CREATE_CUSTOMER_TABLE.CommandText =
+		    createCustomerTableCMD.CommandText =
 		    "CREATE TABLE IF NOT EXISTS Customer" +
 		    "(account_id BIGINT NOT NULL," +
 		    " first_name TEXT NOT NULL," +
@@ -52,7 +53,7 @@ namespace CulinaireTaxi.Database
 		    " ON DELETE CASCADE" +
 		    " ON UPDATE CASCADE)";
 
-		    CREATE_COMPANY_TABLE.CommandText =
+		    createCompanyTableCMD.CommandText =
 		    "CREATE TABLE IF NOT EXISTS Company" +
 		    "(account_id BIGINT NOT NULL," +
 		    " type TINYINT NOT NULL," +
@@ -64,7 +65,7 @@ namespace CulinaireTaxi.Database
 		    " ON DELETE CASCADE" +
 		    " ON UPDATE CASCADE)";
 
-		    CREATE_RATING_TABLE.CommandText =
+		    createRatingTableCMD.CommandText =
 		    "CREATE TABLE IF NOT EXISTS gives_rating" +
 		    "(customer_id BIGINT NOT NULL," +
 		    " company_id BIGINT NOT NULL," +
@@ -79,7 +80,7 @@ namespace CulinaireTaxi.Database
 		    " ON DELETE CASCADE" +
 		    " ON UPDATE CASCADE)";
 
-		    CREATE_RESERVATION_TABLE.CommandText =
+		    createReservationTableCMD.CommandText =
 		    "CREATE TABLE IF NOT EXISTS Reservation" +
 		    "(id BIGINT NOT NULL AUTO_INCREMENT," +
 		    " customer_id BIGINT NOT NULL," +
@@ -100,30 +101,130 @@ namespace CulinaireTaxi.Database
 
 		    #endregion
 
-		    CREATE_ACCOUNT_TABLE.ExecuteNonQuery();
-		    CREATE_CUSTOMER_TABLE.ExecuteNonQuery();
-		    CREATE_COMPANY_TABLE.ExecuteNonQuery();
-		    CREATE_RATING_TABLE.ExecuteNonQuery();
-		    CREATE_RESERVATION_TABLE.ExecuteNonQuery();
+		    createAccountTableCMD.ExecuteNonQuery();
+		    createCustomerTableCMD.ExecuteNonQuery();
+		    createCompanyTableCMD.ExecuteNonQuery();
+		    createRatingTableCMD.ExecuteNonQuery();
+		    createReservationTableCMD.ExecuteNonQuery();
 		}
-
-		connection.Close();
 	    }
 	}
 
-	public static Account RetrieveAccount()
+	public static Account RetrieveAccount(string email)
 	{
-	    throw new System.NotImplementedException();
+	    using (var connection = new MySqlConnection(CONNECTION_STRING))
+	    {
+		connection.Open();
+
+		using (var retrieveAccountCMD = connection.CreateCommand())
+		{
+		    retrieveAccountCMD.CommandText = "SELECT * FROM Account WHERE email = @email";
+		    retrieveAccountCMD.Parameters.AddWithValue("@email", email);
+
+		    using (var reader = retrieveAccountCMD.ExecuteReader(CommandBehavior.SingleRow))
+		    {
+			if (reader.Read())
+			{
+			    Account account = new Account();
+
+			    account.id = reader.GetInt64(0);
+
+			    account.type = (Account.Type)reader.GetByte(1);
+
+			    account.email = reader.GetString(2);
+			    account.password = reader.GetString(3);
+
+			    account.county = reader.GetString(4);
+			    account.city = reader.GetString(5);
+			    account.street = reader.GetString(6);
+			    account.postalCode = reader.GetString(7);
+			    account.phoneNumber = reader.GetString(8);
+
+			    return account;
+			}
+			else
+			{
+			    return null;
+			}
+		    }
+		}
+	    }
 	}
 
-	public static Customer RetrieveCustomer()
+	public static User RetrieveUser(Account account)
 	{
-	    throw new System.NotImplementedException();
+	    if (account.type == Account.Type.CUSTOMER)
+	    {
+		return RetrieveCustomer(account);
+	    }
+	    else
+	    {
+		return RetrieveCompany(account);
+	    }
 	}
 
-	public static Company RetrieveCompany()
+	private static Customer RetrieveCustomer(Account account)
 	{
-	    throw new System.NotImplementedException();
+	    using (var connection = new MySqlConnection(CONNECTION_STRING))
+	    {
+		connection.Open();
+
+		using (var retrieveCustomerCMD = connection.CreateCommand())
+		{
+		    retrieveCustomerCMD.CommandText = $"SELECT first_name, last_name FROM Customer WHERE id = {account.id}";
+
+		    using (var reader = retrieveCustomerCMD.ExecuteReader(CommandBehavior.SingleRow))
+		    {
+			if (reader.Read())
+			{
+			    Customer customer = new Customer();
+
+			    customer.account = account;
+
+			    customer.firstName = reader.GetString(0);
+			    customer.lastName = reader.GetString(1);
+
+			    return customer;
+			}
+			else
+			{
+			    return null;
+			}
+		    }
+		}
+	    }
+	}
+
+	private static Company RetrieveCompany(Account account)
+	{
+	    using (var connection = new MySqlConnection(CONNECTION_STRING))
+	    {
+		connection.Open();
+
+		using (var retrieveCompanyCMD = connection.CreateCommand())
+		{
+		    retrieveCompanyCMD.CommandText = $"SELECT type, name, description FROM Company WHERE id = {account.id}";
+
+		    using (var reader = retrieveCompanyCMD.ExecuteReader(CommandBehavior.SingleRow))
+		    {
+			if (reader.Read())
+			{
+			    Company company = new Company();
+
+			    company.account = account;
+
+			    company.name = reader.GetString(0);
+			    company.description = reader.GetString(1);
+
+			    return company;
+			}
+			else
+			{
+			    return null;
+			}
+		    }
+		}
+	    }
 	}
 
     }
