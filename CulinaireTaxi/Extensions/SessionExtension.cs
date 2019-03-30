@@ -10,6 +10,8 @@ namespace CulinaireTaxi.Extensions
     public static class SessionExtension
     {
 
+	private static readonly JsonSerializerSettings SERIALIZER_SETTINGS = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All };
+
 	/// <summary>
 	/// Set the given key and value in this session.
 	/// </summary>
@@ -17,7 +19,7 @@ namespace CulinaireTaxi.Extensions
 	/// <param name="value">The value to set.</param>
 	public static void SetObject(this ISession session, string key, object value)
 	{
-	    session.SetString(key, JsonConvert.SerializeObject(value));
+	    session.SetString(key, JsonConvert.SerializeObject(value, SERIALIZER_SETTINGS));
 	}
 
 	/// <summary>
@@ -30,7 +32,7 @@ namespace CulinaireTaxi.Extensions
 	{
 	    string value = session.GetString(key);
 
-	    return (value == null) ? default(T) : JsonConvert.DeserializeObject<T>(value);
+	    return (value == null) ? default(T) : JsonConvert.DeserializeObject<T>(value, SERIALIZER_SETTINGS);
 	}
 
     }
