@@ -64,51 +64,154 @@ namespace CulinaireTaxi.Database.Entities
 
 	}
 
-	public static Reservation CreateReservation(long customerId, long companyId, DateTime from, DateTime till, int guestsAmount)
+	/// <summary>
+	/// Attempts to create a new reservation in the database.
+	/// </summary>
+	/// <param name="customerId">The id of customer who placed the reservation.</param>
+	/// <param name="companyId">The id of the company.</param>
+	/// <param name="fromDate">The start date to reserve for.</param>
+	/// <param name="tillDate">The end date to reserve for.</param>
+	/// <param name="guestsAmount">The amount of guests expected.</param>
+	/// <returns>The newly created reservation on success, null otherwise (i.e. a conflicting reservation exists).</returns>
+	public static Reservation CreateReservation(long customerId, long companyId, DateTime fromDate, DateTime tillDate, int guestsAmount)
 	{
-	    throw new NotImplementedException();
+	    using (var connection = new MySqlConnection(CONNECTION_STRING))
+	    {
+		connection.Open();
+
+		using (var createReservationCMD = connection.CreateCommand())
+		{
+		    createReservationCMD.CommandText =
+		     "INSERT IGNORE INTO Reservation" +
+		     " (customer_id, company_id, from_date, till_date, guests_amount)" +
+		     " VALUES" +
+		    $" ({customerId}, {companyId}, {fromDate.ToMySqlFormat()}, {tillDate.ToMySqlFormat()}, {guestsAmount})";
+
+		    bool success = (createReservationCMD.ExecuteNonQuery() != 0);
+
+		    if (success)
+		    {
+			Reservation reservation = new Reservation();
+
+			reservation.Id = createReservationCMD.LastInsertedId;
+
+			reservation.CustomerId = customerId;
+			reservation.CompanyId = companyId;
+
+			reservation.FromDate = fromDate;
+			reservation.TillDate = tillDate;
+
+			reservation.GuestsAmount = guestsAmount;
+
+			reservation.ReservationStatus = Status.OPEN;
+
+			return reservation;
+		    }
+		    else
+		    {
+			return null;
+		    }
+		}
+	    }
 	}
 
+	/// <summary>
+	/// Attempt to retrieve reservations from the database.
+	/// </summary>
+	/// <param name="companyId">The id of the company associated with the reservations.</param>
+	/// <returns>A list of reservations.</returns>
 	public List<Reservation> RetrieveReservationsFor(long companyId)
 	{
 	    return RetrieveReservations($" WHERE company_id = {companyId}");
 	}
 
+	/// <summary>
+	/// Attempt to retrieve reservations from the database.
+	/// </summary>
+	/// <param name="companyId">The id of the company associated with the reservations.</param>
+	/// <param name="status">The status of the reservations.</param>
+	/// <returns>A list of reservations.</returns>
 	public List<Reservation> RetrieveReservationsFor(long companyId, Status status)
 	{
 	    return RetrieveReservations($" WHERE company_id = {companyId} AND status = {(byte)status}");
 	}
 
+	/// <summary>
+	/// Attempt to retrieve reservations from the database.
+	/// </summary>
+	/// <param name="companyId">The id of the company associated with the reservations.</param>
+	/// <param name="start">The minimum 'FromDate' of the reservations.</param>
+	/// <param name="end">The maximum 'FromDate' of the reservations.</param>
+	/// <returns>A list of reservations.</returns>
 	public List<Reservation> RetrieveReservationsFor(long companyId, DateTime start, DateTime end)
 	{
-	    return RetrieveReservations($" WHERE company_id = {companyId} AND (fromDate BETWEEN '{start.ToMySqlFormat()}' AND '{end.ToMySqlFormat()}')");
+	    return RetrieveReservations($" WHERE company_id = {companyId} AND (from_date BETWEEN '{start.ToMySqlFormat()}' AND '{end.ToMySqlFormat()}')");
 	}
 
+	/// <summary>
+	/// Attempt to retrieve reservations from the database.
+	/// </summary>
+	/// <param name="companyId">The id of the company associated with the reservations.</param>
+	/// <param name="start">The minimum 'FromDate' of the reservations.</param>
+	/// <param name="end">The maximum 'FromDate' of the reservations.</param>
+	/// <param name="status">The status of the reservations.</param>
+	/// <returns>A list of reservations.</returns>
 	public List<Reservation> RetrieveReservationsFor(long companyId, DateTime start, DateTime end, Status status)
 	{
-	    return RetrieveReservations($" WHERE company_id = {companyId} AND (fromDate BETWEEN '{start.ToMySqlFormat()}' AND '{end.ToMySqlFormat()}') AND status = {(byte)status}");
+	    return RetrieveReservations($" WHERE company_id = {companyId} AND (from_date BETWEEN '{start.ToMySqlFormat()}' AND '{end.ToMySqlFormat()}') AND status = {(byte)status}");
 	}
 
+	/// <summary>
+	/// Attempt to retrieve reservations from the database.
+	/// </summary>
+	/// <param name="customerId">The id of the customer who placed the reservations.</param>
+	/// <returns>A list of reservations.</returns>
 	public List<Reservation> RetrieveReservationsFrom(long customerId)
 	{
 	    return RetrieveReservations($" WHERE customer_id = {customerId}");
 	}
 
+	/// <summary>
+	/// Attempt to retrieve reservations from the database.
+	/// </summary>
+	/// <param name="customerId">The id of the customer who placed the reservations.</param>
+	/// <param name="status">The status of the reservations.</param>
+	/// <returns>A list of reservations.</returns>
 	public List<Reservation> RetrieveReservationsFrom(long customerId, Status status)
 	{
 	    return RetrieveReservations($" WHERE customer_id = {customerId} AND status = {(byte)status}");
 	}
 
+	/// <summary>
+	/// Attempt to retrieve reservations from the database.
+	/// </summary>
+	/// <param name="customerId">The id of the customer who placed the reservations.</param>
+	/// <param name="start">The minimum 'FromDate' of the reservations.</param>
+	/// <param name="end">The maximum 'FromDate' of the reservations.</param>
+	/// <returns>A list of reservations.</returns>
 	public List<Reservation> RetrieveReservationsFrom(long customerId, DateTime start, DateTime end)
 	{
-	    return RetrieveReservations($" WHERE customer_id = {customerId} AND (fromDate BETWEEN '{start.ToMySqlFormat()}' AND '{end.ToMySqlFormat()}')");
+	    return RetrieveReservations($" WHERE customer_id = {customerId} AND (from_date BETWEEN '{start.ToMySqlFormat()}' AND '{end.ToMySqlFormat()}')");
 	}
 
+	/// <summary>
+	/// Attempt to retrieve reservations from the database.
+	/// </summary>
+	/// <param name="customerId">The id of the customer who placed the reservations.</param>
+	/// <param name="start">The minimum 'FromDate' of the reservations.</param>
+	/// <param name="end">The maximum 'FromDate' of the reservations.</param>
+	/// <param name="status">The status of the reservations.</param>
+	/// <returns>A list of reservations.</returns>
 	public List<Reservation> RetrieveReservationsFrom(long customerId, DateTime start, DateTime end, Status status)
 	{
-	    return RetrieveReservations($" WHERE customer_id = {customerId} AND (fromDate BETWEEN '{start.ToMySqlFormat()}' AND '{end.ToMySqlFormat()}') AND status = {(byte)status}");
+	    return RetrieveReservations($" WHERE customer_id = {customerId} AND (from_date BETWEEN '{start.ToMySqlFormat()}' AND '{end.ToMySqlFormat()}') AND status = {(byte)status}");
 	}
 
+	/// <summary>
+	/// Attempt to retrieve reservations from the database matching the given condition.
+	/// </summary>
+	/// <param name="condition">The condition to which the reservations must comply</param>
+	/// <returns>A list of reservations matching the given condition.</returns>
 	private List<Reservation> RetrieveReservations(string condition)
 	{
 	    using (var connection = new MySqlConnection(CONNECTION_STRING))
@@ -117,7 +220,7 @@ namespace CulinaireTaxi.Database.Entities
 
 		using (var retrieveReservationsCMD = connection.CreateCommand())
 		{
-		    retrieveReservationsCMD.CommandText = $"SELECT * FROM Reservation" + condition + " ORDER BY fromDate ASC";
+		    retrieveReservationsCMD.CommandText = $"SELECT * FROM Reservation" + condition + " ORDER BY from_date ASC";
 
 		    using (var reader = retrieveReservationsCMD.ExecuteReader())
 		    {

@@ -83,11 +83,69 @@ namespace CulinaireTaxi.Database.Entities
 
 	}
 
-	public static Account CreateAccount(Type accountType, string email, string password, ContactDetails contact)
+	/// <summary>
+	/// Attempts to create a new account in the database.
+	/// </summary>
+	/// <param name="accountType">The type of the account.</param>
+	/// <param name="email">The email of the account.</param>
+	/// <param name="password">The password of the account.</param>
+	/// <param name="contact">OPTIONAL: The contact details of the account.</param>
+	/// <returns>The newly created account on success, null otherwise (i.e. a conflicting account exists).</returns>
+	public static Account CreateAccount(Type accountType, string email, string password, ContactDetails contact = null)
 	{
-	    throw new System.NotImplementedException();
+	    using (var connection = new MySqlConnection(CONNECTION_STRING))
+	    {
+		connection.Open();
+
+		using (var createAccountCMD = connection.CreateCommand())
+		{
+		    createAccountCMD.CommandText =
+		    "INSERT IGNORE INTO Account" +
+		    " (type, email, password, county, city, street, postal_code, phone_number)" +
+		    " VALUES" +
+		    " (@accountType, @email, @password, @county, @city, @street, @postal_code, @phone_number)";
+
+		    var parameters = createAccountCMD.Parameters;
+
+		    parameters.AddWithValue("@accountType", (byte)accountType);
+		    parameters.AddWithValue("@email", email);
+		    parameters.AddWithValue("@password", password);
+		    parameters.AddWithValue("@county", contact?.County);
+		    parameters.AddWithValue("@city", contact?.City);
+		    parameters.AddWithValue("@street", contact?.Street);
+		    parameters.AddWithValue("@postal_code", contact?.PostalCode);
+		    parameters.AddWithValue("@phone_number", contact?.PhoneNumber);
+
+		    bool success = (createAccountCMD.ExecuteNonQuery() != 0);
+
+		    if (success)
+		    {
+			Account account = new Account();
+
+			account.Id = createAccountCMD.LastInsertedId;
+
+			account.AccountType = accountType;
+
+			account.Email = email;
+			account.Password = password;
+
+			account.Contact = contact;
+
+			return account;
+		    }
+		    else
+		    {
+			return null;
+		    }
+		}
+	    }
 	}
 
+	/// <summary>
+	/// Attempt to retrieve an account from the database.
+	/// </summary>
+	/// <param name="email">The email of the account.</param>
+	/// <returns>The account if one was found, null otherwise.</returns>
 	public static Account RetrieveByEmail(string email)
 	{
 	    using (var connection = new MySqlConnection(CONNECTION_STRING))
