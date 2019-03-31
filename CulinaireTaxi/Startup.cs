@@ -1,5 +1,6 @@
 using System;
 using CulinaireTaxi.Authentication;
+using CulinaireTaxi.Database;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -37,6 +38,8 @@ namespace CulinaireTaxi
 		options.Cookie.HttpOnly = true;
 		options.Cookie.IsEssential = true;
 	    });
+
+	    CulinaireTaxiDB.InitializeDatabase(/*"server=localhost;uid=root;pwd=rootpass;database=culinairetaxi;"*/"server=sql7.freemysqlhosting.net;uid=sql7285675;pwd=ITnJKJJc4r;database=sql7285675");
 
 	    services.AddHttpContextAccessor();
 

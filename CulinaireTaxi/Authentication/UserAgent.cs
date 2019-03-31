@@ -1,4 +1,5 @@
-﻿using CulinaireTaxi.Database.Entities;
+﻿using CulinaireTaxi.Database;
+using CulinaireTaxi.Database.Entities;
 using CulinaireTaxi.Extensions;
 using Microsoft.AspNetCore.Http;
 using System;
@@ -12,11 +13,11 @@ namespace CulinaireTaxi.Authentication
     public sealed class UserAgent
     {
 
-	private const string USER_KEY = "UserAgent_User";
+	private const string ACCOUNT_KEY = "UserAgent_Account";
 
 	private ISession m_session;
 
-	private User m_user;
+	private Account m_account;
 
 	/// <summary>
 	/// Indicates whether the current user is logged in.
@@ -25,24 +26,24 @@ namespace CulinaireTaxi.Authentication
 	{
 	    get
 	    {
-		return (User != null);
+		return (Account != null);
 	    }
 	}
 
 	/// <summary>
 	/// The account associated with the current user, null if the user is not logged in.
 	/// </summary>
-	public User User
+	public Account Account
 	{
 	    get
 	    {
-		return m_user;
+		return m_account;
 	    }
 
 	    private set
 	    {
-		m_user = value;
-		m_session.SetObject(USER_KEY, m_user);
+		m_account = value;
+		m_session.SetObject(ACCOUNT_KEY, m_account);
 	    }
 	}
 
@@ -54,7 +55,7 @@ namespace CulinaireTaxi.Authentication
 	{
 	    m_session = httpContextAccessor.HttpContext.Session;
 
-	    User = m_session.GetObject<User>(USER_KEY);
+	    Account = m_session.GetObject<Account>(ACCOUNT_KEY);
 	}
 
 	/// <summary>
@@ -74,18 +75,11 @@ namespace CulinaireTaxi.Authentication
 	/// <param name="password">The password of a registered account.</param>
 	public void Login(string email, string password)
 	{
-	    Account account = Account.RetrieveByEmail(email);
+	    Account account = AccountTable.RetrieveAccount(email);
 
 	    if (account.Password == password)
 	    {
-		if (account.AccountType == Account.Type.CUSTOMER)
-		{
-		    User = Customer.RetrieveByAccount(account);
-		}
-		else
-		{
-		    User = Company.RetrieveByAccount(account);
-		}
+		Account = account;
 	    }
 	}
 
@@ -94,7 +88,7 @@ namespace CulinaireTaxi.Authentication
 	/// </summary>
 	public void Logout()
 	{
-	    User = null;
+	    Account = null;
 	}
 
     }
