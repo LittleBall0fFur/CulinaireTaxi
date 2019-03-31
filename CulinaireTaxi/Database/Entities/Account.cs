@@ -80,7 +80,7 @@ namespace CulinaireTaxi.Database.Entities
 
 	private Account()
 	{
-
+	    Contact = new ContactDetails();
 	}
 
 	/// <summary>
@@ -170,11 +170,11 @@ namespace CulinaireTaxi.Database.Entities
 			    account.Email = reader.GetString(2);
 			    account.Password = reader.GetString(3);
 
-			    account.Contact.County = reader.GetString(4);
-			    account.Contact.City = reader.GetString(5);
-			    account.Contact.Street = reader.GetString(6);
-			    account.Contact.PostalCode = reader.GetString(7);
-			    account.Contact.PhoneNumber = reader.GetString(8);
+			    account.Contact.County = !reader.IsDBNull(4) ? reader.GetString(4) : null;
+			    account.Contact.City = !reader.IsDBNull(5) ? reader.GetString(5) : null;
+			    account.Contact.Street = !reader.IsDBNull(6) ? reader.GetString(6) : null;
+			    account.Contact.PostalCode = !reader.IsDBNull(7) ? reader.GetString(7) : null;
+			    account.Contact.PhoneNumber = !reader.IsDBNull(8) ? reader.GetString(8) : null;
 
 			    return account;
 			}

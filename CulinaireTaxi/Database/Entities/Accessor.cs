@@ -86,7 +86,7 @@ namespace CulinaireTaxi.Database.Entities
 		    " from_date DATETIME NOT NULL," +
 		    " till_date DATETIME NOT NULL," +
 		    " guests_amount INT NOT NULL," +
-		    " status TINYINT NOT NULL," +
+		    " status TINYINT NOT NULL DEFAULT 0," +
 		    " PRIMARY KEY (id)," +
 		    " FOREIGN KEY (customer_id)" +
 		    " REFERENCES Customer(account_id)" +

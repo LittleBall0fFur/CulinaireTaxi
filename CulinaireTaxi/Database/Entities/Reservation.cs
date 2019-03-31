@@ -85,7 +85,7 @@ namespace CulinaireTaxi.Database.Entities
 		     "INSERT IGNORE INTO Reservation" +
 		     " (customer_id, company_id, from_date, till_date, guests_amount)" +
 		     " VALUES" +
-		    $" ({customerId}, {companyId}, {fromDate.ToMySqlFormat()}, {tillDate.ToMySqlFormat()}, {guestsAmount})";
+		    $" ({customerId}, {companyId}, '{fromDate.ToMySqlFormat()}', '{tillDate.ToMySqlFormat()}', {guestsAmount})";
 
 		    bool success = (createReservationCMD.ExecuteNonQuery() != 0);
 
@@ -120,7 +120,7 @@ namespace CulinaireTaxi.Database.Entities
 	/// </summary>
 	/// <param name="companyId">The id of the company associated with the reservations.</param>
 	/// <returns>A list of reservations.</returns>
-	public List<Reservation> RetrieveReservationsFor(long companyId)
+	public static List<Reservation> RetrieveReservationsFor(long companyId)
 	{
 	    return RetrieveReservations($" WHERE company_id = {companyId}");
 	}
@@ -131,7 +131,7 @@ namespace CulinaireTaxi.Database.Entities
 	/// <param name="companyId">The id of the company associated with the reservations.</param>
 	/// <param name="status">The status of the reservations.</param>
 	/// <returns>A list of reservations.</returns>
-	public List<Reservation> RetrieveReservationsFor(long companyId, Status status)
+	public static List<Reservation> RetrieveReservationsFor(long companyId, Status status)
 	{
 	    return RetrieveReservations($" WHERE company_id = {companyId} AND status = {(byte)status}");
 	}
@@ -143,7 +143,7 @@ namespace CulinaireTaxi.Database.Entities
 	/// <param name="start">The minimum 'FromDate' of the reservations.</param>
 	/// <param name="end">The maximum 'FromDate' of the reservations.</param>
 	/// <returns>A list of reservations.</returns>
-	public List<Reservation> RetrieveReservationsFor(long companyId, DateTime start, DateTime end)
+	public static List<Reservation> RetrieveReservationsFor(long companyId, DateTime start, DateTime end)
 	{
 	    return RetrieveReservations($" WHERE company_id = {companyId} AND (from_date BETWEEN '{start.ToMySqlFormat()}' AND '{end.ToMySqlFormat()}')");
 	}
@@ -156,7 +156,7 @@ namespace CulinaireTaxi.Database.Entities
 	/// <param name="end">The maximum 'FromDate' of the reservations.</param>
 	/// <param name="status">The status of the reservations.</param>
 	/// <returns>A list of reservations.</returns>
-	public List<Reservation> RetrieveReservationsFor(long companyId, DateTime start, DateTime end, Status status)
+	public static List<Reservation> RetrieveReservationsFor(long companyId, DateTime start, DateTime end, Status status)
 	{
 	    return RetrieveReservations($" WHERE company_id = {companyId} AND (from_date BETWEEN '{start.ToMySqlFormat()}' AND '{end.ToMySqlFormat()}') AND status = {(byte)status}");
 	}
@@ -166,7 +166,7 @@ namespace CulinaireTaxi.Database.Entities
 	/// </summary>
 	/// <param name="customerId">The id of the customer who placed the reservations.</param>
 	/// <returns>A list of reservations.</returns>
-	public List<Reservation> RetrieveReservationsFrom(long customerId)
+	public static List<Reservation> RetrieveReservationsFrom(long customerId)
 	{
 	    return RetrieveReservations($" WHERE customer_id = {customerId}");
 	}
@@ -177,7 +177,7 @@ namespace CulinaireTaxi.Database.Entities
 	/// <param name="customerId">The id of the customer who placed the reservations.</param>
 	/// <param name="status">The status of the reservations.</param>
 	/// <returns>A list of reservations.</returns>
-	public List<Reservation> RetrieveReservationsFrom(long customerId, Status status)
+	public static List<Reservation> RetrieveReservationsFrom(long customerId, Status status)
 	{
 	    return RetrieveReservations($" WHERE customer_id = {customerId} AND status = {(byte)status}");
 	}
@@ -189,7 +189,7 @@ namespace CulinaireTaxi.Database.Entities
 	/// <param name="start">The minimum 'FromDate' of the reservations.</param>
 	/// <param name="end">The maximum 'FromDate' of the reservations.</param>
 	/// <returns>A list of reservations.</returns>
-	public List<Reservation> RetrieveReservationsFrom(long customerId, DateTime start, DateTime end)
+	public static List<Reservation> RetrieveReservationsFrom(long customerId, DateTime start, DateTime end)
 	{
 	    return RetrieveReservations($" WHERE customer_id = {customerId} AND (from_date BETWEEN '{start.ToMySqlFormat()}' AND '{end.ToMySqlFormat()}')");
 	}
@@ -202,7 +202,7 @@ namespace CulinaireTaxi.Database.Entities
 	/// <param name="end">The maximum 'FromDate' of the reservations.</param>
 	/// <param name="status">The status of the reservations.</param>
 	/// <returns>A list of reservations.</returns>
-	public List<Reservation> RetrieveReservationsFrom(long customerId, DateTime start, DateTime end, Status status)
+	public static List<Reservation> RetrieveReservationsFrom(long customerId, DateTime start, DateTime end, Status status)
 	{
 	    return RetrieveReservations($" WHERE customer_id = {customerId} AND (from_date BETWEEN '{start.ToMySqlFormat()}' AND '{end.ToMySqlFormat()}') AND status = {(byte)status}");
 	}
@@ -212,7 +212,7 @@ namespace CulinaireTaxi.Database.Entities
 	/// </summary>
 	/// <param name="condition">The condition to which the reservations must comply</param>
 	/// <returns>A list of reservations matching the given condition.</returns>
-	private List<Reservation> RetrieveReservations(string condition)
+	private static List<Reservation> RetrieveReservations(string condition)
 	{
 	    using (var connection = new MySqlConnection(CONNECTION_STRING))
 	    {
@@ -238,7 +238,9 @@ namespace CulinaireTaxi.Database.Entities
 			    reservation.FromDate = reader.GetDateTime(3);
 			    reservation.TillDate = reader.GetDateTime(4);
 
-			    reservation.ReservationStatus = (Status)reader.GetByte(5);
+			    reservation.GuestsAmount = reader.GetInt32(5);
+
+			    reservation.ReservationStatus = (Status)reader.GetByte(6);
 
 			    reservations.Add(reservation);
 			}

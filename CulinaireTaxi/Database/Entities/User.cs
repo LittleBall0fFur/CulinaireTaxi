@@ -11,6 +11,14 @@ namespace CulinaireTaxi.Database.Entities
 	    protected set;
 	}
 
+	public long Id
+	{
+	    get
+	    {
+		return Account.Id;
+	    }
+	}
+
     }
 
 }
