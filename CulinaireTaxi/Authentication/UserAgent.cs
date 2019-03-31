@@ -1,6 +1,4 @@
-﻿using static CulinaireTaxi.Database.CulinaireTaxiDB;
-
-using CulinaireTaxi.Database.Entities;
+﻿using CulinaireTaxi.Database.Entities;
 using CulinaireTaxi.Extensions;
 using Microsoft.AspNetCore.Http;
 using System;
@@ -17,6 +15,8 @@ namespace CulinaireTaxi.Authentication
 	private const string USER_KEY = "UserAgent_User";
 
 	private ISession m_session;
+
+	private User m_user;
 
 	/// <summary>
 	/// Indicates whether the current user is logged in.
@@ -36,12 +36,13 @@ namespace CulinaireTaxi.Authentication
 	{
 	    get
 	    {
-		return m_session.GetObject<User>(USER_KEY);
+		return m_user;
 	    }
 
 	    private set
 	    {
-		m_session.SetObject(USER_KEY, value);
+		m_user = value;
+		m_session.SetObject(USER_KEY, m_user);
 	    }
 	}
 
@@ -52,6 +53,8 @@ namespace CulinaireTaxi.Authentication
 	public UserAgent(IHttpContextAccessor httpContextAccessor)
 	{
 	    m_session = httpContextAccessor.HttpContext.Session;
+
+	    User = m_session.GetObject<User>(USER_KEY);
 	}
 
 	/// <summary>
@@ -71,11 +74,18 @@ namespace CulinaireTaxi.Authentication
 	/// <param name="password">The password of a registered account.</param>
 	public void Login(string email, string password)
 	{
-	    Account account = RetrieveAccount(email);
+	    Account account = Account.RetrieveByEmail(email);
 
-	    if (account.password == password)
+	    if (account.Password == password)
 	    {
-		User = RetrieveUser(account);
+		if (account.AccountType == Account.Type.CUSTOMER)
+		{
+		    User = Customer.RetrieveByAccount(account);
+		}
+		else
+		{
+		    User = Company.RetrieveByAccount(account);
+		}
 	    }
 	}
 

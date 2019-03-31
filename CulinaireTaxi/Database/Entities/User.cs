@@ -2,10 +2,14 @@
 namespace CulinaireTaxi.Database.Entities
 {
 
-    public abstract class User
+    public abstract class User : Accessor
     {
 
-	public Account account;
+	public Account Account
+	{
+	    get;
+	    protected set;
+	}
 
     }
 

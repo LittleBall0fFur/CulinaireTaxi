@@ -1,16 +1,14 @@
-﻿using CulinaireTaxi.Database.Entities;
-using MySql.Data.MySqlClient;
-using System.Data;
+﻿using MySql.Data.MySqlClient;
 
-namespace CulinaireTaxi.Database
+namespace CulinaireTaxi.Database.Entities
 {
 
-    public static class CulinaireTaxiDB
+    public abstract class Accessor
     {
 
-	private static readonly string CONNECTION_STRING = /*"server=localhost;uid=root;pwd=rootpass;database=culinairetaxi;"*/"server=sql7.freemysqlhosting.net;uid=sql7285675;pwd=ITnJKJJc4r;database=sql7285675";
+	protected static readonly string CONNECTION_STRING = /*"server=localhost;uid=root;pwd=rootpass;database=culinairetaxi;"*/"server=sql7.freemysqlhosting.net;uid=sql7285675;pwd=ITnJKJJc4r;database=sql7285675";
 
-	static CulinaireTaxiDB()
+	static Accessor()
 	{
 	    Initialize();
 	}
@@ -106,123 +104,6 @@ namespace CulinaireTaxi.Database
 		    createCompanyTableCMD.ExecuteNonQuery();
 		    createRatingTableCMD.ExecuteNonQuery();
 		    createReservationTableCMD.ExecuteNonQuery();
-		}
-	    }
-	}
-
-	public static Account RetrieveAccount(string email)
-	{
-	    using (var connection = new MySqlConnection(CONNECTION_STRING))
-	    {
-		connection.Open();
-
-		using (var retrieveAccountCMD = connection.CreateCommand())
-		{
-		    retrieveAccountCMD.CommandText = "SELECT * FROM Account WHERE email = @email";
-		    retrieveAccountCMD.Parameters.AddWithValue("@email", email);
-
-		    using (var reader = retrieveAccountCMD.ExecuteReader(CommandBehavior.SingleRow))
-		    {
-			if (reader.Read())
-			{
-			    Account account = new Account();
-
-			    account.id = reader.GetInt64(0);
-
-			    account.type = (Account.Type)reader.GetByte(1);
-
-			    account.email = reader.GetString(2);
-			    account.password = reader.GetString(3);
-
-			    account.county = reader.GetString(4);
-			    account.city = reader.GetString(5);
-			    account.street = reader.GetString(6);
-			    account.postalCode = reader.GetString(7);
-			    account.phoneNumber = reader.GetString(8);
-
-			    return account;
-			}
-			else
-			{
-			    return null;
-			}
-		    }
-		}
-	    }
-	}
-
-	public static User RetrieveUser(Account account)
-	{
-	    if (account.type == Account.Type.CUSTOMER)
-	    {
-		return RetrieveCustomer(account);
-	    }
-	    else
-	    {
-		return RetrieveCompany(account);
-	    }
-	}
-
-	private static Customer RetrieveCustomer(Account account)
-	{
-	    using (var connection = new MySqlConnection(CONNECTION_STRING))
-	    {
-		connection.Open();
-
-		using (var retrieveCustomerCMD = connection.CreateCommand())
-		{
-		    retrieveCustomerCMD.CommandText = $"SELECT first_name, last_name FROM Customer WHERE id = {account.id}";
-
-		    using (var reader = retrieveCustomerCMD.ExecuteReader(CommandBehavior.SingleRow))
-		    {
-			if (reader.Read())
-			{
-			    Customer customer = new Customer();
-
-			    customer.account = account;
-
-			    customer.firstName = reader.GetString(0);
-			    customer.lastName = reader.GetString(1);
-
-			    return customer;
-			}
-			else
-			{
-			    return null;
-			}
-		    }
-		}
-	    }
-	}
-
-	private static Company RetrieveCompany(Account account)
-	{
-	    using (var connection = new MySqlConnection(CONNECTION_STRING))
-	    {
-		connection.Open();
-
-		using (var retrieveCompanyCMD = connection.CreateCommand())
-		{
-		    retrieveCompanyCMD.CommandText = $"SELECT type, name, description FROM Company WHERE id = {account.id}";
-
-		    using (var reader = retrieveCompanyCMD.ExecuteReader(CommandBehavior.SingleRow))
-		    {
-			if (reader.Read())
-			{
-			    Company company = new Company();
-
-			    company.account = account;
-
-			    company.name = reader.GetString(0);
-			    company.description = reader.GetString(1);
-
-			    return company;
-			}
-			else
-			{
-			    return null;
-			}
-		    }
 		}
 	    }
 	}
