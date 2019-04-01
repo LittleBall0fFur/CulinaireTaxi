@@ -77,7 +77,7 @@ namespace CulinaireTaxi.Authentication
 	{
 	    Account account = AccountTable.RetrieveAccount(email);
 
-	    if (account.Password == password)
+	    if (account?.Password == password)
 	    {
 		Account = account;
 	    }
