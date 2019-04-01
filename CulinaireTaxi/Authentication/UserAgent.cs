@@ -92,5 +92,4 @@ namespace CulinaireTaxi.Authentication
 	}
 
     }
-
 }
