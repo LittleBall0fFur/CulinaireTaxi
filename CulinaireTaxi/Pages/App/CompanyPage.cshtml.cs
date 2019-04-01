@@ -14,12 +14,12 @@ namespace CulinaireTaxi.Pages
 
         public void OnPostSub()
         {
-            date = date.AddDays(-1);
+            date.AddDays(-1);
         }
 
         public void OnPostAdd()
         {
-            date = date.AddDays(1);
+            date.AddDays(1);
         }
 
         public void OnPostToday()
@@ -27,9 +27,9 @@ namespace CulinaireTaxi.Pages
             date = today;
         }
 
-        public string GetDate()
+        public DateTime GetDate()
         {
-            return date.ToString("D");
+            return date;
         }
     }
 }
