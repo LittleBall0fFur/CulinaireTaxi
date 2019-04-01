@@ -31,10 +31,5 @@ namespace CulinaireTaxi.Pages
         {
             return date.ToString("D");
         }
-
-        public string GetToday()
-        {
-            return today.ToString("D");
-        }
     }
 }
