@@ -1,0 +1,247 @@
+﻿@page
+@model CompanyPageModel
+@{
+    var company = CompanyTable.RetrieveCompany(UserAgent.Account.CompanyId.Value);
+    var companyName = company.Name;
+}
+<!DOCTYPE HTML>
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous" />
+
+    <link rel="stylesheet" href="~/css/index.css" />
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prefixfree/1.0.7/prefixfree.min.js"></script>
+
+    <title>CulinaireTaxi | @companyName</title>
+</head>
+<body class="bg-primary">
+
+    @* HEADER *@
+    <div class="jumbotron text-shadow text-white">
+        <nav class="navbar navbar-expand">
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav m-auto">
+                    <li class="nav-item border-right">
+                        <a class="nav-link" href="/Index">Uitloggen</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/About">How to use</a>
+                    </li>
+                    <li class="nav-item border-left">
+                        <a class="nav-link" href="/Contact">Contact</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <div class="container mx-auto mt-5">
+            <div class="row">
+                <div class="col text-center">
+                    <h1 class="branding">Welcome @companyName</h1>
+                    <p class="display-5">"Lorem Ipsum"</p>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                    <button class="btn btn-danger" type="button" onclick="alert('Why you no listen (ಥ﹏ಥ)')">DO NOT CLICK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* MAIN CONTENT *@
+    <div class="container">
+        <div class="row">
+            @* FIRST CARD *@
+            <div class="col-sm pb-2">
+                <div class="card shadow bg-secondary">
+                    <div class="card-body">
+                        <div class="calendar">
+                            <div class="calendar_header">
+                                <h5 class="header_copy"> Calendar Plan</h5>
+                            </div>
+                            <div class="calendar_plan">
+                                <div class="cl_plan">
+                                    <div class="cl_title" style="padding-left: 30px;"><form method="post"><input type="submit" value="Today" asp-page-handler="Today" asp-route-sessioncount="15" /></form></div>
+                                    <div class="cl_copy" style="padding-left: 45px;">@CompanyPageModel.date.ToString("D")</div>
+                                    <form method="post"><input type="submit" value="<" asp-page-handler="Sub" asp-route-sessioncount="20" style="float:left; margin-left: -25px;"></form>
+                                    <form method="post"><input type="submit" value=">" asp-page-handler="Add" asp-route-sessioncount="10" style="float:right; margin-right: -25px;"></form>
+                                </div>
+                            </div>
+                            <div class="calendar_events">
+                                <p class="ce_title">Upcoming Events</p>
+                                <div class="event_item">
+                                    <div class="ei_Dot dot_active"></div>
+                                    <div class="ei_Title">10:30 am</div>
+                                    <div class="ei_Copy">Monday briefing with the team</div>
+                                </div>
+                                <div class="event_item">
+                                    <div class="ei_Dot"></div>
+                                    <div class="ei_Title">12:00 pm</div>
+                                    <div class="ei_Copy">Lunch for with the besties</div>
+                                </div>
+                                <div class="event_item">
+                                    <div class="ei_Dot"></div>
+                                    <div class="ei_Title">13:00 pm</div>
+                                    <div class="ei_Copy">Meet with the client for final design <br></div>
+                                </div>
+                                <div class="event_item">
+                                    <div class="ei_Dot"></div>
+                                    <div class="ei_Title">14:30 am</div>
+                                    <div class="ei_Copy">Plan event night to inspire students</div>
+                                </div>
+                                <div class="event_item">
+                                    <div class="ei_Dot"></div>
+                                    <div class="ei_Title">15:30 am</div>
+                                    <div class="ei_Copy">Add some more events to the calendar</div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                </div>
+            </div>
+            @* SECOND CARD *@
+            <div class="col-sm pb-2">
+                <div class="card shadow bg-secondary">
+                    <div class="card-body">
+                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                </div>
+            </div>
+            @* THIRD CARD *@
+            <div class="col-sm pb-2">
+                <div class="card shadow bg-secondary">
+                    <div class="card-body">
+                        <h5 class="card-title">Special title treatment</h5>
+                        <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+    <style>
+        input {
+            margin-top: -80px;
+            color: #d6cfcb;
+            border: none;
+            text-decoration: none;
+            background-color: rgba(0, 0, 0, 0.00);
+            font-size: 28px;
+        }
+
+        .calendar {
+            width: 370px;
+        }
+
+        .header_copy {
+            color: $light_grey;
+            font-size: 20px;
+        }
+
+        .calendar_plan {
+            margin: 20px 0 40px;
+        }
+
+        .cl_plan {
+            height: 140px;
+            background-color: #dc3545;
+            box-shadow: 0px 0px 52px -18px rgba(0, 0, 0, 0.75);
+            padding: 30px;
+            color: #fff;
+            border-radius: 3px;
+        }
+
+        .cl_title {
+        }
+
+        .cl_copy {
+            font-size: 20px;
+            margin: 20px 0;
+            display: inline-block;
+        }
+
+        .cl_add {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #fff;
+            cursor: pointer;
+            margin: 0 0 0 65px;
+            color: #c2c2c2;
+            padding: 11px 13px;
+        }
+
+        .calendar_events {
+            color: $light_grey;
+        }
+
+        .ce_title {
+            font-size: 14px;
+        }
+
+        .event_item {
+            margin: 18px 0;
+            padding: 5px;
+            cursor: pointer;
+        }
+
+        &:hover {
+            background-image: linear-gradient(-222deg, #FF8494, #ffa9b7);
+            box-shadow: 0px 0px 52px -18px rgba(0, 0, 0, 0.75);
+        }
+
+        .ei_Dot {
+            background-color: #fff;
+        }
+
+        .ei_Copy, .ei_Title {
+            color: #fff;
+        }
+
+
+        .ei_Dot, .ei_Title {
+            display: inline-block;
+        }
+
+        .ei_Dot {
+            border-radius: 50%;
+            width: 10px;
+            height: 10px;
+            background-color: $light_grey;
+            box-shadow: 0px 0px 52px -18px rgba(0, 0, 0, 0.75);
+        }
+
+        .dot_active {
+            background-color: #FF8494;
+        }
+
+        .ei_Title {
+            margin-left: 10px;
+            color: #363b41;
+        }
+
+        .ei_Copy {
+            font-size: 12px;
+            margin-left: 27px;
+        }
+
+        .dark {
+            background-image: linear-gradient(-222deg, #646464, #454545);
+            color: #fff;
+        }
+
+        .header_title, .ei_Title, .ce_title {
+            color: #fff;
+        }
+    </style>
+</body>
+</html>

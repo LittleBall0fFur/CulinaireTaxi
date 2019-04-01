@@ -13,4 +13,10 @@
     <PackageReference Include="Stripe.net" Version="25.1.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="Pages\App\CustomerPage.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+  </ItemGroup>
+
 </Project>
