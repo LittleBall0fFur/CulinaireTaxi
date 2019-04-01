@@ -9,8 +9,8 @@ namespace CulinaireTaxi.Pages
 {
     public class CompanyPageModel : PageModel
     {
-        public static DateTime date = DateTime.Today;
-        public static DateTime today = date;
+        private DateTime date = DateTime.Today;
+        private readonly DateTime today = DateTime.Today;
 
         public void OnPostSub()
         {
@@ -25,6 +25,16 @@ namespace CulinaireTaxi.Pages
         public void OnPostToday()
         {
             date = today;
+        }
+
+        public string GetDate()
+        {
+            return date.ToString("D");
+        }
+
+        public string GetToday()
+        {
+            return today.ToString("D");
         }
     }
 }
