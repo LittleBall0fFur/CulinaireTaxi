@@ -86,6 +86,17 @@ namespace CulinaireTaxi.Database
 	/// <summary>
 	/// Attempt to retrieve reservations from the database.
 	/// </summary>
+	/// <param name="companyId"></param>
+	/// <param name="day"></param>
+	/// <returns></returns>
+	public static List<Reservation> RetrieveReservationsFor(long companyId, DateTime day)
+	{
+	    return RetrieveReservationsFor(companyId, day.Date, day.Date.AddDays(1));
+	}
+
+	/// <summary>
+	/// Attempt to retrieve reservations from the database.
+	/// </summary>
 	/// <param name="companyId">The id of the company associated with the reservations.</param>
 	/// <param name="start">The minimum 'FromDate' of the reservations.</param>
 	/// <param name="end">The maximum 'FromDate' of the reservations.</param>
@@ -93,6 +104,18 @@ namespace CulinaireTaxi.Database
 	public static List<Reservation> RetrieveReservationsFor(long companyId, DateTime start, DateTime end)
 	{
 	    return RetrieveReservations($" WHERE company_id = {companyId} AND (from_date BETWEEN '{start.ToMySqlFormat()}' AND '{end.ToMySqlFormat()}')");
+	}
+
+	/// <summary>
+	/// Attempt to retrieve reservations from the database.
+	/// </summary>
+	/// <param name="companyId"></param>
+	/// <param name="day"></param>
+	/// <param name="status"></param>
+	/// <returns></returns>
+	public static List<Reservation> RetrieveReservationsFor(long companyId, DateTime day, ReservationStatus status)
+	{
+	    return RetrieveReservationsFor(companyId, day.Date, day.Date.AddDays(1), status);
 	}
 
 	/// <summary>
