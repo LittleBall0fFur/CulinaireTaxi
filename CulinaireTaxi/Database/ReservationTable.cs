@@ -221,6 +221,51 @@ namespace CulinaireTaxi.Database
 	    }
 	}
 
+	/// <summary>
+	/// Updates the status of a reservation to the given status.
+	/// </summary>
+	/// <param name="id">The id of the reservation to update.</param>
+	/// <param name="new_status">The new status of the reservation.</param>
+	/// <returns>True if the reservation was updated, false otherwise.</returns>
+	public static bool UpdateReservationStatus(long id, ReservationStatus new_status)
+	{
+	    using (var connection = new MySqlConnection(ConnectionString))
+	    {
+		connection.Open();
+
+		using (var updateReservationCMD = connection.CreateCommand())
+		{
+		    updateReservationCMD.CommandText = $"UPDATE Reservation SET status = {(byte)new_status} WHERE id = {id}";
+
+		    bool reservationUpdated = (updateReservationCMD.ExecuteNonQuery() != 0);
+
+		    return reservationUpdated;
+		}
+	    }
+	}
+
+	/// <summary>
+	/// Deletes an existing reservation.
+	/// </summary>
+	/// <param name="id">The id of the reservation to delete.</param>
+	/// <returns>True if the reservation was deleted, false otherwise.</returns>
+	public static bool DeleteReservation(long id)
+	{
+	    using (var connection = new MySqlConnection(ConnectionString))
+	    {
+		connection.Open();
+
+		using (var deleteReservationCMD = connection.CreateCommand())
+		{
+		    deleteReservationCMD.CommandText = $"DELETE FROM Reservation WHERE id = {id}";
+
+		    bool reservationDeleted = (deleteReservationCMD.ExecuteNonQuery() != 0);
+
+		    return reservationDeleted;
+		}
+	    }
+	}
+
     }
 
 }

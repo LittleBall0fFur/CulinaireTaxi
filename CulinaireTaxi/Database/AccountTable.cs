@@ -72,6 +72,7 @@ namespace CulinaireTaxi.Database
 		}
 	    }
 	}
+
         public static Account RetrieveAccountByID(long id)
         {
             using (var connection = new MySqlConnection(ConnectionString))
@@ -165,6 +166,121 @@ namespace CulinaireTaxi.Database
 			    return null;
 			}
 		    }
+		}
+	    }
+	}
+
+	/// <summary>
+	/// Update an account's email to the given email.
+	/// </summary>
+	/// <param name="id">The id of the account to update.</param>
+	/// <param name="new_email">The new email of the account.</param>
+	/// <returns>True if the account was updated, false otherwise.</returns>
+	public static bool UpdateAccountEmail(long id, string new_email)
+	{
+	    using (var connection = new MySqlConnection(ConnectionString))
+	    {
+		connection.Open();
+
+		using (var updateAccountCMD = connection.CreateCommand())
+		{
+		    updateAccountCMD.CommandText = $"UPDATE Account SET email = @new_email WHERE id = {id}";
+
+		    updateAccountCMD.Parameters.AddWithValue("@new_email", new_email);
+
+		    bool accountUpdated = (updateAccountCMD.ExecuteNonQuery() != 0);
+
+		    return accountUpdated;
+		}
+	    }
+	}
+
+	/// <summary>
+	/// Update an account's password to the given password.
+	/// </summary>
+	/// <param name="id">The id of the account to update.</param>
+	/// <param name="new_password">The new password of the account.</param>
+	/// <returns>True if the account was updated, false otherwise.</returns>
+	public static bool UpdateAccountPassword(long id, string new_password)
+	{
+	    using (var connection = new MySqlConnection(ConnectionString))
+	    {
+		connection.Open();
+
+		using (var updateAccountCMD = connection.CreateCommand())
+		{
+		    updateAccountCMD.CommandText = $"UPDATE Account SET password = @new_password WHERE id = {id}";
+
+		    updateAccountCMD.Parameters.AddWithValue("@new_password", new_password);
+
+		    bool accountUpdated = (updateAccountCMD.ExecuteNonQuery() != 0);
+
+		    return accountUpdated;
+		}
+	    }
+	}
+
+	/// <summary>
+	/// Update an account's contact details to the given contac details.
+	/// </summary>
+	/// <param name="id">The id of the account to update.</param>
+	/// <param name="new_contact">The new contact details of the account.</param>
+	/// <returns>True if the account was updated, false otherwise.</returns>
+	public static bool UpdateAccountContactDetails(long id, ContactDetails new_contact)
+	{
+	    using (var connection = new MySqlConnection(ConnectionString))
+	    {
+		connection.Open();
+
+		using (var updateAccountCMD = connection.CreateCommand())
+		{
+		    updateAccountCMD.CommandText =
+		    "UPDATE" +
+		    " Account " +
+		    "SET" +
+		    " first_name = @new_firstName, last_name = @new_lastName," +
+		    " county = @new_county, city = @new_city, street = @new_street, postal_code = @new_postalCode," +
+		    " phone_number = @new_phoneNumber " +
+		    "WHERE" +
+		    $" id = {id}";
+
+		    var parameters = updateAccountCMD.Parameters;
+
+		    parameters.AddWithValue("@new_firstName", new_contact.FirstName);
+		    parameters.AddWithValue("@new_lastName", new_contact.LastName);
+
+		    parameters.AddWithValue("@new_county", new_contact.County);
+		    parameters.AddWithValue("@new_city", new_contact.City);
+		    parameters.AddWithValue("@new_street", new_contact.Street);
+		    parameters.AddWithValue("@new_postalCode", new_contact.PostalCode);
+
+		    parameters.AddWithValue("@new_phoneNumber", new_contact.PhoneNumber);
+
+		    bool accountUpdated = (updateAccountCMD.ExecuteNonQuery() != 0);
+
+		    return accountUpdated;
+		}
+	    }
+	}
+
+	/// <summary>
+	/// Deletes an existing account.
+	/// </summary>
+	/// <param name="id">The id of the account to delete.</param>
+	/// <returns>True if the account was deleted, false otherwise.</returns>
+	public static bool DeleteAccount(long id)
+	{
+	    using (var connection = new MySqlConnection(ConnectionString))
+	    {
+		connection.Open();
+
+		using (var deleteAccountCMD = connection.CreateCommand())
+		{
+		    deleteAccountCMD.CommandText = $"DELETE FROM Account WHERE id = {id}";
+
+		    bool accountDeleted = (deleteAccountCMD.ExecuteNonQuery() != 0);
+
+		    return accountDeleted;
 		}
 	    }
 	}

@@ -29,6 +29,7 @@ namespace CulinaireTaxi.Database
 		connection.Open();
 
 		using (var createCompanyTableCMD = connection.CreateCommand())
+		using (var createContractTableCMD = connection.CreateCommand())
 		using (var createAccountTableCMD = connection.CreateCommand())
 		using (var createRatingTableCMD = connection.CreateCommand())
 		using (var createReservationTableCMD = connection.CreateCommand())
@@ -42,6 +43,20 @@ namespace CulinaireTaxi.Database
 		    " name TEXT NOT NULL," +
 		    " description TEXT NOT NULL," +
 		    " PRIMARY KEY (id))";
+
+		    createContractTableCMD.CommandText =
+		    "CREATE TABLE IF NOT EXISTS has_contracted" +
+		    "(client_id BIGINT NOT NULL," +
+		    " contractor_id BIGINT NOT NULL," +
+		    " PRIMARY KEY (client_id, contractor_id)," +
+		    " FOREIGN KEY (client_id)" +
+		    " REFERENCES Company(id)" +
+		    " ON DELETE CASCADE" +
+		    " ON UPDATE CASCADE," +
+		    " FOREIGN KEY (contractor_id)" +
+		    " REFERENCES Company(id)" +
+		    " ON DELETE CASCADE" +
+		    " ON UPDATE CASCADE)";
 
 		    createAccountTableCMD.CommandText =
 		    "CREATE TABLE IF NOT EXISTS Account" +
@@ -100,6 +115,7 @@ namespace CulinaireTaxi.Database
 		    #endregion
 
 		    createCompanyTableCMD.ExecuteNonQuery();
+		    createContractTableCMD.ExecuteNonQuery();
 		    createAccountTableCMD.ExecuteNonQuery();
 		    createRatingTableCMD.ExecuteNonQuery();
 		    createReservationTableCMD.ExecuteNonQuery();
