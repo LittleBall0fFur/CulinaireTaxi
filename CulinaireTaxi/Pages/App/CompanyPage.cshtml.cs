@@ -4,13 +4,24 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using CulinaireTaxi.Extensions;
 
 namespace CulinaireTaxi.Pages
 {
     public class CompanyPageModel : PageModel
     {
-        private DateTime date = DateTime.Today;
+        [BindProperty] public DateTime date { get; set; }
         private readonly DateTime today = DateTime.Today;
+
+        public void OnGet()
+        {
+            date = DateTime.Today;
+        }
+
+        public void SetDate(DateTime _date)
+        {
+            date = _date;
+        }
 
         public void OnPostSub()
         {
@@ -24,12 +35,12 @@ namespace CulinaireTaxi.Pages
 
         public void OnPostToday()
         {
-            date = today;
+            date = date;
         }
 
-        public string GetDate()
+        public DateTime GetDate()
         {
-            return date.ToString("D");
+            return date;
         }
     }
 }

@@ -38,7 +38,7 @@
                 </ul>
             </div>
         </nav>
-
+        
         <div class="container mx-auto mt-5">
             <div class="row">
                 <div class="col text-center">
@@ -62,49 +62,53 @@
                             <div class="calendar_header">
                                 <h5 class="header_copy"> Calendar Plan</h5>
                             </div>
-                            <div class="calendar_plan">
-                                <div class="cl_plan">
-                                    <div class="cl_title" style="padding-left: 30px;"><form method="post"><input type="submit" value="Today" asp-page-handler="Today" asp-route-sessioncount="15" /></form></div>
-                                    <div class="cl_copy" style="padding-left: 45px;">@Model.GetDate()</div>
-                                    <form method="post"><input type="submit" value="<" asp-page-handler="Sub" asp-route-sessioncount="20" style="float:left; margin-left: -25px;"></form>
-                                    <form method="post"><input type="submit" value=">" asp-page-handler="Add" asp-route-sessioncount="10" style="float:right; margin-right: -25px;"></form>
-                                </div>
-                            </div>
-                            <div class="calendar_events">
-                                <p class="ce_title">Upcoming Events</p>
-                                @foreach(Reservation reservation in ReservationTable.RetrieveReservationsFor(UserAgent.Account.CompanyId.Value))
-                                {
-                                    <div class="event_item">
-                                        <div class="ei_Dot dot_active"></div>
-                                        <div class="ei_Title">@reservation.FromDate -  @reservation.TillDate</div>
-                                        <div class="ei_Copy">Name: @AccountTable.RetrieveAccountByID(reservation.CustomerId).Contact.FirstName @AccountTable.RetrieveAccountByID(reservation.CustomerId).Contact.LastName <br /> Amount of people: @reservation.GuestsAmount <br/> Status: @reservation.Status</div>
+                                <div class="calendar_plan">
+                                    <div class="cl_plan">
+                                        <div class="cl_title" style="padding-left: 30px;"><form method="post"><input type="submit" value="Today" asp-page-handler="Today" asp-route-sessioncount="15" /></form></div>
+                                        <div class="cl_copy" style="padding-left: 45px;">@Model.GetDate().ToString("D")</div>
+                                        <form method="post">
+                                            <input asp-for="date" type="hidden" value="@Model.date" required>
+                                            <input type="submit" value="<" asp-page-handler="Sub" style="float:left; margin-left: -25px;" id="submit">
+                                            <input type="submit" value=">" asp-page-handler="Add" style="float:right; margin-right: -25px;" id="submit">
+                                        </form>
                                     </div>
-                                }
-                            </div>
+                                </div>
+                                <div class="calendar_events">
+                                    <p class="ce_title">Upcoming Events</p>
+
+                                    @foreach (Reservation reservation in ReservationTable.RetrieveReservationsFor(UserAgent.Account.CompanyId.Value, Model.GetDate()))
+                                    {
+                                        <div class="event_item">
+                                            <div class="ei_Dot dot_active"></div>
+                                            <div class="ei_Title"><p>@reservation.FromDate.ToString("HH:mm") -  @reservation.TillDate.ToString("HH:mm") </p></div>
+                                            <div class="ei_Copy"><p>Name: @AccountTable.RetrieveAccountByID(reservation.CustomerId).Contact.FirstName @AccountTable.RetrieveAccountByID(reservation.CustomerId).Contact.LastName <br /> Amount of people: @reservation.GuestsAmount <br /> Status: @reservation.Status</p></div>
+                                        </div>
+                                    }
+                                </div>
                         </div>
                         <a href="#" class="btn btn-primary">Go somewhere</a>
                     </div>
-                </div>
             </div>
-            @* SECOND CARD *@
-            <div class="col-sm pb-2">
-                <div class="card shadow bg-secondary">
-                    <div class="card-body">
-                        <a href="#" class="btn btn-primary">Go somewhere</a>
-                    </div>
-                </div>
-            </div>
-            @* THIRD CARD *@
-            <div class="col-sm pb-2">
-                <div class="card shadow bg-secondary">
-                    <div class="card-body">
-                        <h5 class="card-title">Special title treatment</h5>
-                        <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                        <a href="#" class="btn btn-primary">Go somewhere</a>
-                    </div>
+        </div>
+        @* SECOND CARD *@
+        <div class="col-sm pb-2">
+            <div class="card shadow bg-secondary">
+                <div class="card-body">
+                    <a href="#" class="btn btn-primary">Go somewhere</a>
                 </div>
             </div>
         </div>
+        @* THIRD CARD *@
+        <div class="col-sm pb-2">
+            <div class="card shadow bg-secondary">
+                <div class="card-body">
+                    <h5 class="card-title">Special title treatment</h5>
+                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                    <a href="#" class="btn btn-primary">Go somewhere</a>
+                </div>
+            </div>
+        </div>
+    </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
@@ -135,7 +139,7 @@
 
         .cl_plan {
             height: 140px;
-            background-color: #dc3545;
+            background-color: #1da1a3;
             box-shadow: 0px 0px 52px -18px rgba(0, 0, 0, 0.75);
             padding: 30px;
             color: #fff;
@@ -199,12 +203,12 @@
             border-radius: 50%;
             width: 10px;
             height: 10px;
-            background-color: $light_grey;
+            background-color: #1da1a3;
             box-shadow: 0px 0px 52px -18px rgba(0, 0, 0, 0.75);
         }
 
         .dot_active {
-            background-color: #FF8494;
+            background-color: #1da1a3;
         }
 
         .ei_Title {
