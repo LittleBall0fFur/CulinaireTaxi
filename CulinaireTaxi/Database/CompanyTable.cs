@@ -139,6 +139,74 @@ namespace CulinaireTaxi.Database
 	    }
 	}
 
+	/// <summary>
+	/// Updates a company's name.
+	/// </summary>
+	/// <param name="id">The id of the company to update.</param>
+	/// <param name="new_name">The new name of the company.</param>
+	/// <returns>True if the company's name was updated, false otherwise.</returns>
+	public static bool UpdateCompanyName(long id, string new_name)
+	{
+	    using (var connection = new MySqlConnection(ConnectionString))
+	    {
+		connection.Open();
+
+		using (var updateCompanyCMD = connection.CreateCommand())
+		{
+		    updateCompanyCMD.CommandText = $"UPDATE Company SET name = {new_name} WHERE id = {id}";
+
+		    bool companyUpdated = (updateCompanyCMD.ExecuteNonQuery() != 0);
+
+		    return companyUpdated;
+		}
+	    }
+	}
+
+	/// <summary>
+	/// Updates a company's description.
+	/// </summary>
+	/// <param name="id">The id of the company to update.</param>
+	/// <param name="new_description">The new description of the company.</param>
+	/// <returns>True if the company's description was updated, false otherwise.</returns>
+	public static bool UpdateCompanyDescription(long id, string new_description)
+	{
+	    using (var connection = new MySqlConnection(ConnectionString))
+	    {
+		connection.Open();
+
+		using (var updateCompanyCMD = connection.CreateCommand())
+		{
+		    updateCompanyCMD.CommandText = $"UPDATE Company SET description = {new_description} WHERE id = {id}";
+
+		    bool companyUpdated = (updateCompanyCMD.ExecuteNonQuery() != 0);
+
+		    return companyUpdated;
+		}
+	    }
+	}
+
+	/// <summary>
+	/// Deletes an existing company.
+	/// </summary>
+	/// <param name="id">The id of the company to delete.</param>
+	/// <returns>True if the company was deleted, false otherwise.</returns>
+	public static bool DeleteCompany(long id)
+	{
+	    using (var connection = new MySqlConnection(ConnectionString))
+	    {
+		connection.Open();
+
+		using (var deleteReservationCMD = connection.CreateCommand())
+		{
+		    deleteReservationCMD.CommandText = $"DELETE FROM Company WHERE id = {id}";
+
+		    bool reservationDeleted = (deleteReservationCMD.ExecuteNonQuery() != 0);
+
+		    return reservationDeleted;
+		}
+	    }
+	}
+
     }
 
 }
