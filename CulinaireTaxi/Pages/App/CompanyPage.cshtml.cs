@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using CulinaireTaxi.Extensions;
+using CulinaireTaxi.Database.Entities;
 
 namespace CulinaireTaxi.Pages
 {
@@ -12,6 +13,9 @@ namespace CulinaireTaxi.Pages
     {
         [BindProperty] public DateTime date { get; set; }
         private readonly DateTime today = DateTime.Today;
+
+        List<Reservation> reservations = new List<Reservation>();
+        int resID;
 
         public void OnGet()
         {
@@ -35,12 +39,28 @@ namespace CulinaireTaxi.Pages
 
         public void OnPostToday()
         {
-            date = date;
+            date = today;
         }
 
         public DateTime GetDate()
         {
             return date;
+        }
+
+        public Reservation GetReservationByID(int id)
+        {
+            return reservations[id];
+        }
+
+        public void AddReservation(Reservation res)
+        {
+            resID = reservations.Count();
+            reservations.Add(res);
+        }
+
+        public int GetResID()
+        {
+            return resID;
         }
     }
 }
