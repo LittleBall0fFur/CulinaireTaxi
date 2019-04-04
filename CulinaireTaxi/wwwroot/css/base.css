@@ -1,0 +1,17 @@
+﻿@import url('base_colors.css');
+@import url('base_elements.css');
+@import url('base_text.css');
+
+html, body
+{
+    width: 100%;
+    height: 100%;
+}
+
+body
+{
+    background-color: var(--outer-color);
+
+    background-image: url("../images/patterns/dot.png");
+    background-repeat: repeat;
+}

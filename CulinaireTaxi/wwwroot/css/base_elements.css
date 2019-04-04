@@ -1,0 +1,32 @@
+﻿
+.jumbotron-header
+{
+    background-image: radial-gradient(circle at center, transparent, black), url("../images/backgrounds/front_header.jpg");
+
+    background-size: cover;
+    background-repeat: no-repeat;
+
+    box-shadow: 0 0 16px black inset;
+
+    border-radius: 0;
+}
+
+.jumbotron-header .navbar
+{
+    width: 100%;
+
+    position: absolute;
+
+    top: 0;
+    left: 0;
+}
+
+.jumbotron-header .nav-item
+{
+    padding: 0 16px 0 16px;
+}
+
+.jumbotron-header .nav-link
+{
+    color: white;
+}

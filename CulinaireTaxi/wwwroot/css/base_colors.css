@@ -1,0 +1,29 @@
+﻿
+:root
+{
+    --outer-color: #2e190f;
+    --middle-color: #5d3f2f;
+    --inner-color: #1da1a3;
+    --inner-color-translucent: rgba(29, 161, 163, 0.5);
+}
+
+.bg-primary
+{
+    background-color: var(--outer-color) !important;
+}
+
+.btn-primary
+{
+    background-color: var(--inner-color) !important;
+    border-color: var(--inner-color) !important;
+}
+
+.btn-primary:focus, .btn-primary:active
+{
+    box-shadow: 0 0 0 0.2rem var(--inner-color-translucent) !important;
+}
+
+.bg-secondary
+{
+    background-color: var(--middle-color) !important;
+}

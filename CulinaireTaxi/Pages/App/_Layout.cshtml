@@ -1,13 +1,17 @@
-﻿<!DOCTYPE html>
+﻿@{
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>@ViewBag.Title</title>
-</head>
-<body>
-    <div>
-        @RenderBody()
-    </div>
-</body>
-</html>
+@section head_stylesheets {
+    @RenderSection("head_stylesheets", required: false)
+}
+
+@section head_scripts {
+    @RenderSection("head_scripts", required: false)
+}
+
+@RenderBody()
+
+@section body_scripts {
+    @RenderSection("body_scripts", required: false)
+}

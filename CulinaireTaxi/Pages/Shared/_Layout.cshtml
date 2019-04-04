@@ -2,12 +2,24 @@
 
 <html>
 <head>
-    <meta name="viewport" content="width=device-width" />
-    <title>@ViewBag.Title</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+    @RenderSection("head_meta", required: false)
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous" />
+
+    <link rel="stylesheet" href="~/css/base.css" />
+
+    @RenderSection("head_stylesheets", required: false)
+
+    @RenderSection("head_scripts", required: false)
+
+    <title>CulinaireTaxi | @ViewBag.Title</title>
 </head>
 <body>
-    <div>
-        @RenderBody()
-    </div>
+    @RenderBody()
+
+    @RenderSection("body_scripts", required: false)
 </body>
 </html>
