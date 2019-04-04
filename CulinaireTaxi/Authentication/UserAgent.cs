@@ -50,7 +50,7 @@ namespace CulinaireTaxi.Authentication
 	/// <summary>
 	/// Constructs a new UserAgent using a session to identify the current user.
 	/// </summary>
-	/// <param name="session">The current user's session.</param>
+	/// <param name="httpContextAccessor">An HttpContextAccessor from which the session is retrieved.</param>
 	public UserAgent(IHttpContextAccessor httpContextAccessor)
 	{
 	    m_session = httpContextAccessor.HttpContext.Session;
@@ -61,11 +61,13 @@ namespace CulinaireTaxi.Authentication
 	/// <summary>
 	/// Registers an account for the current user on success.
 	/// </summary>
-	/// <param name="email"></param>
-	/// <param name="password"></param>
-	public void Register(string email, string password)
+	/// <param name="accountType">The account type of the account to register.</param>
+	/// <param name="email">The email address of the account to register.</param>
+	/// <param name="password">The password of the account to register.</param>
+	/// <param name="contact">The contact details of the account to register.</param>
+	public void Register(AccountType accountType, string email, string password, ContactDetails contact)
 	{
-	    throw new NotImplementedException();
+	    Account = AccountTable.CreateAccount(accountType, email, password, contact);
 	}
 
 	/// <summary>
