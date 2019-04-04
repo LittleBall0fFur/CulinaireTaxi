@@ -10,14 +10,16 @@ namespace CulinaireTaxi.Extensions
     public static class SessionExtension
     {
 
+	private static readonly JsonSerializerSettings SERIALIZER_SETTINGS = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All };
+
 	/// <summary>
 	/// Set the given key and value in this session.
 	/// </summary>
 	/// <param name="key">The key to set.</param>
 	/// <param name="value">The value to set.</param>
-	public static void SetObject(this ISession session, string key, object value)
+	public static void SetObject(this ISession @this, string key, object value)
 	{
-	    session.SetString(key, JsonConvert.SerializeObject(value));
+	    @this.SetString(key, JsonConvert.SerializeObject(value, SERIALIZER_SETTINGS));
 	}
 
 	/// <summary>
@@ -26,11 +28,11 @@ namespace CulinaireTaxi.Extensions
 	/// <typeparam name="T">The type of the object to get.</typeparam>
 	/// <param name="key"></param>
 	/// <returns>The <typeparamref name="T"/> associated with the given key, if any. Returns the default value of <typeparamref name="T"/> otherwise.</returns>
-	public static T GetObject<T>(this ISession session, string key)
+	public static T GetObject<T>(this ISession @this, string key)
 	{
-	    string value = session.GetString(key);
+	    string value = @this.GetString(key);
 
-	    return (value == null) ? default(T) : JsonConvert.DeserializeObject<T>(value);
+	    return (value == null) ? default(T) : JsonConvert.DeserializeObject<T>(value, SERIALIZER_SETTINGS);
 	}
 
     }

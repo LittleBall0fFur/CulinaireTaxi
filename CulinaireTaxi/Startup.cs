@@ -1,5 +1,6 @@
 using System;
 using CulinaireTaxi.Authentication;
+using CulinaireTaxi.Database;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -11,61 +12,63 @@ namespace CulinaireTaxi
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
+	public Startup(IConfiguration configuration)
+	{
+	    Configuration = configuration;
+	}
 
-        public IConfiguration Configuration { get; }
+	public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
-        {
-            services.Configure<CookiePolicyOptions>(options =>
-            {
-            // This lambda determines whether user consent for non-essential cookies is needed for a given request.
-            options.CheckConsentNeeded = context => true;
-                options.MinimumSameSitePolicy = SameSiteMode.None;
-            });
+	// This method gets called by the runtime. Use this method to add services to the container.
+	public void ConfigureServices(IServiceCollection services)
+	{
+	    services.Configure<CookiePolicyOptions>(options =>
+	    {
+		// This lambda determines whether user consent for non-essential cookies is needed for a given request.
+		options.CheckConsentNeeded = context => true;
+		options.MinimumSameSitePolicy = SameSiteMode.None;
+	    });
 
-            services.AddDistributedMemoryCache();
+	    services.AddDistributedMemoryCache();
 
-            services.AddSession(options =>
-            {
-                options.IdleTimeout = TimeSpan.FromMinutes(120);
-                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-                options.Cookie.HttpOnly = true;
-                options.Cookie.IsEssential = true;
-            });
+	    services.AddSession(options =>
+	    {
+		options.IdleTimeout = TimeSpan.FromMinutes(120);
+		options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+		options.Cookie.HttpOnly = true;
+		options.Cookie.IsEssential = true;
+	    });
 
-            services.AddHttpContextAccessor();
+	    CulinaireTaxiDB.InitializeDatabase("server=84.86.32.123;uid=root;pwd=rootpass;database=culinairetaxi;"/*"server=sql7.freemysqlhosting.net;uid=sql7285675;pwd=ITnJKJJc4r;database=sql7285675"*/);
 
-            services.AddScoped<UserAgent>();
+	    services.AddHttpContextAccessor();
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-        }
+	    services.AddScoped<UserAgent>();
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
-        {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                app.UseExceptionHandler("/Error");
-                app.UseHsts();
-            }
+	    services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+	}
 
-            app.UseHttpsRedirection();
-            app.UseStaticFiles();
-            app.UseSession();
-            app.UseCookiePolicy();
+	// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+	public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+	{
+	    if (env.IsDevelopment())
+	    {
+		app.UseDeveloperExceptionPage();
+	    }
+	    else
+	    {
+		app.UseExceptionHandler("/Error");
+		app.UseHsts();
+	    }
 
-            app.UseStatusCodePagesWithRedirects("/Error/{0}");
+	    app.UseHttpsRedirection();
+	    app.UseStaticFiles();
+	    app.UseSession();
+	    app.UseCookiePolicy();
 
-            app.UseMvc();
-        }
+	    app.UseStatusCodePagesWithRedirects("/Error/{0}");
+
+	    app.UseMvc();
+	}
     }
 }

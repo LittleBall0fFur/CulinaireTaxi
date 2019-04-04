@@ -1,7 +1,8 @@
-﻿using CulinaireTaxi.Extensions;
+﻿using CulinaireTaxi.Database;
+using CulinaireTaxi.Database.Entities;
+using CulinaireTaxi.Extensions;
 using Microsoft.AspNetCore.Http;
 using System;
-using Account = System.String;
 
 namespace CulinaireTaxi.Authentication
 {
@@ -15,6 +16,8 @@ namespace CulinaireTaxi.Authentication
 	private const string ACCOUNT_KEY = "UserAgent_Account";
 
 	private ISession m_session;
+
+	private Account m_account;
 
 	/// <summary>
 	/// Indicates whether the current user is logged in.
@@ -34,12 +37,13 @@ namespace CulinaireTaxi.Authentication
 	{
 	    get
 	    {
-		return m_session.GetObject<Account>(ACCOUNT_KEY);
+		return m_account;
 	    }
 
 	    private set
 	    {
-		m_session.SetObject(ACCOUNT_KEY, value);
+		m_account = value;
+		m_session.SetObject(ACCOUNT_KEY, m_account);
 	    }
 	}
 
@@ -50,6 +54,8 @@ namespace CulinaireTaxi.Authentication
 	public UserAgent(IHttpContextAccessor httpContextAccessor)
 	{
 	    m_session = httpContextAccessor.HttpContext.Session;
+
+	    Account = m_session.GetObject<Account>(ACCOUNT_KEY);
 	}
 
 	/// <summary>
@@ -69,7 +75,12 @@ namespace CulinaireTaxi.Authentication
 	/// <param name="password">The password of a registered account.</param>
 	public void Login(string email, string password)
 	{
-	    throw new NotImplementedException();
+	    Account account = AccountTable.RetrieveAccount(email);
+
+	    if (account?.Password == password)
+	    {
+		Account = account;
+	    }
 	}
 
 	/// <summary>

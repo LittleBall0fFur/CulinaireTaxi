@@ -8,23 +8,39 @@ body
 
 .bg-primary
 {
-    background-color: #47221B !important;
+    background-color: #2e190f !important;
 }
 
 .bg-secondary
 {
-    background-color: #6B4037 !important;
+    background-color: #5d3f2f !important;
 }
 
-.btn-primary
+h5
 {
-    background-color: #8E5E58 !important;
-    border-color: #8E5E58 !important;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.08);
+    padding: 5px;
+    color: #ccb7ae;
+}
+
+p
+{
+    color: #d6cfcb;
+    font-size: 15px;
+}
+
+#time{
+    font-size: 20px;
+}
+
+.btn-primary {
+    background-color: #1da1a3 !important;
+    border-color: #1da1a3 !important;
 }
 
 .btn-primary:focus, .btn-primary:active
 {
-    box-shadow: 0 0 0 0.2rem rgba(142, 94, 88, 0.5) !important;
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.5) !important;
 }
 
 .jumbotron

@@ -39,7 +39,7 @@ namespace CulinaireTaxi.Pages
 	{
 	    if (ModelState.IsValid)
 	    {
-
+		UserAgent.Login(Email, Password);
 	    }
 	}
 
