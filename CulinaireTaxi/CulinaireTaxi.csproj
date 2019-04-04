@@ -13,8 +13,4 @@
     <PackageReference Include="Stripe.net" Version="25.1.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="wwwroot\js\" />
-  </ItemGroup>
-
 </Project>
