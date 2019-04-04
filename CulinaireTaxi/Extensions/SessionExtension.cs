@@ -5,7 +5,7 @@ namespace CulinaireTaxi.Extensions
 {
 
     /// <summary>
-    /// Adds additional methods to ISession.
+    /// Adds additional methods to <see cref="ISession"/>.
     /// </summary>
     public static class SessionExtension
     {
