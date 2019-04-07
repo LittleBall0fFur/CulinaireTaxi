@@ -1,5 +1,4 @@
 ﻿using MySql.Data.MySqlClient;
-using System.Collections.Generic;
 
 namespace CulinaireTaxi.Database
 {
@@ -42,6 +41,8 @@ namespace CulinaireTaxi.Database
 		    " type TINYINT NOT NULL," +
 		    " name TEXT NOT NULL," +
 		    " description TEXT NOT NULL," +
+		    " latitude DOUBLE NOT NULL," +
+		    " longitude DOUBLE NOT NULL," +
 		    " PRIMARY KEY (id))";
 
 		    createContractTableCMD.CommandText =
@@ -119,63 +120,6 @@ namespace CulinaireTaxi.Database
 		    createAccountTableCMD.ExecuteNonQuery();
 		    createRatingTableCMD.ExecuteNonQuery();
 		    createReservationTableCMD.ExecuteNonQuery();
-		}
-	    }
-	}
-
-	/// <summary>
-	/// Executes the specified MySQL command using the given parameters.
-	/// </summary>
-	/// <param name="commandText">The text of the command to execute.</param>
-	/// <param name="parameters">A list of parameters.</param>
-	/// <returns>The number of rows affected.</returns>
-	public static int ExecuteNonQuery(string commandText, MySqlParameter[] parameters)
-	{
-	    using (var connection = new MySqlConnection(ConnectionString))
-	    {
-		connection.Open();
-
-		using (var command = connection.CreateCommand())
-		{
-		    command.CommandText = commandText;
-		    command.Parameters.AddRange(parameters);
-
-		    return command.ExecuteNonQuery();
-		}
-	    }
-	}
-
-	/// <summary>
-	/// Executes the specified MySQL command using the given parameters.
-	/// </summary>
-	/// <param name="commandText">The text of the command to execute.</param>
-	/// <param name="parameters">A list of parameters.</param>
-	/// <returns>A list containing the rows retrieved by the command.</returns>
-	public static List<object[]> ExecuteQuery(string commandText, MySqlParameter[] parameters)
-	{
-	    using (var connection = new MySqlConnection(ConnectionString))
-	    {
-		connection.Open();
-
-		using (var command = connection.CreateCommand())
-		{
-		    command.CommandText = commandText;
-		    command.Parameters.AddRange(parameters);
-
-		    using (var reader = command.ExecuteReader())
-		    {
-			List<object[]> results = new List<object[]>();
-
-			while (reader.Read())
-			{
-			    object[] result = new object[reader.FieldCount];
-			    reader.GetValues(result);
-
-			    results.Add(result);
-			}
-
-			return results;
-		    }
 		}
 	    }
 	}
