@@ -30,8 +30,8 @@ namespace CulinaireTaxi.Database
 		{
 		    createReservationCMD.CommandText =
 		     "INSERT IGNORE INTO Reservation" +
-		     " (customer_id, company_id, from_date, till_date, guests_amount)" +
-		     " VALUES" +
+		     " (customer_id, company_id, from_date, till_date, guests_amount) " +
+		     "VALUES" +
 		    $" ({customerId}, {companyId}, '{fromDate.ToMySqlFormat()}', '{tillDate.ToMySqlFormat()}', {guestsAmount})";
 
 		    bool success = (createReservationCMD.ExecuteNonQuery() != 0);

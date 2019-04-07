@@ -28,8 +28,8 @@ namespace CulinaireTaxi.Database
 		{
 		    createAccountCMD.CommandText =
 		    "INSERT IGNORE INTO Account" +
-		    " (type, email, password, first_name, last_name, county, city, street, postal_code, phone_number, company_id)" +
-		    " VALUES" +
+		    " (type, email, password, first_name, last_name, county, city, street, postal_code, phone_number, company_id) " +
+		    "VALUES" +
 		    " (@accountType, @email, @password, @firstName, @lastName, @county, @city, @street, @postalCode, @phoneNumber, @companyId)";
 
 		    var parameters = createAccountCMD.Parameters;
