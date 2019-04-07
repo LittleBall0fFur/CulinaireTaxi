@@ -4,6 +4,7 @@
     Layout = "~/Pages/App/_Layout.cshtml";
 
     ViewBag.Title = "Order";
+
 }
 
 @section head_stylesheets {
@@ -17,7 +18,16 @@
     <script type="text/javascript" charset="utf-8" src="https://js.api.here.com/v3/3.0/mapsjs-mapevents.js"></script>
 }
 
-<div style="width: 100%; height:30%;" id="map"></div>
+<div style="width: 60%; height:60%;" id="map">
+    @{
+        List<Company> companies = CompanyTable.RetrieveCompaniesOfType(0);
+
+        for (int i = 0; i < companies.Count; i++)
+        {
+            @:<b>@companies[i].Latitude</b>
+        }
+    }
+</div>
 
 <form method="post">
     <input type="hidden" name="location" />
@@ -25,4 +35,17 @@
 
 @section body_scripts {
     <script src="~/js/Map.js"></script>
+    <script>
+        @{
+           // List< Company> companies = CompanyTable.RetrieveCompaniesOfType(0);
+           @:var comp = {};
+            for (int i = 0; i < companies.Count; i++)
+            {
+                @:comp['x'] = @companies[i].Latitude;
+                @:comp['y'] = @companies[i].Longtitude;
+                @:CreateDestinationMarker(comp);
+                @:console.log(comp);
+            }
+            }
+    </script>
 }

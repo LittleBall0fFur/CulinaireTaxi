@@ -6,6 +6,18 @@ var platform = new H.service.Platform({
     'app_code': 'jTvw0t1CFTzdvxpKytXhIw',
     'useHTTPS': true
 });
+
+var restaurants = [];
+
+function AddRestaurant(id, name, x, y) {
+    var restaurant = {};
+    restaurant['id'] = id;
+    restaurant['name'] = name;
+    restaurant['latitude'] = x;
+    restaurant['longtitude'] = y;
+    restaurants.addObject();
+}
+
 var defaultLayers = platform.createDefaultLayers();
 var x = 52.5;
 var y = 13.4;
@@ -34,7 +46,6 @@ var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
 var ui = H.ui.UI.createDefault(map, defaultLayers);
 //Setup markers
 CreateHomeMarker();
-CreateDestinationMarker();
 var homeIcon = new H.map.Icon(house);
 function CreateHomeMarker() {
     homeMarker = new H.map.Marker({ lat: 42.35805, lng: -71.0636 }, { icon: homeIcon });
@@ -61,9 +72,13 @@ function CreateHomeMarker() {
         }
     }, false);
 }
+
 var wineGlassIcon = new H.map.Icon(wineglass);
-function CreateDestinationMarker() {
-    destinationMarker = new H.map.Marker({ lat: 42.35805, lng: -71.0636 }, { icon: wineGlassIcon });
+
+function CreateDestinationMarker(restaurant) {
+
+    destinationMarker = new H.map.Marker({ lat: restaurant.x, lng: restaurant.y });
+    console.log(destinationMarker);
     destinationMarker.draggable = true;
     map.addObject(destinationMarker);
     map.addEventListener('dragstart', function (ev) {
@@ -83,7 +98,6 @@ function CreateDestinationMarker() {
         pointer = ev.currentPointer;
         if (target instanceof mapsjs.map.Marker) {
             target.setPosition(map.screenToGeo(pointer.viewportX, pointer.viewportY));
-            console.log(target);
         }
     }, false);
 }
