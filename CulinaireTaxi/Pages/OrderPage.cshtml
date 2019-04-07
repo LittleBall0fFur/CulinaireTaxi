@@ -20,7 +20,7 @@
 
 <div style="width: 60%; height:60%;" id="map">
     @{
-        List<Company> companies = CompanyTable.RetrieveCompaniesOfType(0);
+        List<Company> companies = CompanyTable.RetrieveCompaniesOfType(CompanyType.RESTAURANT);
 
         for (int i = 0; i < companies.Count; i++)
         {
@@ -42,7 +42,7 @@
             for (int i = 0; i < companies.Count; i++)
             {
                 @:comp['x'] = @companies[i].Latitude;
-                @:comp['y'] = @companies[i].Longtitude;
+                @:comp['y'] = @companies[i].Longitude;
                 @:CreateDestinationMarker(comp);
                 @:console.log(comp);
             }
