@@ -56,6 +56,44 @@ namespace CulinaireTaxi.Pages
             set;
         }
 
+        // reseveer
+        [BindProperty, Required]
+        public long restaurant
+        {
+            get;
+            set;
+        }
+        [BindProperty, Required]
+        public string fromdate
+        {
+            get;
+            set;
+        }
+        [BindProperty, Required]
+        public string fromtime
+        {
+            get;
+            set;
+        }
+        [BindProperty, Required]
+        public string tilldate
+        {
+            get;
+            set;
+        }
+        [BindProperty, Required]
+        public string tilltime
+        {
+            get;
+            set;
+        }
+        [BindProperty, Required]
+        public int guestsamount
+        {
+            get;
+            set;
+        }
+
         public void OnPost()
         {
             if (!_user.IsAuthenticated) {
@@ -70,8 +108,8 @@ namespace CulinaireTaxi.Pages
                 contact.PostalCode = postalcode;
                 contact.PhoneNumber = phonenumber;
                 AccountTable.UpdateAccountContactDetails(_user.Account.Id, contact);
-            } else if (form_id == "1") {
-
+            } else if (form_id == "1" && ModelState.IsValid) {
+                ReservationTable.CreateReservation(_user.Account.Id, restaurant, DateTime.Parse(fromdate + " " + fromtime), DateTime.Parse(tilldate + " " + tilltime), guestsamount);
             }
         }
     }
