@@ -40,6 +40,7 @@ namespace CulinaireTaxi
 	    });
 
 	    CulinaireTaxiDB.InitializeDatabase("server=84.86.32.123;uid=dev_root;pwd=StupidAfricansTryingToHackIntoMyDatabaseShouldBeStopped_XD;database=culinairetaxi;"/*"server=sql7.freemysqlhosting.net;uid=sql7285675;pwd=ITnJKJJc4r;database=sql7285675"*/);
+        //CulinaireTaxiDB.InitializeDatabase("server=127.0.0.1;uid=root;pwd=root;database=testing_database;"/*"server=sql7.freemysqlhosting.net;uid=sql7285675;pwd=ITnJKJJc4r;database=sql7285675"*/);
 
 	    services.AddHttpContextAccessor();
 

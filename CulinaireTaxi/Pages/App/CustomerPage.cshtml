@@ -1,8 +1,7 @@
 ﻿@page
-@model CompanyPageModel
+@model CustomerPageModel
 @{
-    var company = CompanyTable.RetrieveCompany(UserAgent.Account.CompanyId.Value);
-    var companyName = company.Name;
+    var user = UserAgent.Account;
 }
 <!DOCTYPE HTML>
 
@@ -17,7 +16,7 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prefixfree/1.0.7/prefixfree.min.js"></script>
 
-    <title>CulinaireTaxi | @companyName</title>
+    <title>CulinaireTaxi</title>
 </head>
 <body class="bg-primary">
 
@@ -42,7 +41,7 @@
         <div class="container mx-auto mt-5">
             <div class="row">
                 <div class="col text-center">
-                    <h1 class="branding">Welcome @companyName</h1>
+                    <h1 class="branding">Welcome @user.Contact.FullName</h1>
                     <p class="display-5">"Lorem Ipsum"</p>
                     <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
                     <button class="btn btn-primary" type="button" onclick="alert('Why you no listen (ಥ﹏ಥ)')">DO NOT CLICK</button>
@@ -54,7 +53,7 @@
     @* MAIN CONTENT *@
     <div class="container">
         <div class="row">
-            @* FIRST CARD *@
+            @* CALANDER CARD *@
             <div class="col-sm pb-2">
                 <div class="card shadow bg-secondary">
                     <div class="card-body">
@@ -70,40 +69,91 @@
                                     <form method="post"><input type="submit" value=">" asp-page-handler="Add" asp-route-sessioncount="10" style="float:right; margin-right: -25px;"></form>
                                 </div>
                             </div>
-                            <div class="calendar_events">
-                                <p class="ce_title">Upcoming Events</p>
-                                <div class="event_item">
-                                    <div class="ei_Dot dot_active"></div>
-                                    <div class="ei_Title">10:30 am</div>
-                                    <div class="ei_Copy">Monday briefing with the team</div>
-                                </div>
-                                <div class="event_item">
-                                    <div class="ei_Dot"></div>
-                                    <div class="ei_Title">12:00 pm</div>
-                                    <div class="ei_Copy">Lunch for with the besties</div>
-                                </div>
-                                <div class="event_item">
-                                    <div class="ei_Dot"></div>
-                                    <div class="ei_Title">13:00 pm</div>
-                                    <div class="ei_Copy">Meet with the client for final design <br></div>
-                                </div>
-                                <div class="event_item">
-                                    <div class="ei_Dot"></div>
-                                    <div class="ei_Title">14:30 am</div>
-                                    <div class="ei_Copy">Plan event night to inspire students</div>
-                                </div>
-                                <div class="event_item">
-                                    <div class="ei_Dot"></div>
-                                    <div class="ei_Title">15:30 am</div>
-                                    <div class="ei_Copy">Add some more events to the calendar</div>
-                                </div>
-                            </div>
                         </div>
                         <a href="#" class="btn btn-primary">Go somewhere</a>
                     </div>
                 </div>
             </div>
-            @* SECOND CARD *@
+            @* ACCOUNT DETAIL CARD *@
+            <div class="col-sm pb-4">
+                <div class="card shadow bg-secondary">
+                    <div class="card-body">
+                        <div class="accountdetails">
+                            <h5 class="card-title">Account Details</h5>
+
+                            @{
+                                if (user.Contact.MissingData())
+                                {
+                                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                        <strong>Oh snap!</strong> Vergeet niet alle contact gegevens in te vullen om goed berijkbaar te blijven.
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                }
+                            }
+
+                            @*fullname*@
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="">Full Name</span>
+                                </div>
+                                <input type="text" style="margin:0px;" class="form-control" value="@user.Contact.FullName" readonly>
+                            </div>
+                            @*email*@
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="">Email</span>
+                                </div>
+                                <input type="text" style="margin:0px;" class="form-control" value="@user.Email" readonly>
+                            </div>
+                            <form method="post">
+                                <input type="hidden" name="form_id" value="0"/>
+                                @*County*@
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="">County</span>
+                                    </div>
+                                    <input type="text" name="county" style="margin:0px;" class="form-control" placeholder="Groningen" value="@user.Contact.County">
+                                </div>
+                                @*City*@
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="">City</span>
+                                    </div>
+                                    <input type="text" name="city" style="margin:0px;" class="form-control" placeholder="Groningen" value="@user.Contact.City">
+                                </div>
+                                @*Streetname*@
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="">Street</span>
+                                    </div>
+                                    <input type="text" name="streetname" style="margin:0px;" class="form-control" placeholder="Herestraat 12" value="@user.Contact.Street">
+                                </div>
+                                @*PostalCode*@
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="">Postal Code</span>
+                                    </div>
+                                    <input type="text" name="postalcode" style="margin:0px;" class="form-control" placeholder="9711 LJ" value="@user.Contact.PostalCode">
+                                </div>
+                                @*PhoneNumber*@
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="">Phone Number</span>
+                                    </div>
+                                    <input type="text" name="phonenumber" style="margin:0px;" class="form-control" placeholder="0622334455" value="@user.Contact.PhoneNumber">
+                                </div>
+                                <button type="submit" class="btn btn-success">Save Details</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            @* FIRST CARD *@
             <div class="col-sm pb-2">
                 <div class="card shadow bg-secondary">
                     <div class="card-body">
@@ -111,17 +161,16 @@
                     </div>
                 </div>
             </div>
-            @* THIRD CARD *@
-            <div class="col-sm pb-2">
+            @* SECOND CARD *@
+            <div class="col-sm pb-4">
                 <div class="card shadow bg-secondary">
                     <div class="card-body">
-                        <h5 class="card-title">Special title treatment</h5>
-                        <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
                         <a href="#" class="btn btn-primary">Go somewhere</a>
                     </div>
                 </div>
             </div>
         </div>
+
     </div>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
@@ -139,6 +188,14 @@
 
         .calendar {
             width: 370px;
+        }
+
+        .accountdetails {
+            margin: 20px;
+            padding: 5px;
+        }
+
+        .accountdetails_header {
         }
 
         .header_copy {
