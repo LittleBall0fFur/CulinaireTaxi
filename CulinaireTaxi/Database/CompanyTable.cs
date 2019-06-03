@@ -16,8 +16,8 @@ namespace CulinaireTaxi.Database
         /// <param name="companyType">The type of the company.</param>
         /// <param name="name">The name of the company.</param>
         /// <param name="description">The description of the company.</param>
-	/// <param name="latitude">The latitude of the company's location.</param>
-	/// <param name="longitude">The longitude of the company's location.</param>
+        /// <param name="latitude">The latitude of the company's location.</param>
+        /// <param name="longitude">The longitude of the company's location.</param>
         /// <returns>The newly created company on success, null otherwise (i.e. a conflicting company exists).</returns>
         public static Company CreateCompany(CompanyType companyType, string name, string description, double latitude, double longitude)
         {
@@ -29,7 +29,7 @@ namespace CulinaireTaxi.Database
                 {
                     createCompanyCMD.CommandText =
                     "INSERT IGNORE INTO Company" +
-		    " (type, name, description, latitude, longitude) " +
+            " (type, name, description, latitude, longitude) " +
                     "VALUES" +
                     " (@companyType, @name, @description, @latitude, @longitude)";
 
@@ -38,8 +38,8 @@ namespace CulinaireTaxi.Database
                     parameters.AddWithValue("@companyType", (byte)companyType);
                     parameters.AddWithValue("@name", name);
                     parameters.AddWithValue("@description", description);
-		    parameters.AddWithValue("@latitude", latitude);
-		    parameters.AddWithValue("@longitude", longitude);
+                    parameters.AddWithValue("@latitude", latitude);
+                    parameters.AddWithValue("@longitude", longitude);
 
                     bool success = (createCompanyCMD.ExecuteNonQuery() != 0);
 
@@ -54,8 +54,8 @@ namespace CulinaireTaxi.Database
                         company.Name = name;
                         company.Description = description;
 
-			company.Latitude = latitude;
-			company.Longitude = longitude;
+                        company.Latitude = latitude;
+                        company.Longitude = longitude;
 
                         return company;
                     }
@@ -95,8 +95,8 @@ namespace CulinaireTaxi.Database
                             company.Name = reader.GetString(1);
                             company.Description = reader.GetString(2);
 
-			    company.Latitude = reader.GetDouble(3);
-			    company.Longitude = reader.GetDouble(4);
+                            company.Latitude = reader.GetDouble(3);
+                            company.Longitude = reader.GetDouble(4);
 
                             return company;
                         }
@@ -140,8 +140,8 @@ namespace CulinaireTaxi.Database
                             company.Name = reader.GetString(2);
                             company.Description = reader.GetString(3);
 
-			    company.Latitude = reader.GetDouble(4);
-			    company.Longitude = reader.GetDouble(5);
+                            company.Latitude = reader.GetDouble(4);
+                            company.Longitude = reader.GetDouble(5);
 
                             companies.Add(company);
                         }
@@ -240,29 +240,29 @@ namespace CulinaireTaxi.Database
             }
         }
 
-	/// <summary>
-	/// Updates a company's location.
-	/// </summary>
-	/// <param name="id">The id of the company to update.</param>
-	/// <param name="latitude">The latitude of the company's new location.</param>
-	/// <param name="longitude">The longitude of the company's new location.</param>
-	/// <returns>True if the company's location was updated, false otherwise.</returns>
-	public static bool UpdateCompanyLocation(long id, double latitude, double longitude)
-	{
-	    using (var connection = new MySqlConnection(ConnectionString))
-	    {
-		connection.Open();
+        /// <summary>
+        /// Updates a company's location.
+        /// </summary>
+        /// <param name="id">The id of the company to update.</param>
+        /// <param name="latitude">The latitude of the company's new location.</param>
+        /// <param name="longitude">The longitude of the company's new location.</param>
+        /// <returns>True if the company's location was updated, false otherwise.</returns>
+        public static bool UpdateCompanyLocation(long id, double latitude, double longitude)
+        {
+            using (var connection = new MySqlConnection(ConnectionString))
+            {
+                connection.Open();
 
-		using (var updateCompanyCMD = connection.CreateCommand())
-		{
-		    updateCompanyCMD.CommandText = $"UPDATE Company SET latitude = {latitude}, longitude = {longitude} WHERE id = {id}";
+                using (var updateCompanyCMD = connection.CreateCommand())
+                {
+                    updateCompanyCMD.CommandText = $"UPDATE Company SET latitude = {latitude}, longitude = {longitude} WHERE id = {id}";
 
-		    bool companyUpdated = (updateCompanyCMD.ExecuteNonQuery() != 0);
+                    bool companyUpdated = (updateCompanyCMD.ExecuteNonQuery() != 0);
 
-		    return companyUpdated;
-		}
-	    }
-	}
+                    return companyUpdated;
+                }
+            }
+        }
 
         /// <summary>
         /// Deletes an existing company.

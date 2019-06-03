@@ -11,86 +11,86 @@ namespace CulinaireTaxi.Pages
 
     public class RegisterModel : PageModel
     {
-        
-	public UserAgent UserAgent
-	{
-	    get;
-	    private set;
-	}
 
-	[BindProperty, EmailAddress, Required]
-	public string Email
-	{
-	    get;
-	    set;
-	}
+        public UserAgent UserAgent
+        {
+            get;
+            private set;
+        }
 
-	[BindProperty, EmailAddress, Required]
-	public string ConfirmEmail
-	{
-	    get;
-	    set;
-	}
+        [BindProperty, EmailAddress, Required]
+        public string Email
+        {
+            get;
+            set;
+        }
 
-	[BindProperty, Required]
-	public string FirstName
-	{
-	    get;
-	    set;
-	}
+        [BindProperty, EmailAddress, Required]
+        public string ConfirmEmail
+        {
+            get;
+            set;
+        }
 
-	[BindProperty, Required]
-	public string LastName
-	{
-	    get;
-	    set;
-	}
+        [BindProperty, Required]
+        public string FirstName
+        {
+            get;
+            set;
+        }
 
-	[BindProperty, Password, Required]
-	public string Password
-	{
-	    get;
-	    set;
-	}
+        [BindProperty, Required]
+        public string LastName
+        {
+            get;
+            set;
+        }
 
-	[BindProperty, Password, Required]
-	public string ConfirmPassword
-	{
-	    get;
-	    set;
-	}
+        [BindProperty, Password, Required]
+        public string Password
+        {
+            get;
+            set;
+        }
 
-	public RegisterModel(UserAgent userAgent)
-	{
-	    UserAgent = userAgent;
-	}
+        [BindProperty, Password, Required]
+        public string ConfirmPassword
+        {
+            get;
+            set;
+        }
 
-	public void OnPost()
-	{
-	    ValidateEquality(ConfirmEmail, Email, nameof(ConfirmEmail), "De email adressen komen niet met elkaar overeen!");
-	    ValidateEquality(ConfirmPassword, Password, nameof(ConfirmPassword), "De wachtwoorden komen niet met elkaar overeen!");
+        public RegisterModel(UserAgent userAgent)
+        {
+            UserAgent = userAgent;
+        }
 
-	    if (ModelState.IsValid)
-	    {
-		UserAgent.Register(AccountType.CUSTOMER, Email, Password, new ContactDetails { FirstName = FirstName, LastName = LastName });
-	    }
-	}
+        public void OnPost()
+        {
+            ValidateEquality(ConfirmEmail, Email, nameof(ConfirmEmail), "De email adressen komen niet met elkaar overeen!");
+            ValidateEquality(ConfirmPassword, Password, nameof(ConfirmPassword), "De wachtwoorden komen niet met elkaar overeen!");
 
-	/// <summary>
-	/// Validates whether the values of two properties are equal to eachother. This method was added since <see cref="System.ComponentModel.DataAnnotations.CompareAttribute"/> doesn't work as expected.
-	/// Should the validation fail, the given error message will be added to the validation summary and <c>ModelState.IsValid</c> shall return false.
-	/// </summary>
-	/// <param name="property">The value of the property being compared.</param>
-	/// <param name="otherProperty">The value of the property to which the property being compared should be equal.</param>
-	/// <param name="propertyName">The name of the property being compared.</param>
-	/// <param name="ErrorMessage">The error message to add to the validation summary when the given values are not equal.</param>
-	public void ValidateEquality(IComparable property, IComparable otherProperty, string propertyName, string ErrorMessage)
-	{
-	    if (property.CompareTo(otherProperty) != 0)
-	    {
-		ModelState.AddModelError(propertyName, ErrorMessage);
-	    }
-	}
+            if (ModelState.IsValid)
+            {
+                UserAgent.Register(AccountType.CUSTOMER, Email, Password, new ContactDetails { FirstName = FirstName, LastName = LastName });
+            }
+        }
+
+        /// <summary>
+        /// Validates whether the values of two properties are equal to eachother. This method was added since <see cref="System.ComponentModel.DataAnnotations.CompareAttribute"/> doesn't work as expected.
+        /// Should the validation fail, the given error message will be added to the validation summary and <c>ModelState.IsValid</c> shall return false.
+        /// </summary>
+        /// <param name="property">The value of the property being compared.</param>
+        /// <param name="otherProperty">The value of the property to which the property being compared should be equal.</param>
+        /// <param name="propertyName">The name of the property being compared.</param>
+        /// <param name="ErrorMessage">The error message to add to the validation summary when the given values are not equal.</param>
+        public void ValidateEquality(IComparable property, IComparable otherProperty, string propertyName, string ErrorMessage)
+        {
+            if (property.CompareTo(otherProperty) != 0)
+            {
+                ModelState.AddModelError(propertyName, ErrorMessage);
+            }
+        }
 
     }
 
