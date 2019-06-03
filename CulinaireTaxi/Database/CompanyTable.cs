@@ -29,7 +29,7 @@ namespace CulinaireTaxi.Database
                 {
                     createCompanyCMD.CommandText =
                     "INSERT IGNORE INTO Company" +
-            " (type, name, description, latitude, longitude) " +
+                    " (type, name, description, latitude, longitude) " +
                     "VALUES" +
                     " (@companyType, @name, @description, @latitude, @longitude)";
 
