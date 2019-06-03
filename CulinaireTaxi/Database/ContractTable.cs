@@ -126,7 +126,7 @@ namespace CulinaireTaxi.Database
 
                 using (var deleteContractCMD = connection.CreateCommand())
                 {
-                    deleteContractCMD.CommandText = $"DELETE FROM Contract WHERE client_id = {clientId} AND contractor_id = {contractorId}";
+                    deleteContractCMD.CommandText = $"DELETE FROM has_contracted WHERE client_id = {clientId} AND contractor_id = {contractorId}";
 
                     bool contractDeleted = (deleteContractCMD.ExecuteNonQuery() != 0);
 

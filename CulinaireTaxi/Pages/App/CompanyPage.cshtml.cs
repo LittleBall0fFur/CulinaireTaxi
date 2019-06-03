@@ -6,45 +6,128 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using CulinaireTaxi.Extensions;
 using CulinaireTaxi.Database.Entities;
+using System.ComponentModel.DataAnnotations;
+using CulinaireTaxi.Database;
+using CulinaireTaxi.Authentication;
 
 namespace CulinaireTaxi.Pages
 {
+
     public class CompanyPageModel : PageModel
     {
-        [BindProperty] public DateTime date { get; set; }
-        private readonly DateTime today = DateTime.Today;
+
+        public const string POSTID_CALENDAR_BACKWARDS = "sub_date";
+        public const string POSTID_CALENDAR_TODAY = "today_date";
+        public const string POSTID_CALENDAR_FORWARDS = "add_date";
+
+        public const string POSTID_CONTRACTORS_ADD = "add_contractor";
+        public const string POSTID_CONTRACTORS_REMOVE = "remove_contractor";
+
+        public UserAgent UserAgent
+        {
+            get;
+            set;
+        }
+
+        [BindProperty]
+        [Required]
+        public string PostID
+        {
+            get;
+            set;
+        }
+
+        [BindProperty]
+        public DateTime Date
+        {
+            get;
+            set;
+        }
+
+        [BindProperty]
+        public long ContractorID
+        {
+            get;
+            set;
+        }
+
+        private readonly DateTime TODAY = DateTime.Today;
 
         List<Reservation> reservations = new List<Reservation>();
         int resID;
 
-        public void OnGet()
+        public CompanyPageModel(UserAgent userAgent)
         {
-            date = DateTime.Today;
+            UserAgent = userAgent;
+
+            Date = DateTime.Today;
         }
 
-        public void SetDate(DateTime _date)
+        public void OnPost()
         {
-            date = _date;
-        }
+            if (!ModelState.IsValid)
+            {
+                return;
+            }
 
-        public void OnPostSub()
-        {
-            date = date.AddDays(-1);
-        }
+            switch (PostID)
+            {
+                case POSTID_CALENDAR_BACKWARDS:
+                    POST_CalendarBackwards();
+                    break;
 
-        public void OnPostAdd()
-        {
-            date = date.AddDays(1);
-        }
+                case POSTID_CALENDAR_TODAY:
+                    POST_CalendarToday();
+                    break;
 
-        public void OnPostToday()
-        {
-            date = today;
+                case POSTID_CALENDAR_FORWARDS:
+                    POST_CalendarForwards();
+                    break;
+
+                case POSTID_CONTRACTORS_ADD:
+                    POST_ContractorsAdd();
+                    break;
+
+                case POSTID_CONTRACTORS_REMOVE:
+                    POST_ContractorsRemove();
+                    break;
+
+            }
         }
 
         public DateTime GetDate()
         {
-            return date;
+            return Date;
+        }
+
+        public void SetDate(DateTime _date)
+        {
+            Date = _date;
+        }
+
+        private void POST_CalendarBackwards()
+        {
+            Date = Date.AddDays(-1);
+        }
+
+        private void POST_CalendarForwards()
+        {
+            Date = Date.AddDays(1);
+        }
+
+        private void POST_CalendarToday()
+        {
+            Date = TODAY;
+        }
+
+        private void POST_ContractorsAdd()
+        {
+            ContractTable.CreateContract(UserAgent.Account.CompanyId.Value, ContractorID);
+        }
+
+        private void POST_ContractorsRemove()
+        {
+            ContractTable.DeleteContract(UserAgent.Account.CompanyId.Value, ContractorID);
         }
 
         public Reservation GetReservationByID(int id)
@@ -62,5 +145,7 @@ namespace CulinaireTaxi.Pages
         {
             return resID;
         }
+
     }
+
 }
