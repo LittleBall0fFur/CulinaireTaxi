@@ -22,6 +22,14 @@ namespace CulinaireTaxi.Pages
 
         public const string POSTID_CONTRACTORS_ADD = "add_contractor";
         public const string POSTID_CONTRACTORS_REMOVE = "remove_contractor";
+        public const string POSTID_DECLINE_RESERVATION = "delete_reservation";
+        public const string POSTID_CONFIRM_RESERVATION = "confirm_reservation";
+
+        public long ResID
+        {
+            get;
+            set;
+        }
 
         public UserAgent UserAgent
         {
@@ -91,6 +99,12 @@ namespace CulinaireTaxi.Pages
                 case POSTID_CONTRACTORS_REMOVE:
                     POST_ContractorsRemove();
                     break;
+                case POSTID_DECLINE_RESERVATION:
+                    POST_Delete_Reservation();
+                    break;
+                case POSTID_CONFIRM_RESERVATION:
+                    POST_Confirm_Reservation();
+                    break;
 
             }
         }
@@ -128,6 +142,16 @@ namespace CulinaireTaxi.Pages
         private void POST_ContractorsRemove()
         {
             ContractTable.DeleteContract(UserAgent.Account.CompanyId.Value, ContractorID);
+        }
+
+        private void POST_Delete_Reservation()
+        {
+            ReservationTable.UpdateReservationStatus(long.Parse(Request.Form["ResID"]), ReservationStatus.DECLINED);
+        }
+
+        private void POST_Confirm_Reservation()
+        {
+            ReservationTable.UpdateReservationStatus(long.Parse(Request.Form["ResID"]), ReservationStatus.ACCEPTED);
         }
 
         public Reservation GetReservationByID(int id)
