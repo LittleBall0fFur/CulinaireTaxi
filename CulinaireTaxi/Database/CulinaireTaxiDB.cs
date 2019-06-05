@@ -32,6 +32,7 @@ namespace CulinaireTaxi.Database
                 using (var createAccountTableCMD = connection.CreateCommand())
                 using (var createRatingTableCMD = connection.CreateCommand())
                 using (var createReservationTableCMD = connection.CreateCommand())
+                using (var createCleanReservationsEventCMD = connection.CreateCommand())
                 {
                     #region CREATE_TABLE_COMMANDS
 
@@ -113,6 +114,11 @@ namespace CulinaireTaxi.Database
                     " ON DELETE CASCADE" +
                     " ON UPDATE CASCADE)";
 
+                    createCleanReservationsEventCMD.CommandText =
+                    "CREATE EVENT IF NOT EXISTS clear_old_reservations " +
+                    "ON SCHEDULE EVERY 1 WEEK DO " +
+                    "DELETE FROM Reservation WHERE till_date <= (NOW() - INTERVAL 1 WEEK)";
+
                     #endregion
 
                     createCompanyTableCMD.ExecuteNonQuery();
@@ -120,6 +126,7 @@ namespace CulinaireTaxi.Database
                     createAccountTableCMD.ExecuteNonQuery();
                     createRatingTableCMD.ExecuteNonQuery();
                     createReservationTableCMD.ExecuteNonQuery();
+                    createCleanReservationsEventCMD.ExecuteNonQuery();
                 }
             }
         }
