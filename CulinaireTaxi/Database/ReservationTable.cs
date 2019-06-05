@@ -131,6 +131,11 @@ namespace CulinaireTaxi.Database
             return RetrieveReservations($" WHERE company_id = {companyId} AND (from_date BETWEEN '{start.ToMySqlFormat()}' AND '{end.ToMySqlFormat()}') AND status = {(byte)status}");
         }
 
+        public static List<Reservation> RetrieveReservationsFrom(long customerId, DateTime day)
+        {
+            return RetrieveReservationsFrom(customerId, day.Date, day.Date.AddDays(1));
+        }
+
         /// <summary>
         /// Attempt to retrieve reservations from the database.
         /// </summary>
