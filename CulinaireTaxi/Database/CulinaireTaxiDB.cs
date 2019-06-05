@@ -32,6 +32,7 @@ namespace CulinaireTaxi.Database
                 using (var createAccountTableCMD = connection.CreateCommand())
                 using (var createRatingTableCMD = connection.CreateCommand())
                 using (var createReservationTableCMD = connection.CreateCommand())
+                using (var createNotificationTableCMD = connection.CreateCommand())
                 using (var createCleanReservationsEventCMD = connection.CreateCommand())
                 {
                     #region CREATE_TABLE_COMMANDS
@@ -114,6 +115,28 @@ namespace CulinaireTaxi.Database
                     " ON DELETE CASCADE" +
                     " ON UPDATE CASCADE)";
 
+                    createNotificationTableCMD.CommandText =
+                    "CREATE TABLE IF NOT EXISTS Notification" +
+                    "(id BIGINT NOT NULL AUTO_INCREMENT," +
+                    " title VARCHAR(32) NOT NULL," +
+                    " message TEXT NOT NULL," +
+                    " company_id BIGINT NOT NULL," +
+                    " customer_id BIGINT NOT NULL," +
+                    " reservation_id BIGINT NOT NULL," +
+                    " PRIMARY KEY (id)," +
+                    " FOREIGN KEY (company_id)" +
+                    " REFERENCES Company(id)" +
+                    " ON DELETE CASCADE" +
+                    " ON UPDATE CASCADE," +
+                    " FOREIGN KEY (customer_id)" +
+                    " REFERENCES Account(id)" +
+                    " ON DELETE CASCADE" +
+                    " ON UPDATE CASCADE," +
+                    " FOREIGN KEY (reservation_id)" +
+                    " REFERENCES Reservation(id)" +
+                    " ON DELETE CASCADE" +
+                    " ON UPDATE CASCADE)";
+
                     createCleanReservationsEventCMD.CommandText =
                     "CREATE EVENT IF NOT EXISTS clear_old_reservations " +
                     "ON SCHEDULE EVERY 1 WEEK DO " +
@@ -126,6 +149,7 @@ namespace CulinaireTaxi.Database
                     createAccountTableCMD.ExecuteNonQuery();
                     createRatingTableCMD.ExecuteNonQuery();
                     createReservationTableCMD.ExecuteNonQuery();
+                    createNotificationTableCMD.ExecuteNonQuery();
                     createCleanReservationsEventCMD.ExecuteNonQuery();
                 }
             }
