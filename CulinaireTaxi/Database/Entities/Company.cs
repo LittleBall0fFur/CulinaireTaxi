@@ -41,7 +41,7 @@ namespace CulinaireTaxi.Database.Entities
             set;
         }
 
-        public double Longtitude
+        public double Longitude
         {
             get;
             set;

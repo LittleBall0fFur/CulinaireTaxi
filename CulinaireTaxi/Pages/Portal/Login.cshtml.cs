@@ -9,39 +9,39 @@ namespace CulinaireTaxi.Pages
     public class LoginModel : PageModel
     {
 
-	public UserAgent UserAgent
-	{
-	    get;
-	    private set;
-	}
+        public UserAgent UserAgent
+        {
+            get;
+            private set;
+        }
 
-	[BindProperty, Required]
-	[EmailAddress]
-	public string Email
-	{
-	    get;
-	    set;
-	}
+        [BindProperty, Required]
+        [EmailAddress]
+        public string Email
+        {
+            get;
+            set;
+        }
 
-	[BindProperty, Required]
-	public string Password
-	{
-	    get;
-	    set;
-	}
+        [BindProperty, Required]
+        public string Password
+        {
+            get;
+            set;
+        }
 
-	public LoginModel(UserAgent userAgent)
-	{
-	    UserAgent = userAgent;
-	}
+        public LoginModel(UserAgent userAgent)
+        {
+            UserAgent = userAgent;
+        }
 
-	public void OnPost()
-	{
-	    if (ModelState.IsValid)
-	    {
-		UserAgent.Login(Email, Password);
-	    }
-	}
+        public void OnPost()
+        {
+            if (ModelState.IsValid)
+            {
+                UserAgent.Login(Email, Password);
+            }
+        }
 
     }
 

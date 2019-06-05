@@ -3,7 +3,6 @@
 @{
     var company = CompanyTable.RetrieveCompany(UserAgent.Account.CompanyId.Value);
     var companyName = company.Name;
-
 }
 <!DOCTYPE HTML>
 
@@ -65,12 +64,24 @@
                             </div>
                             <div class="calendar_plan">
                                 <div class="cl_plan">
-                                    <div class="cl_title" style="padding-left: 30px;"><form method="post"><input type="submit" value="Vandaag" asp-page-handler="Today" asp-route-sessioncount="15" /></form></div>
+                                    <div class="cl_title" style="padding-left: 30px;">
+                                        <form method="post">
+                                            <input asp-for="PostID" type="hidden" value="@CompanyPageModel.POSTID_CALENDAR_TODAY" required />
+                                            <input class="calendar_input" type="submit" value="Vandaag" />
+                                        </form>
+                                    </div>
                                     <div class="cl_copy" style="padding-left: 45px;">@Model.GetDate().ToString("D")</div>
                                     <form method="post">
-                                        <input asp-for="date" type="hidden" value="@Model.date" required>
-                                        <input type="submit" value="<" asp-page-handler="Sub" style="float:left; margin-left: -25px;" id="submit">
-                                        <input type="submit" value=">" asp-page-handler="Add" style="float:right; margin-right: -25px;" id="submit">
+                                        <input asp-for="Date" type="hidden" value="@Model.Date" required>
+                                        <input asp-for="PostID" type="hidden" value="@CompanyPageModel.POSTID_CALENDAR_BACKWARDS" required />
+
+                                        <input class="calendar_input" type="submit" value="<" style="float:left; margin-left: -25px;" id="submit">
+                                    </form>
+                                    <form method="post">
+                                        <input asp-for="Date" type="hidden" value="@Model.Date" required>
+                                        <input asp-for="PostID" type="hidden" value="@CompanyPageModel.POSTID_CALENDAR_FORWARDS" required />
+
+                                        <input class="calendar_input" type="submit" value=">" style="float:right; margin-right: -25px;" id="submit">
                                     </form>
                                 </div>
                             </div>
@@ -78,32 +89,59 @@
                                 <p class="ce_title">Upcoming Events</p>
                                 @foreach (Reservation reservation in ReservationTable.RetrieveReservationsFor(UserAgent.Account.CompanyId.Value, Model.GetDate()))
                                 {
-                                    <div class="event_item" onclick="clickRes()">
-                                        <div class="ei_Dot dot_active"></div>
-                                        <div class="ei_Title"><p id="time">@reservation.FromDate.ToString("HH:mm") -  @reservation.TillDate.ToString("HH:mm")</p></div>
-                                        <div class="ei_Copy"><p>Name: @AccountTable.RetrieveAccountByID(reservation.CustomerId).Contact.FirstName @AccountTable.RetrieveAccountByID(reservation.CustomerId).Contact.LastName <br /> Amount of people: @reservation.GuestsAmount <br /> Status: @reservation.Status</p></div>
-                                    </div>
-                                    Model.AddReservation(reservation);
+                                    if (reservation.Status != ReservationStatus.DECLINED)
+                                    {
+                                        <div class="event_item" onclick="clickRes('@AccountTable.RetrieveAccountByID(reservation.CustomerId).Contact.FullName', '@reservation.FromDate.ToString("HH:mm")', '@reservation.TillDate.ToString("HH:mm")', '@reservation.GuestsAmount', '@reservation.Status', '@reservation.Id')">
+                                            <div class="ei_Dot dot_active"></div>
+                                            <div class="ei_Title"><p id="time">@reservation.FromDate.ToString("HH:mm") -  @reservation.TillDate.ToString("HH:mm")</p></div>
+                                            <div class="ei_Copy"><p>Name: @AccountTable.RetrieveAccountByID(reservation.CustomerId).Contact.FirstName @AccountTable.RetrieveAccountByID(reservation.CustomerId).Contact.LastName <br /> Amount of people: @reservation.GuestsAmount <br /> Status: @reservation.Status</p></div>
+                                        </div>
+                                        Model.AddReservation(reservation);
+                                    }
                                 }
                             </div>
                         </div>
-                        <a href="#" class="btn btn-primary">Go somewhere</a>
                     </div>
                 </div>
             </div>
-            <div id="ResPopUp" class="modal">
-                <!-- Modal content -->
-                <div class="modal-content">
-                    <span class="close">&times;</span>
-                    <h5>Reservatie</h5>
-                    <p>@*@Model.GetReservationByID(0).TillDate*@</p>
-                </div>
-            </div>
+
             @* SECOND CARD *@
             <div class="col-sm pb-2">
                 <div class="card shadow bg-secondary">
                     <div class="card-body">
-                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                        <h5 class="header_copy">Taxi Bedrijven</h5>
+                        <form method="post">
+                            <div class="input-group">
+                                <select class="rounded-left" asp-for="ContractorID" required>
+                                    @foreach (var taxiCompany in CompanyTable.RetrieveCompaniesOfType(CompanyType.TAXI))
+                                    {
+                                        <option label="@taxiCompany.Name" value="@taxiCompany.Id" />
+                                    }
+                                </select>
+
+                                <div class="input-group-append">
+                                    <button class="btn btn-primary" type="submit" name="PostID" value="@CompanyPageModel.POSTID_CONTRACTORS_ADD">Toevoegen</button>
+                                </div>
+                            </div>
+                        </form>
+                        <br />
+                        <div>
+                            @foreach (var contractor in ContractTable.RetrieveContractors(UserAgent.Account.CompanyId.Value))
+                            {
+                                <div class="mb-2 shadow-sm">
+                                    <form method="post">
+                                        <div class="input-group">
+                                            <input asp-for="ContractorID" type="hidden" value="@contractor.Id" required />
+                                            <input class="form-control rounded-left" type="text" value="@contractor.Name" readonly />
+
+                                            <div class="input-group-append">
+                                                <button class="btn btn-primary" type="submit" name="PostID" value="@CompanyPageModel.POSTID_CONTRACTORS_REMOVE">Verwijderen</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            }
+                        </div>
                     </div>
                 </div>
             </div>
@@ -111,18 +149,58 @@
             <div class="col-sm pb-2">
                 <div class="card shadow bg-secondary">
                     <div class="card-body">
-                        <h5 class="card-title">Special title treatment</h5>
-                        <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                        <h5 class="header_copy">Geannuleerde reserveringen</h5>
+                        <div class="calendar_events">
+                            @foreach (Reservation reservation in ReservationTable.RetrieveReservationsFor(UserAgent.Account.CompanyId.Value))
+                            {
+                                if (reservation.Status == ReservationStatus.DECLINED)
+                                {
+                            <div class="event_item" onclick="clickRes('@AccountTable.RetrieveAccountByID(reservation.CustomerId).Contact.FullName', '@reservation.FromDate.ToString("HH:mm")', '@reservation.TillDate.ToString("HH:mm")', '@reservation.GuestsAmount', '@reservation.Status', '@reservation.Id')">
+                                <div class="ei_Dot dot_active"></div>
+                                <div class="ei_Title"><p id="time">@reservation.FromDate.ToString("D")</p></div>
+                                <p id="time">@reservation.FromDate.ToString("HH:mm") -  @reservation.TillDate.ToString("HH:mm")</p>
+                                <div class="ei_Copy"><p>Name: @AccountTable.RetrieveAccountByID(reservation.CustomerId).Contact.FirstName @AccountTable.RetrieveAccountByID(reservation.CustomerId).Contact.LastName <br /> Amount of people: @reservation.GuestsAmount <br /> Status: @reservation.Status</p></div>
+                            </div>
+                                    Model.AddReservation(reservation);
+                                }
+                            }
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <div id="ResPopUp" class="modal">
+        <!-- Modal content -->
+        <div class="modal-content shadow bg-secondary">
+            <span class="close">&times;</span>
+            <h5>Reservatie</h5>
+            <h6>Naam:</h6>
+            <p id="GuestName" style="padding-left: 30px;"></p>
+            <h6>Aantal gasten:</h6>
+            <p id="GuestAmount" style="padding-left: 30px;"></p>
+            <h6>Tijd:</h6>
+            <p id="Time" style="padding-left: 30px;"></p>
+            <h6>Status:</h6>
+            <p id="Status" style="padding-left: 30px;"></p>
+            <form method="post">
+                <input id="ResID" type="hidden" asp-for="ResID" value="" />
+                <input asp-for="PostID" type="hidden" value="@CompanyPageModel.POSTID_CONFIRM_RESERVATION" required />
+                <button class="btn btn-primary" id="Accept" type="submit" style="float:left; margin-bottom: -20px; width:20%;">Bevestig</button>
+            </form>
+            <form method="post">
+                <input id="ResID_Cancel" type="hidden" asp-for="ResID" value="" />
+                <input asp-for="PostID" type="hidden" value="@CompanyPageModel.POSTID_DECLINE_RESERVATION" required />
+                <button class="btn btn-primary" id="Cancel" type="submit" style="float:right; margin-top:-15px; width:20%;">Annuleer</button>
+            </form>
+        </div>
+    </div>
+
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-    
+
     <script>
         // Get the modal
         var modal = document.getElementById('ResPopUp');
@@ -131,7 +209,23 @@
         var span = document.getElementsByClassName("close")[0];
 
         // When the user clicks the button, open the modal
-        function clickRes() {
+        function clickRes(customerName, fromDate, tillDate, guestsAmount, status, resID) {
+            $("#GuestName").text(customerName);
+            $("#GuestAmount").text(guestsAmount);
+            $("#Time").text(fromDate + " - " + tillDate);
+            $("#Status").text(status);
+            if (status == "ACCEPTED") {
+                document.getElementById("Accept").disabled = true;
+                document.getElementById("Cancel").disabled = false;
+            }
+            else {
+                document.getElementById("Cancel").disabled = true;
+                document.getElementById("Accept").disabled = false;
+            }
+            
+            document.getElementById("ResID").value = resID;
+            document.getElementById("ResID_Cancel").value = resID;
+
             modal.style.display = "block";
         }
 
@@ -147,7 +241,7 @@
             }
         }
 
-        /* When the user clicks on the button, 
+        /* When the user clicks on the button,
         toggle between hiding and showing the dropdown content */
         function myFunction() {
             document.getElementById("myDropdown").classList.toggle("show");
@@ -169,12 +263,17 @@
     </script>
 
     <style>
+        h6 {
+            padding: 5px;
+            font-size: 17px;
+            color: #ccb7ae;
+        }
 
         /* The Modal (background) */
         .modal {
             display: none; /* Hidden by default */
             position: fixed; /* Stay in place */
-            z-index: 1; /* Sit on top */
+            z-index: 10; /* Sit on top */
             padding-top: 100px; /* Location of the box */
             left: 0;
             top: 0;
@@ -190,7 +289,6 @@
             background-color: #fefefe;
             margin: auto;
             padding: 20px;
-            border: 1px solid #888;
             width: 50%;
         }
 
@@ -254,7 +352,7 @@
         }
     </style>
     <style>
-        input {
+        .calendar_input {
             margin-top: -80px;
             color: #d6cfcb;
             border: none;

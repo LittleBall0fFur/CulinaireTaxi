@@ -16,8 +16,10 @@ namespace CulinaireTaxi.Database
         /// <param name="companyType">The type of the company.</param>
         /// <param name="name">The name of the company.</param>
         /// <param name="description">The description of the company.</param>
+        /// <param name="latitude">The latitude of the company's location.</param>
+        /// <param name="longitude">The longitude of the company's location.</param>
         /// <returns>The newly created company on success, null otherwise (i.e. a conflicting company exists).</returns>
-        public static Company CreateCompany(CompanyType companyType, string name, string description)
+        public static Company CreateCompany(CompanyType companyType, string name, string description, double latitude, double longitude)
         {
             using (var connection = new MySqlConnection(ConnectionString))
             {
@@ -27,15 +29,17 @@ namespace CulinaireTaxi.Database
                 {
                     createCompanyCMD.CommandText =
                     "INSERT IGNORE INTO Company" +
-                    " (type, name, description)" +
-                    " VALUES" +
-                    " (@companyType, @name, @description)";
+                    " (type, name, description, latitude, longitude) " +
+                    "VALUES" +
+                    " (@companyType, @name, @description, @latitude, @longitude)";
 
                     var parameters = createCompanyCMD.Parameters;
 
                     parameters.AddWithValue("@companyType", (byte)companyType);
                     parameters.AddWithValue("@name", name);
                     parameters.AddWithValue("@description", description);
+                    parameters.AddWithValue("@latitude", latitude);
+                    parameters.AddWithValue("@longitude", longitude);
 
                     bool success = (createCompanyCMD.ExecuteNonQuery() != 0);
 
@@ -49,6 +53,9 @@ namespace CulinaireTaxi.Database
 
                         company.Name = name;
                         company.Description = description;
+
+                        company.Latitude = latitude;
+                        company.Longitude = longitude;
 
                         return company;
                     }
@@ -73,7 +80,7 @@ namespace CulinaireTaxi.Database
 
                 using (var retrieveCompanyCMD = connection.CreateCommand())
                 {
-                    retrieveCompanyCMD.CommandText = $"SELECT type, name, description FROM Company WHERE id = {id}";
+                    retrieveCompanyCMD.CommandText = $"SELECT type, name, description, latitude, longitude FROM Company WHERE id = {id}";
 
                     using (var reader = retrieveCompanyCMD.ExecuteReader(CommandBehavior.SingleRow))
                     {
@@ -88,6 +95,9 @@ namespace CulinaireTaxi.Database
                             company.Name = reader.GetString(1);
                             company.Description = reader.GetString(2);
 
+                            company.Latitude = reader.GetDouble(3);
+                            company.Longitude = reader.GetDouble(4);
+
                             return company;
                         }
                         else
@@ -100,12 +110,12 @@ namespace CulinaireTaxi.Database
         }
 
         /// <summary>
-        /// Attempt to retrieve <paramref name="N"/> companies starting from <paramref name="startIndex"/> from the database.
+        /// Attempt to retrieve <paramref name="N"/> companies starting from <paramref name="startId"/> from the database.
         /// </summary>
-        /// <param name="startIndex">The company id at which to start.</param>
+        /// <param name="startId">The company id at which to start.</param>
         /// <param name="N">The amount of companies to retrieve.</param>
         /// <returns>A List of at most <paramref name="N"/> companies.</returns>
-        public static List<Company> RetrieveCompaniesInRange(int startIndex, int N)
+        public static List<Company> RetrieveCompaniesInRange(int startId, int N)
         {
             using (var connection = new MySqlConnection(ConnectionString))
             {
@@ -113,7 +123,7 @@ namespace CulinaireTaxi.Database
 
                 using (var retrieveCompaniesCMD = connection.CreateCommand())
                 {
-                    retrieveCompaniesCMD.CommandText = $"SELECT * FROM Company WHERE id >= {startIndex} ORDER BY id ASC LIMIT {N}";
+                    retrieveCompaniesCMD.CommandText = $"SELECT * FROM Company WHERE id >= {startId} ORDER BY id ASC LIMIT {N}";
 
                     using (var reader = retrieveCompaniesCMD.ExecuteReader())
                     {
@@ -130,6 +140,9 @@ namespace CulinaireTaxi.Database
                             company.Name = reader.GetString(2);
                             company.Description = reader.GetString(3);
 
+                            company.Latitude = reader.GetDouble(4);
+                            company.Longitude = reader.GetDouble(5);
+
                             companies.Add(company);
                         }
 
@@ -140,12 +153,11 @@ namespace CulinaireTaxi.Database
         }
 
         /// <summary>
-        /// Attempt to retrieve <paramref name="N"/> companies starting from <paramref name="startIndex"/> from the database.
+        /// Attempt to retrieve all companies of the given type from the database.
         /// </summary>
-        /// <param name="startIndex">The company id at which to start.</param>
-        /// <param name="N">The amount of companies to retrieve.</param>
-        /// <returns>A List of at most <paramref name="N"/> companies.</returns>
-        public static List<Company> RetrieveCompaniesOfType(int type)
+        /// <param name="companyType">The type of the companies to retrieve.</param>
+        /// <returns>A List of companies with the given type.</returns>
+        public static List<Company> RetrieveCompaniesOfType(CompanyType companyType)
         {
             using (var connection = new MySqlConnection(ConnectionString))
             {
@@ -153,7 +165,7 @@ namespace CulinaireTaxi.Database
 
                 using (var retrieveCompaniesCMD = connection.CreateCommand())
                 {
-                    retrieveCompaniesCMD.CommandText = $"SELECT * FROM Company WHERE type = {type}";
+                    retrieveCompaniesCMD.CommandText = $"SELECT id, name, description, latitude, longitude FROM Company WHERE type = {(byte)companyType}";
 
                     using (var reader = retrieveCompaniesCMD.ExecuteReader())
                     {
@@ -164,14 +176,14 @@ namespace CulinaireTaxi.Database
                             Company company = new Company();
 
                             company.Id = reader.GetInt64(0);
-                            company.Id = reader.GetInt64(0);
 
-                            company.CompanyType = (CompanyType)reader.GetByte(1);
+                            company.CompanyType = companyType;
 
-                            company.Name = reader.GetString(2);
-                            company.Description = reader.GetString(3);
-                            company.Latitude = reader.GetDouble(4);
-                            company.Longtitude = reader.GetDouble(5);
+                            company.Name = reader.GetString(1);
+                            company.Description = reader.GetString(2);
+
+                            company.Latitude = reader.GetDouble(3);
+                            company.Longitude = reader.GetDouble(4);
 
                             companies.Add(company);
                         }
@@ -229,6 +241,30 @@ namespace CulinaireTaxi.Database
         }
 
         /// <summary>
+        /// Updates a company's location.
+        /// </summary>
+        /// <param name="id">The id of the company to update.</param>
+        /// <param name="latitude">The latitude of the company's new location.</param>
+        /// <param name="longitude">The longitude of the company's new location.</param>
+        /// <returns>True if the company's location was updated, false otherwise.</returns>
+        public static bool UpdateCompanyLocation(long id, double latitude, double longitude)
+        {
+            using (var connection = new MySqlConnection(ConnectionString))
+            {
+                connection.Open();
+
+                using (var updateCompanyCMD = connection.CreateCommand())
+                {
+                    updateCompanyCMD.CommandText = $"UPDATE Company SET latitude = {latitude}, longitude = {longitude} WHERE id = {id}";
+
+                    bool companyUpdated = (updateCompanyCMD.ExecuteNonQuery() != 0);
+
+                    return companyUpdated;
+                }
+            }
+        }
+
+        /// <summary>
         /// Deletes an existing company.
         /// </summary>
         /// <param name="id">The id of the company to delete.</param>
@@ -239,13 +275,13 @@ namespace CulinaireTaxi.Database
             {
                 connection.Open();
 
-                using (var deleteReservationCMD = connection.CreateCommand())
+                using (var deleteCompanyCMD = connection.CreateCommand())
                 {
-                    deleteReservationCMD.CommandText = $"DELETE FROM Company WHERE id = {id}";
+                    deleteCompanyCMD.CommandText = $"DELETE FROM Company WHERE id = {id}";
 
-                    bool reservationDeleted = (deleteReservationCMD.ExecuteNonQuery() != 0);
+                    bool companyDeleted = (deleteCompanyCMD.ExecuteNonQuery() != 0);
 
-                    return reservationDeleted;
+                    return companyDeleted;
                 }
             }
         }
