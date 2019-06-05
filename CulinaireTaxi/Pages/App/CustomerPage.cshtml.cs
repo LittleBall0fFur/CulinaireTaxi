@@ -22,6 +22,7 @@ namespace CulinaireTaxi.Pages
         public const string POSTID_UPDATE_INFO = "update_info";
 
         List<Reservation> reservations = new List<Reservation>();
+        int resID;
 
         private readonly DateTime TODAY = DateTime.Today;
 
