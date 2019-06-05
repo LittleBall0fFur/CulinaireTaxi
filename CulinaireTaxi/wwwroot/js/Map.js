@@ -38,7 +38,6 @@ function SetGeo(position) {
     x = position.coords.latitude;
     y = position.coords.longitude;
     homeMarker.setPosition({ lat: x, lng: y });
-    destinationMarker.setPosition({ lat: x, lng: y + 0.05 })
     map.setCenter({ lat: x, lng: y });
     map.setZoom(14);
 }
@@ -51,26 +50,6 @@ function CreateHomeMarker() {
     homeMarker = new H.map.Marker({ lat: 42.35805, lng: -71.0636 }, { icon: homeIcon });
     homeMarker.draggable = true;
     map.addObject(homeMarker);
-    map.addEventListener('dragstart', function (ev) {
-        var target = ev.target;
-        if (target instanceof H.map.Marker) {
-            behavior.disable();
-        }
-    }, false);
-
-    map.addEventListener('dragend', function (ev) {
-        var target = ev.target;
-        if (target instanceof mapsjs.map.Marker) {
-            behavior.enable();
-        }
-    }, false);
-    map.addEventListener('drag', function (ev) {
-        var target = ev.target;
-        pointer = ev.currentPointer;
-        if (target instanceof mapsjs.map.Marker) {
-            target.setPosition(map.screenToGeo(pointer.viewportX, pointer.viewportY));
-        }
-    }, false);
 }
 
 var wineGlassIcon = new H.map.Icon(wineglass);
@@ -80,24 +59,14 @@ function CreateDestinationMarker(restaurant) {
     destinationMarker = new H.map.Marker({ lat: restaurant.x, lng: restaurant.y });
     console.log(destinationMarker);
     destinationMarker.draggable = true;
+    destinationMarker.isRestaurant = true;
+    destinationMarker.setData("Restaurant: " + restaurant.name + "<br>Description: " + restaurant.description);
     map.addObject(destinationMarker);
-    map.addEventListener('dragstart', function (ev) {
-        var target = ev.target;
-        if (target instanceof H.map.Marker) {
-            behavior.disable();
+    map.addEventListener('tap', function (ev) {
+        if (ev.target instanceof H.map.Marker) {
+            if (ev.target.isRestaurant == true)
+                document.getElementById("RestaurantName").innerHTML = ev.target.getData();
         }
-    }, false);
-    map.addEventListener('dragend', function (ev) {
-        var target = ev.target;
-        if (target instanceof mapsjs.map.Marker) {
-            behavior.enable();
-        }
-    }, false);
-    map.addEventListener('drag', function (ev) {
-        var target = ev.target;
-        pointer = ev.currentPointer;
-        if (target instanceof mapsjs.map.Marker) {
-            target.setPosition(map.screenToGeo(pointer.viewportX, pointer.viewportY));
-        }
-    }, false);
+    }, true);
+
 }
