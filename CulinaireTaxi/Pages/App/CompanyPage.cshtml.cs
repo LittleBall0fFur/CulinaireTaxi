@@ -105,7 +105,6 @@ namespace CulinaireTaxi.Pages
                 case POSTID_CONFIRM_RESERVATION:
                     POST_Confirm_Reservation();
                     break;
-
             }
         }
 
