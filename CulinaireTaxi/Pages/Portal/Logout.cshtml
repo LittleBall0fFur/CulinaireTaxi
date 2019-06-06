@@ -1,0 +1,16 @@
+﻿@page
+@{
+    if (UserAgent.IsAuthenticated)
+    {
+        UserAgent.Logout();
+
+        Response.Redirect("/Index");
+    }
+    else
+    {
+        //Let's pretend this page doesn't exist :)
+        Response.Redirect("/Error/404");
+    }
+}
+
+@* FAKE PAGE TO ALLOW EASY LOGOUT FUNCTIONALITY *@

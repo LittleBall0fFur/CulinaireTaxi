@@ -4,17 +4,16 @@
     ViewBag.Title = "Login";
 }
 
-<h1 class="text-center">Login</h1>
-<hr />
+<h1 class="decorated-header text-center">Login</h1>
 <div class="form-group">
     <label asp-for="Email">Email:</label>
     <input asp-for="Email" class="form-control" type="email" required />
 </div>
 <div class="form-group">
-    <label asp-for="Password">Wachtwoord:</label>
+    <label asp-for="Password">Password:</label>
     <input asp-for="Password" class="form-control" type="password" required />
-    <a href="">Wachtwoord vergeten?</a>
+    <a href="JaDieDoedetDusNie">Forgot your password?</a>
 </div>
 <button class="d-block btn btn-primary mx-auto">Login</button>
 <hr />
-<p class="text-center">Geen account? <a href="/Portal/Register">Registreren</a></p>
+<p class="text-center">Don't have an account? <a href="/Portal/Register">Register here</a></p>

@@ -26,7 +26,7 @@
             <div class="collapse navbar-collapse">
                 <ul class="navbar-nav m-auto">
                     <li class="nav-item border-right">
-                        <a class="nav-link" href="/Index">Uitloggen</a>
+                        <a class="nav-link" href="/Portal/Logout">Logout</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/About">How to use</a>
@@ -59,18 +59,45 @@
                     <div class="card-body">
                         <div class="calendar">
                             <div class="calendar_header">
-                                <h5 class="header_copy"> Calendar Plan</h5>
+                                <h5 class="header_copy">Reservation Calendar</h5>
                             </div>
                             <div class="calendar_plan">
                                 <div class="cl_plan">
-                                    <div class="cl_title" style="padding-left: 30px;"><form method="post"><input type="submit" value="Today" asp-page-handler="Today" asp-route-sessioncount="15" /></form></div>
-                                    <div class="cl_copy" style="padding-left: 45px;"></div>
-                                    <form method="post"><input type="submit" value="<" asp-page-handler="Sub" asp-route-sessioncount="20" style="float:left; margin-left: -25px;"></form>
-                                    <form method="post"><input type="submit" value=">" asp-page-handler="Add" asp-route-sessioncount="10" style="float:right; margin-right: -25px;"></form>
+                                    <div class="cl_title" style="padding-left: 30px;">
+                                        <form method="post">
+                                            <input asp-for="PostID" type="hidden" value="@CustomerPageModel.POSTID_CALENDAR_TODAY" required />
+                                            <input class="calendar_input" type="submit" value="Today" />
+                                        </form>
+                                    </div>
+                                    <div class="cl_copy" style="padding-left: 45px;">@Model.GetDate().ToString("D")</div>
+                                    <form method="post">
+                                        <input asp-for="Date" type="hidden" value="@Model.Date" required>
+                                        <input asp-for="PostID" type="hidden" value="@CustomerPageModel.POSTID_CALENDAR_BACKWARDS" required />
+
+                                        <input class="calendar_input" type="submit" value="<" style="float:left; margin-left: -25px;" id="submit">
+                                    </form>
+                                    <form method="post">
+                                        <input asp-for="Date" type="hidden" value="@Model.Date" required>
+                                        <input asp-for="PostID" type="hidden" value="@CustomerPageModel.POSTID_CALENDAR_FORWARDS" required />
+
+                                        <input class="calendar_input" type="submit" value=">" style="float:right; margin-right: -25px;" id="submit">
+                                    </form>
                                 </div>
                             </div>
+                            <div class="calendar_events">
+                                <p class="ce_title">Upcoming Events</p>
+                                @foreach (Reservation reservation in ReservationTable.RetrieveReservationsFrom(UserAgent.Account.Id, Model.GetDate()))
+                                {
+                                    
+                                    <div class="event_item" onclick="clickRes('@AccountTable.RetrieveAccountByID(reservation.CompanyId).Contact.FullName', '@reservation.FromDate.ToString("HH:mm")', '@reservation.TillDate.ToString("HH:mm")', '@reservation.GuestsAmount', '@reservation.Status', '@reservation.Id')">
+                                        <div class="ei_Dot dot_active"></div>
+                                        <div class="ei_Title"><p id="time">@reservation.FromDate.ToString("HH:mm") -  @reservation.TillDate.ToString("HH:mm")</p></div>
+                                        <div class="ei_Copy"><p>Name: @AccountTable.RetrieveAccountByID(reservation.CompanyId).Contact.FullName <br /> Amount of people: @reservation.GuestsAmount <br /> Status: @reservation.Status</p></div>
+                                    </div>
+                                    Model.AddReservation(reservation);
+                                }
+                            </div>
                         </div>
-                        <a href="#" class="btn btn-primary">Go somewhere</a>
                     </div>
                 </div>
             </div>
@@ -81,16 +108,14 @@
                         <div class="accountdetailpanel">
                             <h5 class="card-title">Account Details</h5>
 
-                            @{
-                                if (user.Contact.MissingData())
-                                {
-                                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                                        <strong>Oh snap!</strong> Vergeet niet alle contact gegevens in te vullen om goed berijkbaar te blijven.
-                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                }
+                            @if (user.Contact.MissingData())
+                            {
+                                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                    <strong>Oh snap!</strong> Vergeet niet alle contact gegevens in te vullen om goed berijkbaar te blijven.
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
                             }
 
                             @*fullname*@
@@ -98,14 +123,14 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text" id="">Full Name</span>
                                 </div>
-                                <input type="text" style="margin:0px;" class="form-control" value="@user.Contact.FullName" readonly>
+                                <input type="text" style="margin:0px;" class="form-control" value="@user.Contact.FullName">
                             </div>
                             @*email*@
                             <div class="input-group mb-3">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text" id="">Email</span>
                                 </div>
-                                <input type="text" style="margin:0px;" class="form-control" value="@user.Email" readonly>
+                                <input type="text" style="margin:0px;" class="form-control" value="@user.Email">
                             </div>
                             <form method="post">
                                 @*account detail form*@
@@ -146,7 +171,8 @@
                                     <input type="text" name="phonenumber" style="margin:0px;" class="form-control" placeholder="0622334455" value="@user.Contact.PhoneNumber">
                                 </div>
                                 @*submit*@
-                                <button type="submit" class="btn btn-success">Save Details</button>
+                                <input asp-for="PostID" type="hidden" value="@CustomerPageModel.POSTID_UPDATE_INFO" required />
+                                <button type="submit" class="btn btn-primary">Save Details</button>
                             </form>
                         </div>
                     </div>
@@ -170,10 +196,9 @@
                                 <input type="hidden" name="form_id" value="1" />
                                 @*restaurant*@
                                 <div class="form-group row">
-                                    <label class="col-4 col-form-label">Restorant</label>
+                                    <label class="col-4 col-form-label">Restaurant</label>
                                     <div class="col-8">
                                         <select name="restaurant" class="form-control">
-                                            <option selected>Choose...</option>
                                             @{
                                                 List<Company> companyList = CompanyTable.RetrieveCompaniesOfType(CompanyType.RESTAURANT);
                                                 for (int i = 0; i < companyList.Count; i++)
@@ -206,13 +231,14 @@
                                 </div>
                                 @*guests amount*@
                                 <div class="form-group row">
-                                    <label class="col-4 col-form-label">Guests Amount</label>
+                                    <label class="col-4 col-form-label">Amount of people</label>
                                     <div class="col-8">
                                         <input class="form-control" style="margin:0px;" type="number" value="0" name="guestsamount">
                                     </div>
                                 </div>
                                 @*submit*@
-                                <button type="submit" class="btn btn-success">Place Reservation</button>
+                                <input asp-for="PostID" type="hidden" value="@CustomerPageModel.POSTID_CREATE_RESERVATION" required />
+                                <button type="submit" class="btn btn-primary">Place Reservation</button>
                             </form>
 
                         </div>
@@ -229,13 +255,175 @@
             </div>
         </div>
 
+        <div id="ResPopUp" class="modal">
+            <!-- Modal content -->
+            <div class="modal-content shadow bg-secondary">
+                <span class="close">&times;</span>
+                <h5>Reservation</h5>
+                <h6>Name:</h6>
+                <p id="GuestName" style="padding-left: 30px;"></p>
+                <h6>Amount of people:</h6>
+                <p id="GuestAmount" style="padding-left: 30px;"></p>
+                <h6>Time:</h6>
+                <p id="Time" style="padding-left: 30px;"></p>
+                <h6>Status:</h6>
+                <p id="Status" style="padding-left: 30px;"></p>
+                <form method="post">
+                    <input id="ResID" type="hidden" asp-for="ResID" value="" />
+                    <input asp-for="PostID" type="hidden" value="@CustomerPageModel.POSTID_DELETE_RESERVATION" required />
+                    <button class="btn btn-primary" id="Cancel" type="submit" style="float:right; margin-top:-15px; width:20%;">Cancel</button>
+                </form>
+            </div>
+        </div>
+
     </div>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+    <script>
+        // Get the modal
+        var modal = document.getElementById('ResPopUp');
+
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("close")[0];
+
+        // When the user clicks the button, open the modal
+        function clickRes(customerName, fromDate, tillDate, guestsAmount, status, resID) {
+            $("#GuestName").text(customerName);
+            $("#GuestAmount").text(guestsAmount);
+            $("#Time").text(fromDate + " - " + tillDate);
+            $("#Status").text(status);
+
+            document.getElementById("ResID").value = resID;
+
+            modal.style.display = "block";
+        }
+
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function () {
+            modal.style.display = "none";
+        }
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        /* When the user clicks on the button,
+        toggle between hiding and showing the dropdown content */
+        function myFunction() {
+            document.getElementById("myDropdown").classList.toggle("show");
+        }
+
+        // Close the dropdown if the user clicks outside of it
+        window.onclick = function (event) {
+            if (!event.target.matches('.dropbtn')) {
+                var dropdowns = document.getElementsByClassName("dropdown-content");
+                var i;
+                for (i = 0; i < dropdowns.length; i++) {
+                    var openDropdown = dropdowns[i];
+                    if (openDropdown.classList.contains('show')) {
+                        openDropdown.classList.remove('show');
+                    }
+                }
+            }
+        }
+    </script>
+
     <style>
-        input {
+        h6 {
+            padding: 5px;
+            font-size: 17px;
+            color: #ccb7ae;
+        }
+
+        /* The Modal (background) */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 10; /* Sit on top */
+            padding-top: 100px; /* Location of the box */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgb(0,0,0); /* Fallback color */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+        }
+
+        /* Modal Content */
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            width: 50%;
+        }
+
+        /* The Close Button */
+        .close {
+            color: #aaaaaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            margin-left: 700px;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .dropbtn {
+            background-color: #3498DB;
+            color: white;
+            padding: 16px;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .dropbtn:hover, .dropbtn:focus {
+            background-color: #2980B9;
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f1f1f1;
+            min-width: 160px;
+            overflow: auto;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+            .dropdown-content a {
+                color: black;
+                padding: 12px 16px;
+                text-decoration: none;
+                display: block;
+            }
+
+        .dropdown a:hover {
+            background-color: #ddd;
+        }
+
+        .show {
+            display: block;
+        }
+    </style>
+    <style>
+        .calendar_input {
             margin-top: -80px;
             color: #d6cfcb;
             border: none;
@@ -246,16 +434,6 @@
 
         .calendar {
             width: 370px;
-        }
-
-        .accountdetailpanel {
-            margin: 20px;
-            padding: 5px;
-        }
-
-        .reservatiepanel {
-            margin: 20px;
-            padding: 5px;
         }
 
         .header_copy {
@@ -269,7 +447,7 @@
 
         .cl_plan {
             height: 140px;
-            background-color: #dc3545;
+            background-color: #1da1a3;
             box-shadow: 0px 0px 52px -18px rgba(0, 0, 0, 0.75);
             padding: 30px;
             color: #fff;
@@ -333,12 +511,12 @@
             border-radius: 50%;
             width: 10px;
             height: 10px;
-            background-color: $light_grey;
+            background-color: #1da1a3;
             box-shadow: 0px 0px 52px -18px rgba(0, 0, 0, 0.75);
         }
 
         .dot_active {
-            background-color: #FF8494;
+            background-color: #1da1a3;
         }
 
         .ei_Title {

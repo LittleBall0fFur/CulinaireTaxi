@@ -27,7 +27,7 @@
             <div class="collapse navbar-collapse">
                 <ul class="navbar-nav m-auto">
                     <li class="nav-item border-right">
-                        <a class="nav-link" href="/Index">Uitloggen</a>
+                        <a class="nav-link" href="/Portal/Logout">Logout</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/About">How to use</a>
@@ -60,14 +60,14 @@
                     <div class="card-body">
                         <div class="calendar">
                             <div class="calendar_header">
-                                <h5 class="header_copy">Reserverings kalender</h5>
+                                <h5 class="header_copy">Reservation Calendar</h5>
                             </div>
                             <div class="calendar_plan">
                                 <div class="cl_plan">
                                     <div class="cl_title" style="padding-left: 30px;">
                                         <form method="post">
                                             <input asp-for="PostID" type="hidden" value="@CompanyPageModel.POSTID_CALENDAR_TODAY" required />
-                                            <input class="calendar_input" type="submit" value="Vandaag" />
+                                            <input class="calendar_input" type="submit" value="Today" />
                                         </form>
                                     </div>
                                     <div class="cl_copy" style="padding-left: 45px;">@Model.GetDate().ToString("D")</div>
@@ -109,18 +109,18 @@
             <div class="col-sm pb-2">
                 <div class="card shadow bg-secondary">
                     <div class="card-body">
-                        <h5 class="header_copy">Taxi Bedrijven</h5>
+                        <h5 class="header_copy">Taxi Companies</h5>
                         <form method="post">
                             <div class="input-group">
                                 <select class="rounded-left" asp-for="ContractorID" required>
                                     @foreach (var taxiCompany in CompanyTable.RetrieveCompaniesOfType(CompanyType.TAXI))
                                     {
-                                        <option label="@taxiCompany.Name" value="@taxiCompany.Id" />
+                                        <option value="@taxiCompany.Id">@taxiCompany.Name</option>
                                     }
                                 </select>
 
                                 <div class="input-group-append">
-                                    <button class="btn btn-primary" type="submit" name="PostID" value="@CompanyPageModel.POSTID_CONTRACTORS_ADD">Toevoegen</button>
+                                    <button class="btn btn-primary" type="submit" name="PostID" value="@CompanyPageModel.POSTID_CONTRACTORS_ADD">Add</button>
                                 </div>
                             </div>
                         </form>
@@ -135,7 +135,7 @@
                                             <input class="form-control rounded-left" type="text" value="@contractor.Name" readonly />
 
                                             <div class="input-group-append">
-                                                <button class="btn btn-primary" type="submit" name="PostID" value="@CompanyPageModel.POSTID_CONTRACTORS_REMOVE">Verwijderen</button>
+                                                <button class="btn btn-primary" type="submit" name="PostID" value="@CompanyPageModel.POSTID_CONTRACTORS_REMOVE">Remove</button>
                                             </div>
                                         </div>
                                     </form>
@@ -149,18 +149,18 @@
             <div class="col-sm pb-2">
                 <div class="card shadow bg-secondary">
                     <div class="card-body">
-                        <h5 class="header_copy">Geannuleerde reserveringen</h5>
+                        <h5 class="header_copy">Cancelled Reservations</h5>
                         <div class="calendar_events">
                             @foreach (Reservation reservation in ReservationTable.RetrieveReservationsFor(UserAgent.Account.CompanyId.Value))
                             {
                                 if (reservation.Status == ReservationStatus.DECLINED)
                                 {
-                            <div class="event_item" onclick="clickRes('@AccountTable.RetrieveAccountByID(reservation.CustomerId).Contact.FullName', '@reservation.FromDate.ToString("HH:mm")', '@reservation.TillDate.ToString("HH:mm")', '@reservation.GuestsAmount', '@reservation.Status', '@reservation.Id')">
-                                <div class="ei_Dot dot_active"></div>
-                                <div class="ei_Title"><p id="time">@reservation.FromDate.ToString("D")</p></div>
-                                <p id="time">@reservation.FromDate.ToString("HH:mm") -  @reservation.TillDate.ToString("HH:mm")</p>
-                                <div class="ei_Copy"><p>Name: @AccountTable.RetrieveAccountByID(reservation.CustomerId).Contact.FirstName @AccountTable.RetrieveAccountByID(reservation.CustomerId).Contact.LastName <br /> Amount of people: @reservation.GuestsAmount <br /> Status: @reservation.Status</p></div>
-                            </div>
+                                    <div class="event_item" onclick="clickRes('@AccountTable.RetrieveAccountByID(reservation.CustomerId).Contact.FullName', '@reservation.FromDate.ToString("HH:mm")', '@reservation.TillDate.ToString("HH:mm")', '@reservation.GuestsAmount', '@reservation.Status', '@reservation.Id')">
+                                        <div class="ei_Dot dot_active"></div>
+                                        <div class="ei_Title"><p id="time">@reservation.FromDate.ToString("D")</p></div>
+                                        <p id="time">@reservation.FromDate.ToString("HH:mm") -  @reservation.TillDate.ToString("HH:mm")</p>
+                                        <div class="ei_Copy"><p>Name: @AccountTable.RetrieveAccountByID(reservation.CustomerId).Contact.FirstName @AccountTable.RetrieveAccountByID(reservation.CustomerId).Contact.LastName <br /> Amount of people: @reservation.GuestsAmount <br /> Status: @reservation.Status</p></div>
+                                    </div>
                                     Model.AddReservation(reservation);
                                 }
                             }
@@ -175,24 +175,24 @@
         <!-- Modal content -->
         <div class="modal-content shadow bg-secondary">
             <span class="close">&times;</span>
-            <h5>Reservatie</h5>
-            <h6>Naam:</h6>
+            <h5>Reservation</h5>
+            <h6>Name:</h6>
             <p id="GuestName" style="padding-left: 30px;"></p>
-            <h6>Aantal gasten:</h6>
+            <h6>Amount of people:</h6>
             <p id="GuestAmount" style="padding-left: 30px;"></p>
-            <h6>Tijd:</h6>
+            <h6>Time:</h6>
             <p id="Time" style="padding-left: 30px;"></p>
             <h6>Status:</h6>
             <p id="Status" style="padding-left: 30px;"></p>
             <form method="post">
                 <input id="ResID" type="hidden" asp-for="ResID" value="" />
                 <input asp-for="PostID" type="hidden" value="@CompanyPageModel.POSTID_CONFIRM_RESERVATION" required />
-                <button class="btn btn-primary" id="Accept" type="submit" style="float:left; margin-bottom: -20px; width:20%;">Bevestig</button>
+                <button class="btn btn-primary" id="Accept" type="submit" style="float:left; margin-bottom: -20px; width:20%;">Confirm</button>
             </form>
             <form method="post">
                 <input id="ResID_Cancel" type="hidden" asp-for="ResID" value="" />
                 <input asp-for="PostID" type="hidden" value="@CompanyPageModel.POSTID_DECLINE_RESERVATION" required />
-                <button class="btn btn-primary" id="Cancel" type="submit" style="float:right; margin-top:-15px; width:20%;">Annuleer</button>
+                <button class="btn btn-primary" id="Cancel" type="submit" style="float:right; margin-top:-15px; width:20%;">Cancel</button>
             </form>
         </div>
     </div>
@@ -222,7 +222,7 @@
                 document.getElementById("Cancel").disabled = true;
                 document.getElementById("Accept").disabled = false;
             }
-            
+
             document.getElementById("ResID").value = resID;
             document.getElementById("ResID_Cancel").value = resID;
 
