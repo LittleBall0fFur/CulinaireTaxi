@@ -115,7 +115,7 @@
                                 <select class="rounded-left" asp-for="ContractorID" required>
                                     @foreach (var taxiCompany in CompanyTable.RetrieveCompaniesOfType(CompanyType.TAXI))
                                     {
-                                        <option label="@taxiCompany.Name" value="@taxiCompany.Id" />
+                                        <option value="@taxiCompany.Id">@taxiCompany.Name</option>
                                     }
                                 </select>
 
