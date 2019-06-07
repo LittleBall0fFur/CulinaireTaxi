@@ -32,6 +32,12 @@ namespace CulinaireTaxi.Database.Entities
             set;
         }
 
+        public long? TaxiCompanyId
+        {
+            get;
+            set;
+        }
+
         public DateTime FromDate
         {
             get;

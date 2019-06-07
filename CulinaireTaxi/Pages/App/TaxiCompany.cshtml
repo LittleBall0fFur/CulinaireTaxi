@@ -13,7 +13,7 @@
 }
 
 @section calendar_events {
-    @foreach (Reservation reservation in ReservationTable.RetrieveReservationsFor(UserAgent.Account.CompanyId.Value, Model.GetDate()))
+    @foreach (Reservation reservation in ReservationTable.RetrieveReservationsWith(UserAgent.Account.CompanyId.Value, Model.GetDate()))
     {
         if (reservation.Status != ReservationStatus.DECLINED)
         {
@@ -49,7 +49,7 @@
 }
 
 @section cancelled_reservations {
-    @foreach (Reservation reservation in ReservationTable.RetrieveReservationsFor(UserAgent.Account.CompanyId.Value, ReservationStatus.DECLINED))
+    @foreach (Reservation reservation in ReservationTable.RetrieveReservationsWith(UserAgent.Account.CompanyId.Value, ReservationStatus.DECLINED))
     {
         <div class="event_item" onclick="clickRes('@AccountTable.RetrieveAccountByID(reservation.CustomerId).Contact.FullName', '@reservation.FromDate.ToString("HH:mm")', '@reservation.TillDate.ToString("HH:mm")', '@reservation.GuestsAmount', '@reservation.Status', '@reservation.Id')">
             <div class="ei_Dot dot_active"></div>
