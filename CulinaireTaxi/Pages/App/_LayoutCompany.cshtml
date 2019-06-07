@@ -1,0 +1,84 @@
+﻿@{
+    Layout = "~/Pages/App/_LayoutBase.cshtml";
+}
+
+@section head_stylesheets {
+    @RenderSection("head_stylesheets", required: false)
+}
+
+@section head_scripts {
+    @RenderSection("head_scripts", required: false)
+}
+
+<div class="container mb-2">
+    <div class="row pb-2">
+        @* FIRST CARD *@
+        <div class="col-sm">
+            <div class="card shadow bg-secondary">
+                <div class="card-body">
+                    <div class="calendar">
+                        <div class="calendar_header">
+                            <h5 class="decorated-header">Reservation Calendar</h5>
+                        </div>
+                        <div class="calendar_plan">
+                            <div class="cl_plan">
+                                <div class="cl_title" style="padding-left: 30px;">
+                                    <form method="post">
+                                        <input name="PostID" type="hidden" value="today_date" required />
+                                        <input class="calendar_input" type="submit" value="Today" />
+                                    </form>
+                                </div>
+                                <div class="cl_copy" style="padding-left: 45px;">@ViewBag.CurrentDate.ToString("D")</div>
+                                <form method="post">
+                                    <input name="Date" type="hidden" value="@ViewBag.CurrentDate.Date" required>
+                                    <input name="PostID" type="hidden" value="sub_date" required />
+
+                                    <input class="calendar_input" type="submit" value="<" style="float:left; margin-left: -25px;" id="submit">
+                                </form>
+                                <form method="post">
+                                    <input name="Date" type="hidden" value="@ViewBag.CurrentDate.Date" required>
+                                    <input name="PostID" type="hidden" value="add_date" required />
+
+                                    <input class="calendar_input" type="submit" value=">" style="float:right; margin-right: -25px;" id="submit">
+                                </form>
+                            </div>
+                        </div>
+                        <div class="calendar_events">
+                            <p class="ce_title">Upcoming Events</p>
+                            @RenderSection("calendar_events", required: true)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @* SECOND CARD *@
+        <div class="col-sm">
+            <div class="card shadow bg-secondary">
+                <div class="card-body">
+                    @RenderSection("contracts", required: true)
+                </div>
+            </div>
+        </div>
+
+        @* THIRD CARD *@
+        <div class="col-sm">
+            <div class="card shadow bg-secondary">
+                <div class="card-body">
+                    <h5 class="decorated-header">Cancelled Reservations</h5>
+                    <div class="calendar_events">
+                        @RenderSection("cancelled_reservations", required: true)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section modals {
+    @RenderSection("modals", required: false)
+}
+
+@section body_scripts {
+    @RenderSection("body_scripts", required: false)
+}

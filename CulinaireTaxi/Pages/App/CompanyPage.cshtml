@@ -1,6 +1,8 @@
 ﻿@page
 @model CompanyPageModel
 @{
+    Layout = null;
+
     var company = CompanyTable.RetrieveCompany(UserAgent.Account.CompanyId.Value);
     var companyName = company.Name;
 }
