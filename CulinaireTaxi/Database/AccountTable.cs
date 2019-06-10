@@ -119,6 +119,52 @@ namespace CulinaireTaxi.Database
             }
         }
 
+        public static Account RetrieveAccountByCompanyID(long companyId)
+        {
+            using (var connection = new MySqlConnection(ConnectionString))
+            {
+                connection.Open();
+
+                using (var retrieveAccountCMD = connection.CreateCommand())
+                {
+                    retrieveAccountCMD.CommandText = "SELECT * FROM Account WHERE company_id = @company_id";
+                    retrieveAccountCMD.Parameters.AddWithValue("@company_id", companyId);
+
+                    using (var reader = retrieveAccountCMD.ExecuteReader(CommandBehavior.SingleRow))
+                    {
+                        if (reader.Read())
+                        {
+                            Account account = new Account();
+
+                            account.Id = reader.GetInt64(0);
+
+                            account.AccountType = (AccountType)reader.GetByte(1);
+
+                            account.Email = reader.GetString(2);
+                            account.Password = reader.GetString(3);
+
+                            account.Contact.FirstName = reader.GetString(4);
+                            account.Contact.LastName = reader.GetString(5);
+
+                            account.Contact.County = !reader.IsDBNull(6) ? reader.GetString(6) : null;
+                            account.Contact.City = !reader.IsDBNull(7) ? reader.GetString(7) : null;
+                            account.Contact.Street = !reader.IsDBNull(8) ? reader.GetString(8) : null;
+                            account.Contact.PostalCode = !reader.IsDBNull(9) ? reader.GetString(9) : null;
+                            account.Contact.PhoneNumber = !reader.IsDBNull(10) ? reader.GetString(10) : null;
+
+                            account.CompanyId = !reader.IsDBNull(11) ? (long?)reader.GetInt64(11) : null;
+
+                            return account;
+                        }
+                        else
+                        {
+                            return null;
+                        }
+                    }
+                }
+            }
+        }
+
         /// <summary>
         /// Attempt to retrieve an account from the database.
         /// </summary>
