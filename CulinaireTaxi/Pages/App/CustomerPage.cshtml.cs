@@ -21,6 +21,9 @@ namespace CulinaireTaxi.Pages
         public const string POSTID_DELETE_RESERVATION = "delete_reservation";
         public const string POSTID_UPDATE_INFO = "update_info";
 
+        public const string POSTID_DELETE_NOTIFICATION = "delete_notification";
+
+
         List<Reservation> reservations = new List<Reservation>();
         int resID;
 
@@ -74,6 +77,12 @@ namespace CulinaireTaxi.Pages
         [BindProperty]
         public int guestsamount { get; set; }
 
+        public long NotificationID
+        {
+            get;
+            set;
+        }
+
         public CustomerPageModel(UserAgent userAgent)
         {
             UserAgent = userAgent;
@@ -106,6 +115,9 @@ namespace CulinaireTaxi.Pages
                     break;
                 case POSTID_UPDATE_INFO:
                     POST_Update_Info();
+                    break;
+                case POSTID_DELETE_NOTIFICATION:
+                    POST_Delete_Notification();
                     break;
             }
         }
@@ -143,7 +155,7 @@ namespace CulinaireTaxi.Pages
                 return;
             }
             Reservation res = ReservationTable.CreateReservation(UserAgent.Account.Id, restaurant, DateTime.Parse(fromdate + " " + fromtime), DateTime.Parse(tilldate + " " + tilltime), guestsamount);
-            NotificationTable.CreateNotification(UserAgent.Account.Id, , res.Id, 2);
+            NotificationTable.CreateNotification(UserAgent.Account.Id, AccountTable.RetrieveAccountByCompanyID(restaurant).Id, res.Id, 2);
         }
 
         private void POST_Update_Info()
@@ -155,6 +167,12 @@ namespace CulinaireTaxi.Pages
             contact.PostalCode = postalcode;
             contact.PhoneNumber = phonenumber;
             AccountTable.UpdateAccountContactDetails(UserAgent.Account.Id, contact);
+        }
+
+        private void POST_Delete_Notification()
+        {
+            bool b = NotificationTable.DeleteNotification(long.Parse(Request.Form["NotificationID"]));
+            System.Diagnostics.Debug.WriteLine(b);
         }
 
         public void AddReservation(Reservation res)

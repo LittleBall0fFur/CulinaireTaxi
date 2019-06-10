@@ -19,15 +19,17 @@ namespace CulinaireTaxi.Database
             {
                 case 0:
                     title = "Reservation canceled";
-                    message = "Your reservation with " + AccountTable.RetrieveAccountByID(sender) + " at " + ReservationTable.RetrieveReservation(resID).FromDate.ToString("D") + " " + ReservationTable.RetrieveReservation(resID).FromDate.ToString("HH:mm") + " has been canceled.";
+                    message = "Your reservation with " + CompanyTable.RetrieveCompany(AccountTable.RetrieveAccountByID(sender).Id).Name + " at " + ReservationTable.RetrieveReservation(resID).FromDate.ToString("D") + " " + ReservationTable.RetrieveReservation(resID).FromDate.ToString("HH:mm") + " has been canceled.";
+                    System.Diagnostics.Debug.WriteLine("Decline");
                     break;
                 case 1:
                     title = "Reservation confirmd";
-                    message = "Your reservation with " + AccountTable.RetrieveAccountByID(sender) + " at " + ReservationTable.RetrieveReservation(resID).FromDate.ToString("D") + " " + ReservationTable.RetrieveReservation(resID).FromDate.ToString("HH:mm") + " has been confirmd.";
+                    message = "Your reservation with " + CompanyTable.RetrieveCompany(AccountTable.RetrieveAccountByID(sender).Id).Name + " at " + ReservationTable.RetrieveReservation(resID).FromDate.ToString("D") + " " + ReservationTable.RetrieveReservation(resID).FromDate.ToString("HH:mm") + " has been confirmd.";
+                    System.Diagnostics.Debug.WriteLine("Accept");
                     break;
                 case 2:
                     title = "A reservation has been made";
-                    message = AccountTable.RetrieveAccountByID(sender).Contact.FullName + "has made a reservation on" + ReservationTable.RetrieveReservation(resID).FromDate.ToString("D") + " " + ReservationTable.RetrieveReservation(resID).FromDate.ToString("HH:mm") + ", please check your calander to accept or decline.";
+                    message = AccountTable.RetrieveAccountByID(sender).Contact.FullName + " has made a reservation on " + ReservationTable.RetrieveReservation(resID).FromDate.ToString("D") + " " + ReservationTable.RetrieveReservation(resID).FromDate.ToString("HH:mm") + ", please check your calander to accept or decline.";
                     break;
             }
             using (var connection = new MySqlConnection(ConnectionString))
@@ -70,6 +72,23 @@ namespace CulinaireTaxi.Database
                     {
                         return null;
                     }
+                }
+            }
+        }
+
+        public static bool DeleteNotification(long id)
+        {
+            using (var connection = new MySqlConnection(ConnectionString))
+            {
+                connection.Open();
+
+                using (var deleteNotificationCMD = connection.CreateCommand())
+                {
+                    deleteNotificationCMD.CommandText = $"DELETE FROM Notification WHERE id = {id}";
+
+                    bool notificationDeleted = (deleteNotificationCMD.ExecuteNonQuery() != 0);
+
+                    return notificationDeleted;
                 }
             }
         }

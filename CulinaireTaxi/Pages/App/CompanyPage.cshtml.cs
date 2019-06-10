@@ -25,7 +25,15 @@ namespace CulinaireTaxi.Pages
         public const string POSTID_DECLINE_RESERVATION = "delete_reservation";
         public const string POSTID_CONFIRM_RESERVATION = "confirm_reservation";
 
+        public const string POSTID_DELETE_NOTIFICATION = "delete_notification";
+
         public long ResID
+        {
+            get;
+            set;
+        }
+
+        public long ResIDCancel
         {
             get;
             set;
@@ -54,6 +62,24 @@ namespace CulinaireTaxi.Pages
 
         [BindProperty]
         public long ContractorID
+        {
+            get;
+            set;
+        }
+
+        public long NotificationID
+        {
+            get;
+            set;
+        }
+
+        public long CustomerID
+        {
+            get;
+            set;
+        }
+
+        public long CustomerIDCancel
         {
             get;
             set;
@@ -100,10 +126,13 @@ namespace CulinaireTaxi.Pages
                     POST_ContractorsRemove();
                     break;
                 case POSTID_DECLINE_RESERVATION:
-                    POST_Delete_Reservation();
+                    POST_Decline_Reservation();
                     break;
                 case POSTID_CONFIRM_RESERVATION:
                     POST_Confirm_Reservation();
+                    break;
+                case POSTID_DELETE_NOTIFICATION:
+                    POST_Delete_Notification();
                     break;
             }
         }
@@ -143,14 +172,21 @@ namespace CulinaireTaxi.Pages
             ContractTable.DeleteContract(UserAgent.Account.CompanyId.Value, ContractorID);
         }
 
-        private void POST_Delete_Reservation()
+        private void POST_Decline_Reservation()
         {
-            ReservationTable.UpdateReservationStatus(long.Parse(Request.Form["ResID"]), ReservationStatus.DECLINED);
+            ReservationTable.UpdateReservationStatus(long.Parse(Request.Form["ResIDCancel"]), ReservationStatus.DECLINED);
+            NotificationTable.CreateNotification(UserAgent.Account.Id, long.Parse(Request.Form["CustomerIDCancel"]), long.Parse(Request.Form["ResIDCancel"]), 0);
         }
 
         private void POST_Confirm_Reservation()
         {
             ReservationTable.UpdateReservationStatus(long.Parse(Request.Form["ResID"]), ReservationStatus.ACCEPTED);
+            NotificationTable.CreateNotification(UserAgent.Account.Id, long.Parse(Request.Form["CustomerID"]), long.Parse(Request.Form["ResID"]), 1);
+        }
+
+        private void POST_Delete_Notification()
+        {
+            NotificationTable.DeleteNotification(long.Parse(Request.Form["NotificationID"]));
         }
 
         public Reservation GetReservationByID(int id)

@@ -40,6 +40,13 @@
             </div>
         </nav>
 
+        <div>
+            <a onclick="clickNotification(@UserAgent.Account.Id)" class="notification" style="float:right; margin-top: -50px;">
+                <span><img src="~/images/icons/notification_icon.png" style="height: 45px; width:45px; cursor:pointer;"></span>
+                <span class="badge">@NotificationTable.GetNotificationsFor(UserAgent.Account.Id).Count().ToString()</span>
+            </a>
+        </div>
+
         <div class="container mx-auto mt-5">
             <div class="row">
                 <div class="col text-center">
@@ -53,232 +60,257 @@
     </div>
 
     @* MAIN CONTENT *@
-    <div class="container">
-        <div class="row">
-            @* CALANDER CARD *@
-            <div class="col-sm pb-2">
-                <div class="card shadow bg-secondary">
-                    <div class="card-body">
-                        <div class="calendar">
-                            <div class="calendar_header">
-                                <h5 class="header_copy">Reservation Calendar</h5>
-                            </div>
-                            <div class="calendar_plan">
-                                <div class="cl_plan">
-                                    <div class="cl_title" style="padding-left: 30px;">
-                                        <form method="post">
-                                            <input asp-for="PostID" type="hidden" value="@CustomerPageModel.POSTID_CALENDAR_TODAY" required />
-                                            <input class="calendar_input" type="submit" value="Today" />
-                                        </form>
-                                    </div>
-                                    <div class="cl_copy" style="padding-left: 45px;">@Model.GetDate().ToString("D")</div>
+<div class="container">
+    <div class="row">
+        @* CALANDER CARD *@
+        <div class="col-sm pb-2">
+            <div class="card shadow bg-secondary">
+                <div class="card-body">
+                    <div class="calendar">
+                        <div class="calendar_header">
+                            <h5 class="header_copy">Reservation Calendar</h5>
+                        </div>
+                        <div class="calendar_plan">
+                            <div class="cl_plan">
+                                <div class="cl_title" style="padding-left: 30px;">
                                     <form method="post">
-                                        <input asp-for="Date" type="hidden" value="@Model.Date" required>
-                                        <input asp-for="PostID" type="hidden" value="@CustomerPageModel.POSTID_CALENDAR_BACKWARDS" required />
-
-                                        <input class="calendar_input" type="submit" value="<" style="float:left; margin-left: -25px;" id="submit">
-                                    </form>
-                                    <form method="post">
-                                        <input asp-for="Date" type="hidden" value="@Model.Date" required>
-                                        <input asp-for="PostID" type="hidden" value="@CustomerPageModel.POSTID_CALENDAR_FORWARDS" required />
-
-                                        <input class="calendar_input" type="submit" value=">" style="float:right; margin-right: -25px;" id="submit">
+                                        <input asp-for="PostID" type="hidden" value="@CustomerPageModel.POSTID_CALENDAR_TODAY" required />
+                                        <input class="calendar_input" type="submit" value="Today" />
                                     </form>
                                 </div>
-                            </div>
-                            <div class="calendar_events">
-                                <p class="ce_title">Upcoming Events</p>
-                                @foreach (Reservation reservation in ReservationTable.RetrieveReservationsFrom(UserAgent.Account.Id, Model.GetDate()))
-                                {
-                                    
-                                    <div class="event_item" onclick="clickRes('@AccountTable.RetrieveAccountByID(reservation.CompanyId).Contact.FullName', '@reservation.FromDate.ToString("HH:mm")', '@reservation.TillDate.ToString("HH:mm")', '@reservation.GuestsAmount', '@reservation.Status', '@reservation.Id')">
-                                        <div class="ei_Dot dot_active"></div>
-                                        <div class="ei_Title"><p id="time">@reservation.FromDate.ToString("HH:mm") -  @reservation.TillDate.ToString("HH:mm")</p></div>
-                                        <div class="ei_Copy"><p>Name: @AccountTable.RetrieveAccountByID(reservation.CompanyId).Contact.FullName <br /> Amount of people: @reservation.GuestsAmount <br /> Status: @reservation.Status</p></div>
-                                    </div>
-                                    Model.AddReservation(reservation);
-                                }
+                                <div class="cl_copy" style="padding-left: 45px;">@Model.GetDate().ToString("D")</div>
+                                <form method="post">
+                                    <input asp-for="Date" type="hidden" value="@Model.Date" required>
+                                    <input asp-for="PostID" type="hidden" value="@CustomerPageModel.POSTID_CALENDAR_BACKWARDS" required />
+
+                                    <input class="calendar_input" type="submit" value="<" style="float:left; margin-left: -25px;" id="submit">
+                                </form>
+                                <form method="post">
+                                    <input asp-for="Date" type="hidden" value="@Model.Date" required>
+                                    <input asp-for="PostID" type="hidden" value="@CustomerPageModel.POSTID_CALENDAR_FORWARDS" required />
+
+                                    <input class="calendar_input" type="submit" value=">" style="float:right; margin-right: -25px;" id="submit">
+                                </form>
                             </div>
                         </div>
-                    </div>
-                </div>
-            </div>
-            @* ACCOUNT DETAIL CARD *@
-            <div class="col-sm pb-4">
-                <div class="card shadow bg-secondary">
-                    <div class="card-body">
-                        <div class="accountdetailpanel">
-                            <h5 class="card-title">Account Details</h5>
-
-                            @if (user.Contact.MissingData())
+                        <div class="calendar_events">
+                            <p class="ce_title">Upcoming Events</p>
+                            @foreach (Reservation reservation in ReservationTable.RetrieveReservationsFrom(UserAgent.Account.Id, Model.GetDate()))
                             {
-                                <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                                    <strong>Oh snap!</strong> Vergeet niet alle contact gegevens in te vullen om goed berijkbaar te blijven.
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
+
+                                <div class="event_item" onclick="clickRes('@AccountTable.RetrieveAccountByID(reservation.CompanyId).Contact.FullName', '@reservation.FromDate.ToString("HH:mm")', '@reservation.TillDate.ToString("HH:mm")', '@reservation.GuestsAmount', '@reservation.Status', '@reservation.Id')">
+                                    <div class="ei_Dot dot_active"></div>
+                                    <div class="ei_Title"><p id="time">@reservation.FromDate.ToString("HH:mm") -  @reservation.TillDate.ToString("HH:mm")</p></div>
+                                    <div class="ei_Copy"><p>Name: @AccountTable.RetrieveAccountByID(reservation.CompanyId).Contact.FullName <br /> Amount of people: @reservation.GuestsAmount <br /> Status: @reservation.Status</p></div>
                                 </div>
+                                Model.AddReservation(reservation);
                             }
-
-                            @*fullname*@
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text" id="">Full Name</span>
-                                </div>
-                                <input type="text" style="margin:0px;" class="form-control" value="@user.Contact.FullName">
-                            </div>
-                            @*email*@
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text" id="">Email</span>
-                                </div>
-                                <input type="text" style="margin:0px;" class="form-control" value="@user.Email">
-                            </div>
-                            <form method="post">
-                                @*account detail form*@
-                                <input type="hidden" name="form_id" value="0" />
-                                @*County*@
-                                <div class="input-group mb-3">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text" id="">County</span>
-                                    </div>
-                                    <input type="text" name="county" style="margin:0px;" class="form-control" placeholder="Groningen" value="@user.Contact.County">
-                                </div>
-                                @*City*@
-                                <div class="input-group mb-3">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text" id="">City</span>
-                                    </div>
-                                    <input type="text" name="city" style="margin:0px;" class="form-control" placeholder="Groningen" value="@user.Contact.City">
-                                </div>
-                                @*Streetname*@
-                                <div class="input-group mb-3">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text" id="">Street</span>
-                                    </div>
-                                    <input type="text" name="streetname" style="margin:0px;" class="form-control" placeholder="Herestraat 12" value="@user.Contact.Street">
-                                </div>
-                                @*PostalCode*@
-                                <div class="input-group mb-3">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text" id="">Postal Code</span>
-                                    </div>
-                                    <input type="text" name="postalcode" style="margin:0px;" class="form-control" placeholder="9711 LJ" value="@user.Contact.PostalCode">
-                                </div>
-                                @*PhoneNumber*@
-                                <div class="input-group mb-3">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text" id="">Phone Number</span>
-                                    </div>
-                                    <input type="text" name="phonenumber" style="margin:0px;" class="form-control" placeholder="0622334455" value="@user.Contact.PhoneNumber">
-                                </div>
-                                @*submit*@
-                                <input asp-for="PostID" type="hidden" value="@CustomerPageModel.POSTID_UPDATE_INFO" required />
-                                <button type="submit" class="btn btn-primary">Save Details</button>
-                            </form>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        @* ACCOUNT DETAIL CARD *@
+        <div class="col-sm pb-4">
+            <div class="card shadow bg-secondary">
+                <div class="card-body">
+                    <div class="accountdetailpanel">
+                        <h5 class="card-title">Account Details</h5>
 
-        <div class="row">
-            @* FIRST CARD *@
-            <div class="col-sm pb-2">
-                <div class="card shadow bg-secondary">
-                    <div class="card-body">
-                        <div class="reservatiepanel" style="color:white">
-                            <h5 class="card-title">Create Reservation</h5>
-                            <p class="card-text">
-                                Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui.
-                            </p>
+                        @if (user.Contact.MissingData())
+                        {
+                            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                <strong>Oh snap!</strong> Vergeet niet alle contact gegevens in te vullen om goed berijkbaar te blijven.
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        }
 
-                            <form method="post">
-                                @*Reservatie form*@
-                                <input type="hidden" name="form_id" value="1" />
-                                @*restaurant*@
-                                <div class="form-group row">
-                                    <label class="col-4 col-form-label">Restaurant</label>
-                                    <div class="col-8">
-                                        <select name="restaurant" class="form-control">
-                                            @{
-                                                List<Company> companyList = CompanyTable.RetrieveCompaniesOfType(CompanyType.RESTAURANT);
-                                                for (int i = 0; i < companyList.Count; i++)
-                                                {
-                                                    <option value="@companyList[i].Id">@companyList[i].Name</option>
-                                                }
-                                            }
-                                        </select>
-                                    </div>
-                                </div>
-                                @*from date*@
-                                <div class="form-group row">
-                                    <label class="col-4 col-form-label">From Date</label>
-                                    <div class="col-5">
-                                        <input class="form-control" style="margin:0px;" type="date" value="2000-01-01" name="fromdate">
-                                    </div>
-                                    <div class="col-3">
-                                        <input class="form-control" style="margin:0px;" type="time" value="00:00" name="fromtime">
-                                    </div>
-                                </div>
-                                @*till date*@
-                                <div class="form-group row">
-                                    <label class="col-4 col-form-label">Till Date</label>
-                                    <div class="col-5">
-                                        <input class="form-control" style="margin:0px;" type="date" value="2000-01-01" name="tilldate">
-                                    </div>
-                                    <div class="col-3">
-                                        <input class="form-control" style="margin:0px;" type="time" value="00:00" name="tilltime">
-                                    </div>
-                                </div>
-                                @*guests amount*@
-                                <div class="form-group row">
-                                    <label class="col-4 col-form-label">Amount of people</label>
-                                    <div class="col-8">
-                                        <input class="form-control" style="margin:0px;" type="number" value="0" name="guestsamount">
-                                    </div>
-                                </div>
-                                @*submit*@
-                                <input asp-for="PostID" type="hidden" value="@CustomerPageModel.POSTID_CREATE_RESERVATION" required />
-                                <button type="submit" class="btn btn-primary">Place Reservation</button>
-                            </form>
-
+                        @*fullname*@
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="">Full Name</span>
+                            </div>
+                            <input type="text" style="margin:0px;" class="form-control" value="@user.Contact.FullName">
                         </div>
-                    </div>
-                </div>
-            </div>
-            @* SECOND CARD *@
-            <div class="col-sm pb-4">
-                <div class="card shadow bg-secondary">
-                    <div class="card-body">
-                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                        @*email*@
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="">Email</span>
+                            </div>
+                            <input type="text" style="margin:0px;" class="form-control" value="@user.Email">
+                        </div>
+                        <form method="post">
+                            @*account detail form*@
+                            <input type="hidden" name="form_id" value="0" />
+                            @*County*@
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="">County</span>
+                                </div>
+                                <input type="text" name="county" style="margin:0px;" class="form-control" placeholder="Groningen" value="@user.Contact.County">
+                            </div>
+                            @*City*@
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="">City</span>
+                                </div>
+                                <input type="text" name="city" style="margin:0px;" class="form-control" placeholder="Groningen" value="@user.Contact.City">
+                            </div>
+                            @*Streetname*@
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="">Street</span>
+                                </div>
+                                <input type="text" name="streetname" style="margin:0px;" class="form-control" placeholder="Herestraat 12" value="@user.Contact.Street">
+                            </div>
+                            @*PostalCode*@
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="">Postal Code</span>
+                                </div>
+                                <input type="text" name="postalcode" style="margin:0px;" class="form-control" placeholder="9711 LJ" value="@user.Contact.PostalCode">
+                            </div>
+                            @*PhoneNumber*@
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="">Phone Number</span>
+                                </div>
+                                <input type="text" name="phonenumber" style="margin:0px;" class="form-control" placeholder="0622334455" value="@user.Contact.PhoneNumber">
+                            </div>
+                            @*submit*@
+                            <input asp-for="PostID" type="hidden" value="@CustomerPageModel.POSTID_UPDATE_INFO" required />
+                            <button type="submit" class="btn btn-primary">Save Details</button>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
-
-        <div id="ResPopUp" class="modal">
-            <!-- Modal content -->
-            <div class="modal-content shadow bg-secondary">
-                <span class="close">&times;</span>
-                <h5>Reservation</h5>
-                <h6>Name:</h6>
-                <p id="GuestName" style="padding-left: 30px;"></p>
-                <h6>Amount of people:</h6>
-                <p id="GuestAmount" style="padding-left: 30px;"></p>
-                <h6>Time:</h6>
-                <p id="Time" style="padding-left: 30px;"></p>
-                <h6>Status:</h6>
-                <p id="Status" style="padding-left: 30px;"></p>
-                <form method="post">
-                    <input id="ResID" type="hidden" asp-for="ResID" value="" />
-                    <input asp-for="PostID" type="hidden" value="@CustomerPageModel.POSTID_DELETE_RESERVATION" required />
-                    <button class="btn btn-primary" id="Cancel" type="submit" style="float:right; margin-top:-15px; width:20%;">Cancel</button>
-                </form>
-            </div>
-        </div>
-
     </div>
+
+    <div class="row">
+        @* FIRST CARD *@
+        <div class="col-sm pb-2">
+            <div class="card shadow bg-secondary">
+                <div class="card-body">
+                    <div class="reservatiepanel" style="color:white">
+                        <h5 class="card-title">Create Reservation</h5>
+                        <p class="card-text">
+                            Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui.
+                        </p>
+
+                        <form method="post">
+                            @*Reservatie form*@
+                            <input type="hidden" name="form_id" value="1" />
+                            @*restaurant*@
+                            <div class="form-group row">
+                                <label class="col-4 col-form-label">Restaurant</label>
+                                <div class="col-8">
+                                    <select name="restaurant" class="form-control">
+                                        @{
+                                            List<Company> companyList = CompanyTable.RetrieveCompaniesOfType(CompanyType.RESTAURANT);
+                                            for (int i = 0; i < companyList.Count; i++)
+                                            {
+                                                <option value="@companyList[i].Id">@companyList[i].Name</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            @*from date*@
+                            <div class="form-group row">
+                                <label class="col-4 col-form-label">From Date</label>
+                                <div class="col-5">
+                                    <input class="form-control" style="margin:0px;" type="date" value="2000-01-01" name="fromdate">
+                                </div>
+                                <div class="col-3">
+                                    <input class="form-control" style="margin:0px;" type="time" value="00:00" name="fromtime">
+                                </div>
+                            </div>
+                            @*till date*@
+                            <div class="form-group row">
+                                <label class="col-4 col-form-label">Till Date</label>
+                                <div class="col-5">
+                                    <input class="form-control" style="margin:0px;" type="date" value="2000-01-01" name="tilldate">
+                                </div>
+                                <div class="col-3">
+                                    <input class="form-control" style="margin:0px;" type="time" value="00:00" name="tilltime">
+                                </div>
+                            </div>
+                            @*guests amount*@
+                            <div class="form-group row">
+                                <label class="col-4 col-form-label">Amount of people</label>
+                                <div class="col-8">
+                                    <input class="form-control" style="margin:0px;" type="number" value="0" name="guestsamount">
+                                </div>
+                            </div>
+                            @*submit*@
+                            <input asp-for="PostID" type="hidden" value="@CustomerPageModel.POSTID_CREATE_RESERVATION" required />
+                            <button type="submit" class="btn btn-primary">Place Reservation</button>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        @* SECOND CARD *@
+        <div class="col-sm pb-4">
+            <div class="card shadow bg-secondary">
+                <div class="card-body">
+                    <a href="#" class="btn btn-primary">Go somewhere</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="ResPopUp" class="modal">
+        <!-- Modal content -->
+        <div class="modal-content shadow bg-secondary">
+            <span class="close">&times;</span>
+            <h5>Reservation</h5>
+            <h6>Name:</h6>
+            <p id="GuestName" style="padding-left: 30px;"></p>
+            <h6>Amount of people:</h6>
+            <p id="GuestAmount" style="padding-left: 30px;"></p>
+            <h6>Time:</h6>
+            <p id="Time" style="padding-left: 30px;"></p>
+            <h6>Status:</h6>
+            <p id="Status" style="padding-left: 30px;"></p>
+            <form method="post">
+                <input id="ResID" type="hidden" asp-for="ResID" value="" />
+                <input asp-for="PostID" type="hidden" value="@CustomerPageModel.POSTID_DELETE_RESERVATION" required />
+                <button class="btn btn-primary" id="Cancel" type="submit" style="float:right; margin-top:-15px; width:20%;">Cancel</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="NotificationPopUp" class="modal">
+        <!-- Modal content -->
+        <div class="modal-content shadow bg-secondary">
+            <span class="close" id="Close">&times;</span>
+            <h5>Messages</h5>
+            @if (NotificationTable.GetNotificationsFor(UserAgent.Account.Id).Count == 0)
+            {<h6>There are no notifications in your inbox...</h6>}
+            else
+            {
+                foreach (Notification notification in NotificationTable.GetNotificationsFor(UserAgent.Account.Id))
+                {
+                    <button class="accordion"><h6 style="margin-top: -10px;">@notification.Title</h6></button>
+                    <div class="panel">
+                        <p style="padding: 10px;">@notification.Message</p>
+                        <form method="post">
+                            <input id="NotificationID" type="hidden" asp-for="NotificationID" value="@notification.ID" />
+                            <input asp-for="PostID" type="hidden" value="@CompanyPageModel.POSTID_DELETE_NOTIFICATION" required />
+                            <button class="btn btn-primary" type="submit" style="float:right; width: 70px; height: 40px; margin: 15px;">Delete</button>
+                        </form>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+
+</div>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
@@ -332,6 +364,45 @@
                     }
                 }
             }
+            }
+
+    //Notification
+    // Get the modal
+        var popUp = document.getElementById('NotificationPopUp');
+
+        // Get the <span> element that closes the modal
+        var span2 = document.getElementById("Close");
+
+        // When the user clicks the button, open the modal
+        function clickNotification(id) {
+            popUp.style.display = "block";
+        }
+
+        // When the user clicks on <span> (x), close the modal
+        span2.onclick = function () {
+            popUp.style.display = "none";
+        }
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                popUp.style.display = "none";
+            }
+        }
+
+        var acc = document.getElementsByClassName("accordion");
+        var i;
+
+        for (i = 0; i < acc.length; i++) {
+            acc[i].addEventListener("click", function() {
+                this.classList.toggle("active");
+                var panel = this.nextElementSibling;
+                if (panel.style.display === "block") {
+                    panel.style.display = "none";
+                } else {
+                    panel.style.display = "block";
+                }
+            });
         }
     </script>
 
@@ -422,6 +493,48 @@
 
         .show {
             display: block;
+        }
+
+        /*notification*/
+        .notification {
+          text-decoration: none;
+          padding: 15px 26px;
+          position: relative;
+        }
+
+        .notification .badge {
+          position: absolute;
+          top: 10px;
+          right: 20px;
+          border-radius: 50%;
+          background-color: red;
+          color: white;
+          width:20px;
+          height: 20px;
+          text-align: center;
+        }
+
+        .accordion {
+          background-color: rgba(0,0,0,0);
+          cursor: pointer;
+          padding: 18px;
+          width: 100%;
+          max-height: 50px;
+          text-align: left;
+          outline: none;
+          transition: 0.4s;
+          border: 2px solid rgba(0, 0, 0, 0.08);
+        }
+
+        .active, .accordion:hover {
+          background-color: #1da1a3; 
+        }
+
+        .panel {
+          padding: 0 18px;
+          display: none;
+          background-color: rgba(0,0,0,0.4);
+          overflow: hidden;
         }
     </style>
     <style>

@@ -45,8 +45,8 @@
         <div>
             
             <a onclick="clickNotification(@UserAgent.Account.Id)" class="notification" style="float:right; margin-top: -50px;">
-                <span><img src="~/images/icons/icon.png" style="height: 45px; width:45px; cursor:pointer;"></span>
-                <span class="badge">@NotificationTable.GetNotificationsFrom(UserAgent.Account.Id).Count().ToString()</span>
+                <span><img src="~/images/icons/notification_icon.png" style="height: 45px; width:45px; cursor:pointer;"></span>
+                <span class="badge">@NotificationTable.GetNotificationsFor(UserAgent.Account.Id).Count().ToString()</span>
             </a>
         </div>
 
@@ -102,7 +102,7 @@
                                 {
                                     if (reservation.Status != ReservationStatus.DECLINED)
                                     {
-                                        <div class="event_item" onclick="clickRes('@AccountTable.RetrieveAccountByID(reservation.CustomerId).Contact.FullName', '@reservation.FromDate.ToString("HH:mm")', '@reservation.TillDate.ToString("HH:mm")', '@reservation.GuestsAmount', '@reservation.Status', '@reservation.Id')">
+                                        <div class="event_item" onclick="clickRes('@AccountTable.RetrieveAccountByID(reservation.CustomerId).Contact.FullName', '@reservation.FromDate.ToString("HH:mm")', '@reservation.TillDate.ToString("HH:mm")', '@reservation.GuestsAmount', '@reservation.Status', '@reservation.Id', '@reservation.CustomerId')">
                                             <div class="ei_Dot dot_active"></div>
                                             <div class="ei_Title"><p id="time">@reservation.FromDate.ToString("HH:mm") -  @reservation.TillDate.ToString("HH:mm")</p></div>
                                             <div class="ei_Copy"><p>Name: @AccountTable.RetrieveAccountByID(reservation.CustomerId).Contact.FirstName @AccountTable.RetrieveAccountByID(reservation.CustomerId).Contact.LastName <br /> Amount of people: @reservation.GuestsAmount <br /> Status: @reservation.Status</p></div>
@@ -166,7 +166,7 @@
                             {
                                 if (reservation.Status == ReservationStatus.DECLINED)
                                 {
-                                    <div class="event_item" onclick="clickRes('@AccountTable.RetrieveAccountByID(reservation.CustomerId).Contact.FullName', '@reservation.FromDate.ToString("HH:mm")', '@reservation.TillDate.ToString("HH:mm")', '@reservation.GuestsAmount', '@reservation.Status', '@reservation.Id')">
+                                    <div class="event_item" onclick="clickRes('@AccountTable.RetrieveAccountByID(reservation.CustomerId).Contact.FullName', '@reservation.FromDate.ToString("HH:mm")', '@reservation.TillDate.ToString("HH:mm")', '@reservation.GuestsAmount', '@reservation.Status', '@reservation.Id', '@reservation.CustomerId')">
                                         <div class="ei_Dot dot_active"></div>
                                         <div class="ei_Title"><p id="time">@reservation.FromDate.ToString("D")</p></div>
                                         <p id="time">@reservation.FromDate.ToString("HH:mm") -  @reservation.TillDate.ToString("HH:mm")</p>
@@ -196,12 +196,14 @@
             <h6>Status:</h6>
             <p id="Status" style="padding-left: 30px;"></p>
             <form method="post">
+                <input id="CustomerID" type="hidden" asp-for="CustomerID" value="" />
                 <input id="ResID" type="hidden" asp-for="ResID" value="" />
                 <input asp-for="PostID" type="hidden" value="@CompanyPageModel.POSTID_CONFIRM_RESERVATION" required />
                 <button class="btn btn-primary" id="Accept" type="submit" style="float:left; margin-bottom: -20px; width:20%;">Confirm</button>
             </form>
             <form method="post">
-                <input id="ResID_Cancel" type="hidden" asp-for="ResID" value="" />
+                <input id="ResIDCancel" type="hidden" asp-for="ResIDCancel" value="" />
+                <input id="CustomerIDCancel" type="hidden" asp-for="CustomerIDCancel" value="" />
                 <input asp-for="PostID" type="hidden" value="@CompanyPageModel.POSTID_DECLINE_RESERVATION" required />
                 <button class="btn btn-primary" id="Cancel" type="submit" style="float:right; margin-top:-15px; width:20%;">Cancel</button>
             </form>
@@ -212,14 +214,21 @@
         <!-- Modal content -->
         <div class="modal-content shadow bg-secondary">
             <span class="close" id="Close">&times;</span>
-            @if (NotificationTable.GetNotificationsFor(UserAgent.Account.Id).Count == 0) { }
+            <h5>Messages</h5>
+            @if (NotificationTable.GetNotificationsFor(UserAgent.Account.Id).Count == 0)
+            {<h6>There are no notifications in your inbox...</h6>}
             else
             {
                 foreach (Notification notification in NotificationTable.GetNotificationsFor(UserAgent.Account.Id))
                 {
-                    <button class="accordion">@notification.Title</button>
+                    <button class="accordion"><h6 style="margin-top: -10px;">@notification.Title</h6></button>
                     <div class="panel">
-                        <p>@notification.Message</p>
+                        <p style="padding: 10px;">@notification.Message</p>
+                        <form method="post">
+                            <input id="NotificationID" type="hidden" asp-for="NotificationID" value="@notification.ID" />
+                            <input asp-for="PostID" type="hidden" value="@CompanyPageModel.POSTID_DELETE_NOTIFICATION" required />
+                            <button class="btn btn-primary" type="submit" style="float:right; width: 70px; height: 40px; margin: 15px;">Delete</button>
+                        </form>
                     </div>
                 }
             }
@@ -238,11 +247,12 @@
         var span = document.getElementsByClassName("close")[0];
 
         // When the user clicks the button, open the modal
-        function clickRes(customerName, fromDate, tillDate, guestsAmount, status, resID) {
+        function clickRes(customerName, fromDate, tillDate, guestsAmount, status, resID, customerID) {
             $("#GuestName").text(customerName);
             $("#GuestAmount").text(guestsAmount);
             $("#Time").text(fromDate + " - " + tillDate);
             $("#Status").text(status);
+
             if (status == "ACCEPTED") {
                 document.getElementById("Accept").disabled = true;
                 document.getElementById("Cancel").disabled = false;
@@ -253,7 +263,10 @@
             }
 
             document.getElementById("ResID").value = resID;
-            document.getElementById("ResID_Cancel").value = resID;
+            document.getElementById("ResIDCancel").value = resID;
+
+            document.getElementById("CustomerID").value = customerID;
+            document.getElementById("CustomerIDCancel").value = customerID;
 
             modal.style.display = "block";
         }
@@ -355,24 +368,6 @@
                 text-decoration: none;
                 cursor: pointer;
             }
-
-        .notification {
-          text-decoration: none;
-          padding: 15px 26px;
-          position: relative;
-        }
-
-        .notification .badge {
-          position: absolute;
-          top: 10px;
-          right: 20px;
-          border-radius: 50%;
-          background-color: red;
-          color: white;
-          width:20px;
-          height: 20px;
-          text-align: center;
-        }
 
         .calendar_input {
             margin-top: -80px;
@@ -490,27 +485,44 @@
         }
 
         /*notification*/
+        .notification {
+          text-decoration: none;
+          padding: 15px 26px;
+          position: relative;
+        }
+
+        .notification .badge {
+          position: absolute;
+          top: 10px;
+          right: 20px;
+          border-radius: 50%;
+          background-color: red;
+          color: white;
+          width:20px;
+          height: 20px;
+          text-align: center;
+        }
+
         .accordion {
-          background-color: #eee;
-          color: #444;
+          background-color: rgba(0,0,0,0);
           cursor: pointer;
           padding: 18px;
           width: 100%;
-          border: none;
+          max-height: 50px;
           text-align: left;
           outline: none;
-          font-size: 15px;
           transition: 0.4s;
+          border: 2px solid rgba(0, 0, 0, 0.08);
         }
 
         .active, .accordion:hover {
-          background-color: #ccc; 
+          background-color: #1da1a3; 
         }
 
         .panel {
           padding: 0 18px;
           display: none;
-          background-color: white;
+          background-color: rgba(0,0,0,0.4);
           overflow: hidden;
         }
     </style>
