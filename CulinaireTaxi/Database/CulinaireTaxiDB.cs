@@ -101,6 +101,7 @@ namespace CulinaireTaxi.Database
                     "(id BIGINT NOT NULL AUTO_INCREMENT," +
                     " customer_id BIGINT NOT NULL," +
                     " company_id BIGINT NOT NULL," +
+                    " taxicompany_id BIGINT," +
                     " from_date DATETIME NOT NULL," +
                     " till_date DATETIME NOT NULL," +
                     " guests_amount INT NOT NULL," +
@@ -113,6 +114,10 @@ namespace CulinaireTaxi.Database
                     " FOREIGN KEY (company_id)" +
                     " REFERENCES Company(id)" +
                     " ON DELETE CASCADE" +
+                    " ON UPDATE CASCADE," +
+                    " FOREIGN KEY (taxicompany_id)" +
+                    " REFERENCES Company(id)" +
+                    " ON DELETE SET NULL" +
                     " ON UPDATE CASCADE)";
 
                     createNotificationTableCMD.CommandText =

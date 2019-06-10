@@ -1,6 +1,8 @@
 ﻿@page
 @model CustomerPageModel
 @{
+    Layout = null;
+
     var user = UserAgent.Account;
 }
 <!DOCTYPE HTML>
@@ -26,7 +28,7 @@
             <div class="collapse navbar-collapse">
                 <ul class="navbar-nav m-auto">
                     <li class="nav-item border-right">
-                        <a class="nav-link" href="/Index">Uitloggen</a>
+                        <a class="nav-link" href="/Portal/Logout">Logout</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/About">How to use</a>
@@ -65,14 +67,14 @@
                     <div class="card-body">
                         <div class="calendar">
                             <div class="calendar_header">
-                                <h5 class="header_copy">Reserverings kalender</h5>
+                                <h5 class="header_copy">Reservation Calendar</h5>
                             </div>
                             <div class="calendar_plan">
                                 <div class="cl_plan">
                                     <div class="cl_title" style="padding-left: 30px;">
                                         <form method="post">
                                             <input asp-for="PostID" type="hidden" value="@CustomerPageModel.POSTID_CALENDAR_TODAY" required />
-                                            <input class="calendar_input" type="submit" value="Vandaag" />
+                                            <input class="calendar_input" type="submit" value="Today" />
                                         </form>
                                     </div>
                                     <div class="cl_copy" style="padding-left: 45px;">@Model.GetDate().ToString("D")</div>
@@ -114,16 +116,14 @@
                         <div class="accountdetailpanel">
                             <h5 class="card-title">Account Details</h5>
 
-                            @{
-                                if (user.Contact.MissingData())
-                                {
-                                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                                        <strong>Oh snap!</strong> Vergeet niet alle contact gegevens in te vullen om goed berijkbaar te blijven.
-                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                }
+                            @if (user.Contact.MissingData())
+                            {
+                                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                    <strong>Oh snap!</strong> Vergeet niet alle contact gegevens in te vullen om goed berijkbaar te blijven.
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
                             }
 
                             @*fullname*@
@@ -179,7 +179,7 @@
                                     <input type="text" name="phonenumber" style="margin:0px;" class="form-control" placeholder="0622334455" value="@user.Contact.PhoneNumber">
                                 </div>
                                 @*submit*@
-                            <input asp-for="PostID" type="hidden" value="@CustomerPageModel.POSTID_UPDATE_INFO" required />
+                                <input asp-for="PostID" type="hidden" value="@CustomerPageModel.POSTID_UPDATE_INFO" required />
                                 <button type="submit" class="btn btn-primary">Save Details</button>
                             </form>
                         </div>
@@ -207,7 +207,6 @@
                                     <label class="col-4 col-form-label">Restaurant</label>
                                     <div class="col-8">
                                         <select name="restaurant" class="form-control">
-                                            <option selected>Choose...</option>
                                             @{
                                                 List<Company> companyList = CompanyTable.RetrieveCompaniesOfType(CompanyType.RESTAURANT);
                                                 for (int i = 0; i < companyList.Count; i++)
@@ -240,7 +239,7 @@
                                 </div>
                                 @*guests amount*@
                                 <div class="form-group row">
-                                    <label class="col-4 col-form-label">Guests Amount</label>
+                                    <label class="col-4 col-form-label">Amount of people</label>
                                     <div class="col-8">
                                         <input class="form-control" style="margin:0px;" type="number" value="0" name="guestsamount">
                                     </div>
@@ -268,19 +267,19 @@
             <!-- Modal content -->
             <div class="modal-content shadow bg-secondary">
                 <span class="close">&times;</span>
-                <h5>Reservatie</h5>
-                <h6>Naam:</h6>
+                <h5>Reservation</h5>
+                <h6>Name:</h6>
                 <p id="GuestName" style="padding-left: 30px;"></p>
-                <h6>Aantal gasten:</h6>
+                <h6>Amount of people:</h6>
                 <p id="GuestAmount" style="padding-left: 30px;"></p>
-                <h6>Tijd:</h6>
+                <h6>Time:</h6>
                 <p id="Time" style="padding-left: 30px;"></p>
                 <h6>Status:</h6>
                 <p id="Status" style="padding-left: 30px;"></p>
                 <form method="post">
                     <input id="ResID" type="hidden" asp-for="ResID" value="" />
                     <input asp-for="PostID" type="hidden" value="@CustomerPageModel.POSTID_DELETE_RESERVATION" required />
-                    <button class="btn btn-primary" id="Cancel" type="submit" style="float:right; margin-top:-15px; width:20%;">Annuleer</button>
+                    <button class="btn btn-primary" id="Cancel" type="submit" style="float:right; margin-top:-15px; width:20%;">Cancel</button>
                 </form>
             </div>
         </div>

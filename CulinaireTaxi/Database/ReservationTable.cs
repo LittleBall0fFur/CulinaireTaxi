@@ -62,6 +62,10 @@ namespace CulinaireTaxi.Database
             }
         }
 
+        /*
+         * RETRIEVE RESERVATIONS ASSOCIATED WITH A RESTAURANT
+         */
+
         /// <summary>
         /// Attempt to retrieve reservations from the database.
         /// </summary>
@@ -128,13 +132,51 @@ namespace CulinaireTaxi.Database
         /// <returns>A list of reservations.</returns>
         public static List<Reservation> RetrieveReservationsFor(long companyId, DateTime start, DateTime end, ReservationStatus status)
         {
-            return RetrieveReservations($" WHERE company_id = {companyId} AND (from_date BETWEEN '{start.ToMySqlFormat()}' AND '{end.ToMySqlFormat()}') AND status = {(byte)status}");
+            return RetrieveReservations($" WHERE taxicompany_id = {companyId} AND (from_date BETWEEN '{start.ToMySqlFormat()}' AND '{end.ToMySqlFormat()}') AND status = {(byte)status}");
+        }
+
+        /*
+         * RETRIEVE RESERVATIONS ASSOCIATED WITH A TAXI COMPANY
+         */
+
+        public static List<Reservation> RetrieveReservationsWith(long taxiCompanyId)
+        {
+            return RetrieveReservations($" WHERE taxicompany_id = {taxiCompanyId}");
+        }
+
+        public static List<Reservation> RetrieveReservationsWith(long taxiCompanyId, ReservationStatus status)
+        {
+            return RetrieveReservations($" WHERE taxicompany_id = {taxiCompanyId} AND status = {(byte)status}");
+        }
+
+        public static List<Reservation> RetrieveReservationsWith(long taxiCompanyId, DateTime day)
+        {
+            return RetrieveReservationsFor(taxiCompanyId, day.Date, day.Date.AddDays(1));
+        }
+
+        public static List<Reservation> RetrieveReservationsWith(long taxiCompanyId, DateTime start, DateTime end)
+        {
+            return RetrieveReservations($" WHERE taxicompany_id = {taxiCompanyId} AND (from_date BETWEEN '{start.ToMySqlFormat()}' AND '{end.ToMySqlFormat()}')");
+        }
+
+        public static List<Reservation> RetrieveReservationsWith(long taxiCompanyId, DateTime day, ReservationStatus status)
+        {
+            return RetrieveReservationsFor(taxiCompanyId, day.Date, day.Date.AddDays(1), status);
+        }
+
+        public static List<Reservation> RetrieveReservationsWith(long taxiCompanyId, DateTime start, DateTime end, ReservationStatus status)
+        {
+            return RetrieveReservations($" WHERE taxicompany_id = {taxiCompanyId} AND (from_date BETWEEN '{start.ToMySqlFormat()}' AND '{end.ToMySqlFormat()}') AND status = {(byte)status}");
         }
 
         public static List<Reservation> RetrieveReservationsFrom(long customerId, DateTime day)
         {
             return RetrieveReservationsFrom(customerId, day.Date, day.Date.AddDays(1));
         }
+
+        /*
+         * RETRIEVE RESERVATIONS ASSOCIATED WITH A CUSTOMER
+         */
 
         /// <summary>
         /// Attempt to retrieve reservations from the database.
@@ -210,17 +252,24 @@ namespace CulinaireTaxi.Database
                         {
                             Reservation reservation = new Reservation();
 
-                            reservation.Id = reader.GetInt64(0);
+                            reservation.Id = reader.GetInt64("id");
 
-                            reservation.CustomerId = reader.GetInt64(1);
-                            reservation.CompanyId = reader.GetInt64(2);
+                            reservation.CustomerId = reader.GetInt64("customer_id");
+                            reservation.CompanyId = reader.GetInt64("company_id");
 
-                            reservation.FromDate = reader.GetDateTime(3);
-                            reservation.TillDate = reader.GetDateTime(4);
+                            /* START TEMPORARY CODE - PREVENT ERRORS IN DATABASE TRANSITION */
+                            if (reader.FieldCount == 8)
+                            {
+                                reservation.TaxiCompanyId = reader.GetInt64("taxicompany_id");
+                            }
+                            /* END TEMPORARY CODE */
 
-                            reservation.GuestsAmount = reader.GetInt32(5);
+                            reservation.FromDate = reader.GetDateTime("from_date");
+                            reservation.TillDate = reader.GetDateTime("till_date");
 
-                            reservation.Status = (ReservationStatus)reader.GetByte(6);
+                            reservation.GuestsAmount = reader.GetInt32("guests_amount");
+
+                            reservation.Status = (ReservationStatus)reader.GetByte("status");
 
                             reservations.Add(reservation);
                         }
@@ -246,6 +295,23 @@ namespace CulinaireTaxi.Database
                 using (var updateReservationCMD = connection.CreateCommand())
                 {
                     updateReservationCMD.CommandText = $"UPDATE Reservation SET status = {(byte)new_status} WHERE id = {id}";
+
+                    bool reservationUpdated = (updateReservationCMD.ExecuteNonQuery() != 0);
+
+                    return reservationUpdated;
+                }
+            }
+        }
+
+        public static bool UpdateReservationTaxiCompany(long id, long taxiCompanyId)
+        {
+            using (var connection = new MySqlConnection(ConnectionString))
+            {
+                connection.Open();
+
+                using (var updateReservationCMD = connection.CreateCommand())
+                {
+                    updateReservationCMD.CommandText = $"UPDATE Reservation SET taxicompany_id = {taxiCompanyId} WHERE id = {id}";
 
                     bool reservationUpdated = (updateReservationCMD.ExecuteNonQuery() != 0);
 

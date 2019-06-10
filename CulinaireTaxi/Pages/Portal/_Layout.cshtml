@@ -10,15 +10,23 @@
     @RenderSection("head_scripts", required: false)
 }
 
+<h1 class="branding my-1 text-center text-white text-shadow">
+    <a href="~/Index">CulinaireTaxi</a>
+</h1>
+<hr class="w-75" />
 <div class="container">
     <div class="row">
-        <div class="col-lg-6 offset-lg-3 my-5 shadow bg-secondary rounded">
+        <div class="col-lg-6 offset-lg-3 shadow bg-secondary rounded">
             <form class="py-4" method="post">
                 @RenderBody()
             </form>
         </div>
     </div>
 </div>
+
+@section modals {
+    @RenderSection("modals", required: false)
+}
 
 @section body_scripts {
     @RenderSection("body_scripts", required: false)
