@@ -10,7 +10,7 @@ namespace CulinaireTaxi.Database
 {
     public class NotificationTable
     {
-        public static Notification CreateNotification(long companyID, long customerID, long resID, int messageType)
+        public static Notification CreateNotification(long sender, long recipient, long resID, int messageType)
         {
             string message = "Message of notification";
             string title = "Title of notification";
@@ -19,11 +19,17 @@ namespace CulinaireTaxi.Database
             {
                 case 0:
                     title = "Reservation canceled";
-                    message = "Your reservation with " + AccountTable.RetrieveAccountByID(companyID) + " at " + ReservationTable.RetrieveReservation(resID).FromDate.ToString("D") + " " + ReservationTable.RetrieveReservation(resID).FromDate.ToString("HH:mm") + " has been canceled.";
+                    message = "Your reservation with " + CompanyTable.RetrieveCompany(AccountTable.RetrieveAccountByID(sender).Id).Name + " at " + ReservationTable.RetrieveReservation(resID).FromDate.ToString("D") + " " + ReservationTable.RetrieveReservation(resID).FromDate.ToString("HH:mm") + " has been canceled.";
+                    System.Diagnostics.Debug.WriteLine("Decline");
                     break;
                 case 1:
                     title = "Reservation confirmd";
-                    message = "Your reservation with " + AccountTable.RetrieveAccountByID(companyID) + " at " + ReservationTable.RetrieveReservation(resID).FromDate.ToString("D") + " " + ReservationTable.RetrieveReservation(resID).FromDate.ToString("HH:mm") + " has been confirmd.";
+                    message = "Your reservation with " + CompanyTable.RetrieveCompany(AccountTable.RetrieveAccountByID(sender).Id).Name + " at " + ReservationTable.RetrieveReservation(resID).FromDate.ToString("D") + " " + ReservationTable.RetrieveReservation(resID).FromDate.ToString("HH:mm") + " has been confirmd.";
+                    System.Diagnostics.Debug.WriteLine("Accept");
+                    break;
+                case 2:
+                    title = "A reservation has been made";
+                    message = AccountTable.RetrieveAccountByID(sender).Contact.FullName + " has made a reservation on " + ReservationTable.RetrieveReservation(resID).FromDate.ToString("D") + " " + ReservationTable.RetrieveReservation(resID).FromDate.ToString("HH:mm") + ", please check your calander to accept or decline.";
                     break;
             }
             using (var connection = new MySqlConnection(ConnectionString))
@@ -34,16 +40,16 @@ namespace CulinaireTaxi.Database
                 {
                     createNotificationCMD.CommandText =
                     "INSERT IGNORE INTO Notification" +
-                    " (title, message, company_id, customer_id, reservation_id) " +
+                    " (title, message, sender_id, recipient_id, reservation_id) " +
                     "VALUES" +
-                    " (@title, @message, @companyID, @customerID, @resID)";
+                    " (@title, @message, @sender, @recipient, @resID)";
 
                     var parameters = createNotificationCMD.Parameters;
 
                     parameters.AddWithValue("@title", title);
                     parameters.AddWithValue("@message", message);
-                    parameters.AddWithValue("@companyID", companyID);
-                    parameters.AddWithValue("@customerID", customerID);
+                    parameters.AddWithValue("@sender", sender);
+                    parameters.AddWithValue("@recipient", recipient);
                     parameters.AddWithValue("@resID", resID);
 
                     bool success = (createNotificationCMD.ExecuteNonQuery() != 0);
@@ -55,11 +61,9 @@ namespace CulinaireTaxi.Database
                         notification.ID = createNotificationCMD.LastInsertedId;
 
                         notification.Title = title;
-
                         notification.Message = message;
-                        notification.CompanyID = companyID;
-
-                        notification.CustomerID = customerID;
+                        notification.Recipient = recipient;
+                        notification.Sender = sender;
                         notification.ReservationID = resID;
 
                         return notification;
@@ -72,14 +76,31 @@ namespace CulinaireTaxi.Database
             }
         }
 
-        public static List<Notification> RetrieveReservationsFrom(long companyID)
+        public static bool DeleteNotification(long id)
         {
-            return RetrieveNotifications($" WHERE customer_id = {companyID}");
+            using (var connection = new MySqlConnection(ConnectionString))
+            {
+                connection.Open();
+
+                using (var deleteNotificationCMD = connection.CreateCommand())
+                {
+                    deleteNotificationCMD.CommandText = $"DELETE FROM Notification WHERE id = {id}";
+
+                    bool notificationDeleted = (deleteNotificationCMD.ExecuteNonQuery() != 0);
+
+                    return notificationDeleted;
+                }
+            }
         }
 
-        public static List<Notification> RetrieveReservationsFor(long customerID)
+        public static List<Notification> GetNotificationsFor(long id)
         {
-            return RetrieveNotifications($" WHERE customer_id = {customerID}");
+            return RetrieveNotifications($" WHERE recipient_id = {id}");
+        }
+
+        public static List<Notification> GetNotificationsFrom(long id)
+        {
+            return RetrieveNotifications($" WHERE sender_id = {id}");
         }
 
         private static List<Notification> RetrieveNotifications(string condition)
@@ -104,11 +125,8 @@ namespace CulinaireTaxi.Database
 
                             notification.Title = reader.GetString(1);
                             notification.Message = reader.GetString(2);
-                            
-                            notification.CompanyID = reader.GetInt64(3);
-                            notification.CustomerID = reader.GetInt64(4);
-
-
+                            notification.Sender = reader.GetInt64(3);
+                            notification.Recipient = reader.GetInt64(4);
                             notification.ReservationID = reader.GetInt32(5);
 
                             notifications.Add(notification);

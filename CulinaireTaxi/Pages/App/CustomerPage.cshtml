@@ -162,6 +162,31 @@
 </div>
 
 @section modals {
+    <div id="NotificationPopUp" class="modal">
+        <!-- Modal content -->
+        <div class="modal-content shadow bg-secondary">
+            <span class="modal-close">&times;</span>
+            <h5>Messages</h5>
+            @if (NotificationTable.GetNotificationsFor(UserAgent.Account.Id).Count == 0)
+            {<h6>There are no notifications in your inbox...</h6>}
+            else
+            {
+                foreach (Notification notification in NotificationTable.GetNotificationsFor(UserAgent.Account.Id))
+                {
+                    <button class="accordion"><h6 style="margin-top: -10px;">@notification.Title</h6></button>
+                    <div class="panel">
+                        <p style="padding: 10px;">@notification.Message</p>
+                        <form method="post">
+                            <input id="NotificationID" type="hidden" asp-for="NotificationID" value="@notification.ID" />
+                            <input asp-for="PostID" type="hidden" value="@CompanyPageModel.POSTID_DELETE_NOTIFICATION" required />
+                            <button class="btn btn-primary" type="submit" style="float:right; width: 70px; height: 40px; margin: 15px;">Delete</button>
+                        </form>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+
     <div id="ResPopUp" class="modal">
         <!-- Modal content -->
         <div class="modal-content shadow bg-secondary">
@@ -184,6 +209,7 @@
     </div>
 
     <div id="OrderPopUp" class="modal">
+        <!-- Modal content -->
         <div class="modal-content shadow bg-secondary reservatiepanel">
             <span class="modal-close">&times;</span>
             <h5>Create Reservation</h5>
@@ -233,6 +259,29 @@
 @section body_scripts {
     <script src="~/js/map.js"></script>
     <script src="~/js/modal.js"></script>
+
+    <script>
+        var notificationModal = document.getElementById('NotificationPopUp');
+        initializeModal(notificationModal);
+
+        function clickNotification(id) {
+            openModal(notificationModal);
+        }
+
+        var acc = document.getElementsByClassName("accordion");
+
+        for (let i = 0; i < acc.length; i++) {
+            acc[i].addEventListener("click", function() {
+                this.classList.toggle("active");
+                var panel = this.nextElementSibling;
+                if (panel.style.display === "block") {
+                    panel.style.display = "none";
+                } else {
+                    panel.style.display = "block";
+                }
+            });
+        }
+    </script>
 
     <script>
         var orderModal = document.getElementById("OrderPopUp");
