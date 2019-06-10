@@ -35,14 +35,42 @@
 
 /* RESTAURANT MAP STYLING */
 
-.restaurants-map
+#restaurants-map
 {
     width: 100%;
     height: 384px;
 
     border-radius: 4px;
+    overflow: hidden;
 
-    background-color: gray;
+    background-color: rgba(152, 205, 254, 1.0);
+}
+
+/* RESTAURANT MAP INFOBUBBLE STYLING */
+
+.restaurant-info
+{
+    width: 256px;
+
+    padding: 8px;
+}
+
+.restaurant-info h5
+{
+    padding: unset;
+
+    font-weight: bold;
+    color: white;
+}
+
+.restaurant-info p
+{
+    color: white;
+}
+
+.restaurant-info button
+{
+    font-size: 12px;
 }
 
 /* MODAL STYLING */
