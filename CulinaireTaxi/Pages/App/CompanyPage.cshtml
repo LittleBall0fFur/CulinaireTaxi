@@ -44,9 +44,9 @@
 
         <div>
             
-            <a onclick="clickNotification(@UserAgent.Account.Id)" class="notification" style="float:right; ">
-                <span><img src="~/images/icons/notification_icon.png" onclick="clickNotification()" style="height: 30px; width:30px; padding-top:-50px;"></span>
-                <span class="badge">3</span>
+            <a onclick="clickNotification(@UserAgent.Account.Id)" class="notification" style="float:right; margin-top: -50px;">
+                <span><img src="~/images/icons/icon.png" style="height: 45px; width:45px; cursor:pointer;"></span>
+                <span class="badge">@NotificationTable.GetNotificationsFrom(UserAgent.Account.Id).Count().ToString()</span>
             </a>
         </div>
 
@@ -212,20 +212,17 @@
         <!-- Modal content -->
         <div class="modal-content shadow bg-secondary">
             <span class="close" id="Close">&times;</span>
-            <button class="accordion">Section 1</button>
-            <div class="panel">
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-            </div>
-
-            <button class="accordion">Section 2</button>
-            <div class="panel">
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-            </div>
-
-            <button class="accordion">Section 3</button>
-            <div class="panel">
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-            </div>
+            @if (NotificationTable.GetNotificationsFor(UserAgent.Account.Id).Count == 0) { }
+            else
+            {
+                foreach (Notification notification in NotificationTable.GetNotificationsFor(UserAgent.Account.Id))
+                {
+                    <button class="accordion">@notification.Title</button>
+                    <div class="panel">
+                        <p>@notification.Message</p>
+                    </div>
+                }
+            }
         </div>
     </div>
 
@@ -363,17 +360,18 @@
           text-decoration: none;
           padding: 15px 26px;
           position: relative;
-          background-image: ;
         }
 
         .notification .badge {
           position: absolute;
-          top: -10px;
-          right: -10px;
-          padding: 5px 10px;
+          top: 10px;
+          right: 20px;
           border-radius: 50%;
           background-color: red;
           color: white;
+          width:20px;
+          height: 20px;
+          text-align: center;
         }
 
         .calendar_input {

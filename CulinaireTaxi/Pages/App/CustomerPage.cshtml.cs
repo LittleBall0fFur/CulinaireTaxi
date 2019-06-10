@@ -142,7 +142,8 @@ namespace CulinaireTaxi.Pages
             {
                 return;
             }
-            ReservationTable.CreateReservation(UserAgent.Account.Id, restaurant, DateTime.Parse(fromdate + " " + fromtime), DateTime.Parse(tilldate + " " + tilltime), guestsamount);
+            Reservation res = ReservationTable.CreateReservation(UserAgent.Account.Id, restaurant, DateTime.Parse(fromdate + " " + fromtime), DateTime.Parse(tilldate + " " + tilltime), guestsamount);
+            NotificationTable.CreateNotification(UserAgent.Account.Id, , res.Id, 2);
         }
 
         private void POST_Update_Info()

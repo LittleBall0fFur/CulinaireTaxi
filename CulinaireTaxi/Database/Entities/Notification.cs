@@ -25,13 +25,13 @@ namespace CulinaireTaxi.Database.Entities
             set;
         }
 
-        public long CompanyID
+        public long Recipient
         {
             get;
             set;
         }
 
-        public long CustomerID
+        public long Sender
         {
             get;
             set;
