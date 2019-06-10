@@ -125,15 +125,15 @@ namespace CulinaireTaxi.Database
                     "(id BIGINT NOT NULL AUTO_INCREMENT," +
                     " title VARCHAR(32) NOT NULL," +
                     " message TEXT NOT NULL," +
-                    " company_id BIGINT NOT NULL," +
-                    " customer_id BIGINT NOT NULL," +
+                    " sender_id BIGINT NOT NULL," +
+                    " recipient_id BIGINT NOT NULL," +
                     " reservation_id BIGINT NOT NULL," +
                     " PRIMARY KEY (id)," +
-                    " FOREIGN KEY (company_id)" +
-                    " REFERENCES Company(id)" +
+                    " FOREIGN KEY (sender_id)" +
+                    " REFERENCES Account(id)" +
                     " ON DELETE CASCADE" +
                     " ON UPDATE CASCADE," +
-                    " FOREIGN KEY (customer_id)" +
+                    " FOREIGN KEY (recipient_id)" +
                     " REFERENCES Account(id)" +
                     " ON DELETE CASCADE" +
                     " ON UPDATE CASCADE," +
