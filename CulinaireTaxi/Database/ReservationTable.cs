@@ -252,24 +252,19 @@ namespace CulinaireTaxi.Database
                         {
                             Reservation reservation = new Reservation();
 
-                            reservation.Id = reader.GetInt64("id");
+                            reservation.Id = reader.GetInt64(0);
 
-                            reservation.CustomerId = reader.GetInt64("customer_id");
-                            reservation.CompanyId = reader.GetInt64("company_id");
+                            reservation.CustomerId = reader.GetInt64(1);
+                            reservation.CompanyId = reader.GetInt64(2);
 
-                            /* START TEMPORARY CODE - PREVENT ERRORS IN DATABASE TRANSITION */
-                            if (reader.FieldCount == 8)
-                            {
-                                reservation.TaxiCompanyId = reader.GetInt64("taxicompany_id");
-                            }
-                            /* END TEMPORARY CODE */
+                            reservation.TaxiCompanyId = reader.GetValue(3) as long?;
 
-                            reservation.FromDate = reader.GetDateTime("from_date");
-                            reservation.TillDate = reader.GetDateTime("till_date");
+                            reservation.FromDate = reader.GetDateTime(4);
+                            reservation.TillDate = reader.GetDateTime(5);
 
-                            reservation.GuestsAmount = reader.GetInt32("guests_amount");
+                            reservation.GuestsAmount = reader.GetInt32(6);
 
-                            reservation.Status = (ReservationStatus)reader.GetByte("status");
+                            reservation.Status = (ReservationStatus)reader.GetByte(7);
 
                             reservations.Add(reservation);
                         }
