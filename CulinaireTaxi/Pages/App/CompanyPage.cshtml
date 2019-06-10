@@ -44,7 +44,7 @@
 
         <div>
             
-            <a onclick="clickNotification()" class="notification" style="float:right; ">
+            <a onclick="clickNotification(@UserAgent.Account.Id)" class="notification" style="float:right; ">
                 <span><img src="~/images/icons/notification_icon.png" onclick="clickNotification()" style="height: 30px; width:30px; padding-top:-50px;"></span>
                 <span class="badge">3</span>
             </a>
@@ -212,6 +212,20 @@
         <!-- Modal content -->
         <div class="modal-content shadow bg-secondary">
             <span class="close" id="Close">&times;</span>
+            <button class="accordion">Section 1</button>
+            <div class="panel">
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+            </div>
+
+            <button class="accordion">Section 2</button>
+            <div class="panel">
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+            </div>
+
+            <button class="accordion">Section 3</button>
+            <div class="panel">
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+            </div>
         </div>
     </div>
 
@@ -267,7 +281,7 @@
         var span2 = document.getElementById("Close");
 
         // When the user clicks the button, open the modal
-        function clickNotification() {
+        function clickNotification(id) {
             popUp.style.display = "block";
         }
 
@@ -281,6 +295,21 @@
             if (event.target == modal) {
                 popUp.style.display = "none";
             }
+        }
+
+        var acc = document.getElementsByClassName("accordion");
+        var i;
+
+        for (i = 0; i < acc.length; i++) {
+            acc[i].addEventListener("click", function() {
+                this.classList.toggle("active");
+                var panel = this.nextElementSibling;
+                if (panel.style.display === "block") {
+                    panel.style.display = "none";
+                } else {
+                    panel.style.display = "block";
+                }
+            });
         }
     </script>
 
@@ -331,17 +360,10 @@
             }
 
         .notification {
-          background-color: #555;
-          color: white;
           text-decoration: none;
           padding: 15px 26px;
           position: relative;
-          display: inline-block;
-          border-radius: 2px;
-        }
-
-        .notification:hover {
-          background: red;
+          background-image: ;
         }
 
         .notification .badge {
@@ -467,6 +489,31 @@
 
         .header_title, .ei_Title, .ce_title {
             color: #fff;
+        }
+
+        /*notification*/
+        .accordion {
+          background-color: #eee;
+          color: #444;
+          cursor: pointer;
+          padding: 18px;
+          width: 100%;
+          border: none;
+          text-align: left;
+          outline: none;
+          font-size: 15px;
+          transition: 0.4s;
+        }
+
+        .active, .accordion:hover {
+          background-color: #ccc; 
+        }
+
+        .panel {
+          padding: 0 18px;
+          display: none;
+          background-color: white;
+          overflow: hidden;
         }
     </style>
 </body>
