@@ -178,7 +178,7 @@
                         <p style="padding: 10px;">@notification.Message</p>
                         <form method="post">
                             <input id="NotificationID" type="hidden" asp-for="NotificationID" value="@notification.ID" />
-                            <input asp-for="PostID" type="hidden" value="@CompanyPageModel.POSTID_DELETE_NOTIFICATION" required />
+                            <input asp-for="PostID" type="hidden" value="@CustomerPageModel.POSTID_DELETE_NOTIFICATION" required />
                             <button class="btn btn-primary" type="submit" style="float:right; width: 70px; height: 40px; margin: 15px;">Delete</button>
                         </form>
                     </div>

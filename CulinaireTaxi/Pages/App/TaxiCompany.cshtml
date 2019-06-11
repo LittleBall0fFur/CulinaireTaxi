@@ -62,6 +62,31 @@
 }
 
 @section modals {
+    <div id="NotificationPopUp" class="modal">
+        <!-- Modal content -->
+        <div class="modal-content shadow bg-secondary">
+            <span class="modal-close">&times;</span>
+            <h5>Messages</h5>
+            @if (NotificationTable.GetNotificationsFor(UserAgent.Account.Id).Count == 0)
+            {<h6>There are no notifications in your inbox...</h6>}
+            else
+            {
+                foreach (Notification notification in NotificationTable.GetNotificationsFor(UserAgent.Account.Id))
+                {
+                    <button class="accordion"><h6 style="margin-top: -10px;">@notification.Title</h6></button>
+                    <div class="panel">
+                        <p style="padding: 10px;">@notification.Message</p>
+                        <form method="post">
+                            <input id="NotificationID" type="hidden" asp-for="NotificationID" value="@notification.ID" />
+                            <input asp-for="PostID" type="hidden" value="@CompanyPageModel.POSTID_DELETE_NOTIFICATION" required />
+                            <button class="btn btn-primary" type="submit" style="float:right; width: 70px; height: 40px; margin: 15px;">Delete</button>
+                        </form>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+
     <div id="ResPopUp" class="modal">
         <!-- Modal content -->
         <div class="modal-content shadow bg-secondary">
@@ -87,35 +112,33 @@
             </form>
         </div>
     </div>
-
-    <div id="NotificationPopUp" class="modal">
-        <!-- Modal content -->
-        <div class="modal-content shadow bg-secondary">
-            <span class="close" id="Close">&times;</span>
-            <h5>Messages</h5>
-            @if (NotificationTable.GetNotificationsFor(UserAgent.Account.Id).Count == 0)
-            {<h6>There are no notifications in your inbox...</h6>}
-            else
-            {
-                foreach (Notification notification in NotificationTable.GetNotificationsFor(UserAgent.Account.Id))
-                {
-                    <button class="accordion"><h6 style="margin-top: -10px;">@notification.Title</h6></button>
-                    <div class="panel">
-                        <p style="padding: 10px;">@notification.Message</p>
-                        <form method="post">
-                            <input id="NotificationID" type="hidden" asp-for="NotificationID" value="@notification.ID" />
-                            <input asp-for="PostID" type="hidden" value="@CompanyPageModel.POSTID_DELETE_NOTIFICATION" required />
-                            <button class="btn btn-primary" type="submit" style="float:right; width: 70px; height: 40px; margin: 15px;">Delete</button>
-                        </form>
-                    </div>
-                }
-            }
-        </div>
-    </div>
 }
 
 @section body_scripts {
     <script src="~/js/modal.js"></script>
+
+    <script>
+        var notificationModal = document.getElementById('NotificationPopUp');
+        initializeModal(notificationModal);
+
+        function clickNotification(id) {
+            openModal(notificationModal);
+        }
+
+        var acc = document.getElementsByClassName("accordion");
+
+        for (let i = 0; i < acc.length; i++) {
+            acc[i].addEventListener("click", function () {
+                this.classList.toggle("active");
+                var panel = this.nextElementSibling;
+                if (panel.style.display === "block") {
+                    panel.style.display = "none";
+                } else {
+                    panel.style.display = "block";
+                }
+            });
+        }
+    </script>
 
     <script>
         var reservationModal = document.getElementById("ResPopUp");
@@ -141,88 +164,6 @@
             document.getElementById("ResID_Cancel").value = resID;
 
             openModal(reservationModal);
-            }
-    //Notification
-    // Get the modal
-        var popUp = document.getElementById('NotificationPopUp');
-
-        // Get the <span> element that closes the modal
-        var span2 = document.getElementById("Close");
-
-        // When the user clicks the button, open the modal
-        function clickNotification(id) {
-            popUp.style.display = "block";
-        }
-
-        // When the user clicks on <span> (x), close the modal
-        span2.onclick = function () {
-            popUp.style.display = "none";
-        }
-
-        // When the user clicks anywhere outside of the modal, close it
-        window.onclick = function (event) {
-            if (event.target == modal) {
-                popUp.style.display = "none";
-            }
-        }
-
-        var acc = document.getElementsByClassName("accordion");
-        var i;
-
-        for (i = 0; i < acc.length; i++) {
-            acc[i].addEventListener("click", function() {
-                this.classList.toggle("active");
-                var panel = this.nextElementSibling;
-                if (panel.style.display === "block") {
-                    panel.style.display = "none";
-                } else {
-                    panel.style.display = "block";
-                }
-            });
         }
     </script>
 }
-
-<style>
-     /*notification*/
-        .notification {
-          text-decoration: none;
-          padding: 15px 26px;
-          position: relative;
-        }
-
-        .notification .badge {
-          position: absolute;
-          top: 10px;
-          right: 20px;
-          border-radius: 50%;
-          background-color: red;
-          color: white;
-          width:20px;
-          height: 20px;
-          text-align: center;
-        }
-
-        .accordion {
-          background-color: rgba(0,0,0,0);
-          cursor: pointer;
-          padding: 18px;
-          width: 100%;
-          max-height: 50px;
-          text-align: left;
-          outline: none;
-          transition: 0.4s;
-          border: 2px solid rgba(0, 0, 0, 0.08);
-        }
-
-        .active, .accordion:hover {
-          background-color: #1da1a3; 
-        }
-
-        .panel {
-          padding: 0 18px;
-          display: none;
-          background-color: rgba(0,0,0,0.4);
-          overflow: hidden;
-        }
-</style>
