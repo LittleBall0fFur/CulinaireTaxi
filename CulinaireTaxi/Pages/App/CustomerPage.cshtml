@@ -24,7 +24,7 @@
 
 @* MAIN CONTENT *@
 <div class="container">
-    
+
     <div class="row pb-2">
         <div class="col">
             <div id="restaurants-map"></div>
@@ -86,16 +86,6 @@
                 <div class="card-body">
                     <div class="accountdetailpanel">
                         <h5 class="card-title">Account Details</h5>
-
-                        @if (user.Contact.MissingData())
-                        {
-                            <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                                <strong>Oh snap!</strong> Vergeet niet alle contact gegevens in te vullen om goed berijkbaar te blijven.
-                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                        }
 
                         @*fullname*@
                         <div class="input-group mb-3">
@@ -212,12 +202,67 @@
         <!-- Modal content -->
         <div class="modal-content shadow bg-secondary reservatiepanel">
             <span class="modal-close">&times;</span>
-            <h5>Create Reservation</h5>
+
+            <h5>Confirm Contact Details</h5>
             <p>Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui.</p>
 
+            @*fullname*@
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="">Full Name</span>
+                </div>
+                <input type="text" style="margin:0px;" class="form-control" value="@user.Contact.FullName">
+            </div>
+            @*email*@
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="">Email</span>
+                </div>
+                <input type="text" style="margin:0px;" class="form-control" value="@user.Email">
+            </div>
             <form method="post">
+                @*account detail form*@
+                @*County*@
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="">County</span>
+                    </div>
+                    <input type="text" name="county" style="margin:0px;" class="form-control" placeholder="Groningen" value="@user.Contact.County">
+                </div>
+                @*City*@
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="">City</span>
+                    </div>
+                    <input type="text" name="city" style="margin:0px;" class="form-control" placeholder="Groningen" value="@user.Contact.City">
+                </div>
+                @*Streetname*@
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="">Street</span>
+                    </div>
+                    <input type="text" name="streetname" style="margin:0px;" class="form-control" placeholder="Herestraat 12" value="@user.Contact.Street">
+                </div>
+                @*PostalCode*@
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="">Postal Code</span>
+                    </div>
+                    <input type="text" name="postalcode" style="margin:0px;" class="form-control" placeholder="9711 LJ" value="@user.Contact.PostalCode">
+                </div>
+                @*PhoneNumber*@
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="">Phone Number</span>
+                    </div>
+                    <input type="text" name="phonenumber" style="margin:0px;" class="form-control" placeholder="0622334455" value="@user.Contact.PhoneNumber">
+                </div>
+
+                <hr>
+                <h5>Create Reservation</h5>
+                <p>Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui.</p>
+
                 @*Reservatie form*@
-                <input type="hidden" name="form_id" value="1" />
                 @*restaurant*@
                 <input asp-for="restaurant" id="restaurant-id" type="hidden" value="" />
                 @*from date*@
@@ -248,10 +293,9 @@
                     </div>
                 </div>
                 @*submit*@
-                <input asp-for="PostID" type="hidden" value="@CustomerPageModel.POSTID_CREATE_RESERVATION" required />
-                <button type="submit" class="btn btn-primary">Place Reservation</button>
+                <input asp-for="PostID" type="hidden" value="@CustomerPageModel.POSTID_CREATE_RESERVATION_UPDATE_INFO" required />
+                <center><button type="submit" class="btn btn-primary">Place Reservation</button></center>
             </form>
-
         </div>
     </div>
 }
@@ -271,7 +315,7 @@
         var acc = document.getElementsByClassName("accordion");
 
         for (let i = 0; i < acc.length; i++) {
-            acc[i].addEventListener("click", function() {
+            acc[i].addEventListener("click", function () {
                 this.classList.toggle("active");
                 var panel = this.nextElementSibling;
                 if (panel.style.display === "block") {

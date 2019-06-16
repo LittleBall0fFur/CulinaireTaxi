@@ -17,6 +17,7 @@ namespace CulinaireTaxi.Pages
         public const string POSTID_CALENDAR_TODAY = "today_date";
         public const string POSTID_CALENDAR_FORWARDS = "add_date";
 
+        public const string POSTID_CREATE_RESERVATION_UPDATE_INFO = "create_reservation_update_info";
         public const string POSTID_CREATE_RESERVATION = "create_reservation";
         public const string POSTID_DELETE_RESERVATION = "delete_reservation";
         public const string POSTID_UPDATE_INFO = "update_info";
@@ -119,6 +120,11 @@ namespace CulinaireTaxi.Pages
                 case POSTID_DELETE_NOTIFICATION:
                     POST_Delete_Notification();
                     break;
+                case POSTID_CREATE_RESERVATION_UPDATE_INFO:
+                    POST_Update_Info();
+                    POST_Create_Reservation();
+                    break;
+
             }
         }
 
@@ -154,6 +160,12 @@ namespace CulinaireTaxi.Pages
             {
                 return;
             }
+
+            if (UserAgent.Account.Contact.MissingData())
+            {
+                return;
+            }
+
             Reservation res = ReservationTable.CreateReservation(UserAgent.Account.Id, restaurant, DateTime.Parse(fromdate + " " + fromtime), DateTime.Parse(tilldate + " " + tilltime), guestsamount);
             NotificationTable.CreateNotification(UserAgent.Account.Id, AccountTable.RetrieveAccountByCompanyID(restaurant).Id, res.Id, 2);
         }
