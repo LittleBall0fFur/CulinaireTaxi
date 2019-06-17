@@ -202,11 +202,6 @@ namespace CulinaireTaxi.Database
             }
         }
 
-        /// <summary>
-        /// Attempt to retrieve all companies of the given type from the database.
-        /// </summary>
-        /// <param name="companyType">The type of the companies to retrieve.</param>
-        /// <returns>A List of companies with the given type.</returns>
         public static List<Company> RetrieveCompaniesByIsConfirmed(bool isConfirmed)
         {
             using (var connection = new MySqlConnection(ConnectionString))
@@ -215,7 +210,7 @@ namespace CulinaireTaxi.Database
 
                 using (var retrieveCompaniesCMD = connection.CreateCommand())
                 {
-                    retrieveCompaniesCMD.CommandText = $"SELECT id, type, name, description, latitude, longitude, is_confirmed FROM Company WHERE is_confirmed = {isConfirmed}";
+                    retrieveCompaniesCMD.CommandText = $"SELECT * FROM Company WHERE is_confirmed = {isConfirmed}";
 
                     using (var reader = retrieveCompaniesCMD.ExecuteReader())
                     {
@@ -324,7 +319,7 @@ namespace CulinaireTaxi.Database
 
                 using (var updateCompanyCMD = connection.CreateCommand())
                 {
-                    updateCompanyCMD.CommandText = $"UPDATE Company SET is_confirmed = {(isConfirmed ? '0' : '1')} WHERE id = {id}";
+                    updateCompanyCMD.CommandText = $"UPDATE Company SET is_confirmed = {isConfirmed} WHERE id = {id}";
 
                     bool companyUpdated = (updateCompanyCMD.ExecuteNonQuery() != 0);
 
