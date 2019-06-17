@@ -203,6 +203,50 @@ namespace CulinaireTaxi.Database
         }
 
         /// <summary>
+        /// Attempt to retrieve all companies of the given type from the database.
+        /// </summary>
+        /// <param name="companyType">The type of the companies to retrieve.</param>
+        /// <returns>A List of companies with the given type.</returns>
+        public static List<Company> RetrieveCompaniesByIsConfirmed(bool isConfirmed)
+        {
+            using (var connection = new MySqlConnection(ConnectionString))
+            {
+                connection.Open();
+
+                using (var retrieveCompaniesCMD = connection.CreateCommand())
+                {
+                    retrieveCompaniesCMD.CommandText = $"SELECT id, type, name, description, latitude, longitude, is_confirmed FROM Company WHERE is_confirmed = {isConfirmed}";
+
+                    using (var reader = retrieveCompaniesCMD.ExecuteReader())
+                    {
+                        List<Company> companies = new List<Company>();
+
+                        while (reader.Read())
+                        {
+                            Company company = new Company();
+
+                            company.Id = reader.GetInt64(0);
+
+                            company.CompanyType = (CompanyType)reader.GetByte(1);
+
+                            company.Name = reader.GetString(2);
+                            company.Description = reader.GetString(3);
+
+                            company.Latitude = reader.GetDouble(4);
+                            company.Longitude = reader.GetDouble(5);
+
+                            company.IsConfirmed = reader.GetBoolean(6);
+
+                            companies.Add(company);
+                        }
+
+                        return companies;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
         /// Updates a company's name.
         /// </summary>
         /// <param name="id">The id of the company to update.</param>
