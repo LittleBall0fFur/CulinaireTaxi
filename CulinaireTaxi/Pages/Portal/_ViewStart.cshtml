@@ -1,11 +1,23 @@
 ﻿@{
     if (UserAgent.IsAuthenticated)
     {
-        if (UserAgent.Account.AccountType != AccountType.CUSTOMER) {
-            Context.Response.Redirect("/App/CompanyPage");
-        } else
+        switch (UserAgent.Account.AccountType)
         {
-            Context.Response.Redirect("/App/CustomerPage");
+            case AccountType.ADMIN:
+                Context.Response.Redirect("/App/Admin");
+                break;
+
+            case AccountType.CUSTOMER:
+                Context.Response.Redirect("/App/CustomerPage");
+                break;
+
+            case AccountType.RESTAURANT:
+                Context.Response.Redirect("/App/Restaurant");
+                break;
+
+            case AccountType.TAXI:
+                Context.Response.Redirect("/App/TaxiCompany");
+                break;
         }
     }
 }
