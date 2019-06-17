@@ -47,6 +47,12 @@ namespace CulinaireTaxi.Database.Entities
             set;
         }
 
+        public bool IsConfirmed
+        {
+            get;
+            set;
+        }
+
     }
 
 }

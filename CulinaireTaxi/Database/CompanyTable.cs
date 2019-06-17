@@ -57,6 +57,8 @@ namespace CulinaireTaxi.Database
                         company.Latitude = latitude;
                         company.Longitude = longitude;
 
+                        company.IsConfirmed = false;
+
                         return company;
                     }
                     else
@@ -80,7 +82,7 @@ namespace CulinaireTaxi.Database
 
                 using (var retrieveCompanyCMD = connection.CreateCommand())
                 {
-                    retrieveCompanyCMD.CommandText = $"SELECT type, name, description, latitude, longitude FROM Company WHERE id = {id}";
+                    retrieveCompanyCMD.CommandText = $"SELECT type, name, description, latitude, longitude, is_confirmed FROM Company WHERE id = {id}";
 
                     using (var reader = retrieveCompanyCMD.ExecuteReader(CommandBehavior.SingleRow))
                     {
@@ -97,6 +99,8 @@ namespace CulinaireTaxi.Database
 
                             company.Latitude = reader.GetDouble(3);
                             company.Longitude = reader.GetDouble(4);
+
+                            company.IsConfirmed = reader.GetBoolean(5);
 
                             return company;
                         }
@@ -143,6 +147,8 @@ namespace CulinaireTaxi.Database
                             company.Latitude = reader.GetDouble(4);
                             company.Longitude = reader.GetDouble(5);
 
+                            company.IsConfirmed = reader.GetBoolean(6);
+
                             companies.Add(company);
                         }
 
@@ -165,7 +171,7 @@ namespace CulinaireTaxi.Database
 
                 using (var retrieveCompaniesCMD = connection.CreateCommand())
                 {
-                    retrieveCompaniesCMD.CommandText = $"SELECT id, name, description, latitude, longitude FROM Company WHERE type = {(byte)companyType}";
+                    retrieveCompaniesCMD.CommandText = $"SELECT id, name, description, latitude, longitude, is_confirmed FROM Company WHERE type = {(byte)companyType}";
 
                     using (var reader = retrieveCompaniesCMD.ExecuteReader())
                     {
@@ -184,6 +190,8 @@ namespace CulinaireTaxi.Database
 
                             company.Latitude = reader.GetDouble(3);
                             company.Longitude = reader.GetDouble(4);
+
+                            company.IsConfirmed = reader.GetBoolean(5);
 
                             companies.Add(company);
                         }
@@ -256,6 +264,23 @@ namespace CulinaireTaxi.Database
                 using (var updateCompanyCMD = connection.CreateCommand())
                 {
                     updateCompanyCMD.CommandText = $"UPDATE Company SET latitude = {latitude}, longitude = {longitude} WHERE id = {id}";
+
+                    bool companyUpdated = (updateCompanyCMD.ExecuteNonQuery() != 0);
+
+                    return companyUpdated;
+                }
+            }
+        }
+
+        public static bool UpdateCompanyConfirm(long id, bool isConfirmed)
+        {
+            using (var connection = new MySqlConnection(ConnectionString))
+            {
+                connection.Open();
+
+                using (var updateCompanyCMD = connection.CreateCommand())
+                {
+                    updateCompanyCMD.CommandText = $"UPDATE Company SET is_confirmed = {(isConfirmed ? '0' : '1')} WHERE id = {id}";
 
                     bool companyUpdated = (updateCompanyCMD.ExecuteNonQuery() != 0);
 

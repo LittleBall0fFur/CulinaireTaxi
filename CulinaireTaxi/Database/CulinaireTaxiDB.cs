@@ -45,6 +45,7 @@ namespace CulinaireTaxi.Database
                     " description TEXT NOT NULL," +
                     " latitude DOUBLE NOT NULL," +
                     " longitude DOUBLE NOT NULL," +
+                    " is_confirmed BIT NOT NULL DEFAULT(FALSE)," +
                     " PRIMARY KEY (id))";
 
                     createContractTableCMD.CommandText =
