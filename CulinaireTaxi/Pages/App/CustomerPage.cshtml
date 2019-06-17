@@ -68,10 +68,10 @@
                             @foreach (Reservation reservation in ReservationTable.RetrieveReservationsFrom(UserAgent.Account.Id, Model.GetDate()))
                             {
 
-                                <div class="event_item" onclick="clickRes('@AccountTable.RetrieveAccountByID(reservation.CompanyId).Contact.FullName', '@reservation.FromDate.ToString("HH:mm")', '@reservation.TillDate.ToString("HH:mm")', '@reservation.GuestsAmount', '@reservation.Status', '@reservation.Id')">
+                                <div class="event_item" onclick="clickRes('@AccountTable.RetrieveAccountByID(reservation.CustomerId).Contact.FullName', '@reservation.FromDate.ToString("HH:mm")', '@reservation.TillDate.ToString("HH:mm")', '@reservation.GuestsAmount', '@reservation.Status', '@reservation.Id')">
                                     <div class="ei_Dot dot_active"></div>
                                     <div class="ei_Title"><p id="time">@reservation.FromDate.ToString("HH:mm") -  @reservation.TillDate.ToString("HH:mm")</p></div>
-                                    <div class="ei_Copy"><p>Name: @AccountTable.RetrieveAccountByID(reservation.CompanyId).Contact.FullName <br /> Amount of people: @reservation.GuestsAmount <br /> Status: @reservation.Status</p></div>
+                                    <div class="ei_Copy"><p>Name: @AccountTable.RetrieveAccountByID(reservation.CustomerId).Contact.FullName <br /> Amount of people: @reservation.GuestsAmount <br /> Status: @reservation.Status</p></div>
                                 </div>
                                 Model.AddReservation(reservation);
                             }
