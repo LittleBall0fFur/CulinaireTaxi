@@ -339,7 +339,10 @@
 
         @foreach (var company in CompanyTable.RetrieveCompaniesOfType(CompanyType.RESTAURANT))
         {
-            @:CreateRestaurantMarker({ id: @company.Id, x: @company.Latitude, y: @company.Longitude, name: "@company.Name", description: "@company.Description" });
+            if (company.IsConfirmed)
+            {
+                @:CreateRestaurantMarker({ id: @company.Id, x: @company.Latitude, y: @company.Longitude, name: "@company.Name", description: "@company.Description" });
+            }
         }
     </script>
 

@@ -34,7 +34,10 @@
             <select class="rounded-left" asp-for="ContractorID" required>
                 @foreach (var taxiCompany in CompanyTable.RetrieveCompaniesOfType(CompanyType.TAXI))
                 {
-                    <option value="@taxiCompany.Id">@taxiCompany.Name</option>
+                    if (taxiCompany.IsConfirmed)
+                    {
+                        <option value="@taxiCompany.Id">@taxiCompany.Name</option>
+                    }
                 }
             </select>
 
