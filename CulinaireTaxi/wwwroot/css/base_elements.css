@@ -43,7 +43,10 @@
     border-radius: 4px;
     overflow: hidden;
 
-    background-color: rgba(152, 205, 254, 1.0);
+    background-color: rgba(162, 209, 255, 1.0);
+
+    background-image: repeating-linear-gradient(00deg, transparent 0 24px, rgba(0, 0, 0, 0.05) 24px 25px),
+		              repeating-linear-gradient(90deg, transparent 0 24px, rgba(0, 0, 0, 0.05) 24px 25px);
 }
 
 /* RESTAURANT MAP INFOBUBBLE STYLING */
