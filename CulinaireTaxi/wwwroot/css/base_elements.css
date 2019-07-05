@@ -190,7 +190,7 @@
 
 .calendar
 {
-    width: 370px;
+    min-width: 370px;
 }
 
 .calendar_plan
@@ -235,7 +235,7 @@
 
 .calendar_events
 {
-    color: $light_grey;
+    /* Empty? */
 }
 
 .ce_title
