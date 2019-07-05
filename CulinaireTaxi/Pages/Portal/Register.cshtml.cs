@@ -18,20 +18,6 @@ namespace CulinaireTaxi.Pages
             private set;
         }
 
-        [BindProperty, EmailAddress, Required]
-        public string Email
-        {
-            get;
-            set;
-        }
-
-        [BindProperty, EmailAddress, Required]
-        public string ConfirmEmail
-        {
-            get;
-            set;
-        }
-
         [BindProperty, Required]
         public string FirstName
         {
@@ -41,6 +27,20 @@ namespace CulinaireTaxi.Pages
 
         [BindProperty, Required]
         public string LastName
+        {
+            get;
+            set;
+        }
+
+        [BindProperty, EmailAddress, Required]
+        public string Email
+        {
+            get;
+            set;
+        }
+
+        [BindProperty, EmailAddress, Required]
+        public string ConfirmEmail
         {
             get;
             set;
@@ -67,8 +67,8 @@ namespace CulinaireTaxi.Pages
 
         public void OnPost()
         {
-            ValidateEquality(ConfirmEmail, Email, nameof(ConfirmEmail), "De email adressen komen niet met elkaar overeen!");
-            ValidateEquality(ConfirmPassword, Password, nameof(ConfirmPassword), "De wachtwoorden komen niet met elkaar overeen!");
+            ValidateEquality(ConfirmEmail, Email, nameof(ConfirmEmail), "The email addresses do not match!");
+            ValidateEquality(ConfirmPassword, Password, nameof(ConfirmPassword), "The passwords do not match!");
 
             if (ModelState.IsValid)
             {
