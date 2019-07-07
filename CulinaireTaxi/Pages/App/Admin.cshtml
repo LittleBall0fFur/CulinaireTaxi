@@ -26,25 +26,26 @@
             <div class="card shadow bg-secondary">
                 <div class="card-body">
                     <h5 class="card-title">Confirm new companies</h5>
-
-                    <hr/>
-
-                    <form method="post">
-                        <div class="input-group">
-                            @{
-                                List<Company> c = CompanyTable.RetrieveCompaniesByIsConfirmed(false);
-                                if(c.Count > 0) { 
-                                    <h3 class="card-title">@c[0].Name</h3>
-                                }
+                    @{
+                        List<Company> disabledCompanys = CompanyTable.RetrieveCompaniesByIsConfirmed(false);
+                        if (disabledCompanys.Count > 0)
+                        {
+                            for (int i = 0; i < disabledCompanys.Count; i++)
+                            {
+                                <form method="post">
+                                    <input asp-for="postID" type="hidden" value="CHECK_COMPANY" required />
+                                    <input asp-for="companyID" type="hidden" value="@disabledCompanys[i].Id" required />
+                                    <div class="input-group">
+                                        <h4 class="card-title">@disabledCompanys[i].Name</h4>
+                                        <div class="input-group">
+                                            <button class="btn btn-primary" type="submit" name="confirmType" value="@AdminModel.POSTID_CONFIRM_COMPANY">Confirm</button>
+                                            <button class="btn btn-primary" type="submit" name="confirmType" value="@AdminModel.POSTID_DECLINE_COMPANY">Decline</button>
+                                        </div>
+                                    </div>
+                                </form>
                             }
-
-                            <div class="input-group-append">
-                                <button class="btn btn-primary" type="submit" name="PostID" value="@AdminModel.POSTID_CONFIRM_COMPANY">Confirm</button>
-                                <button class="btn btn-primary" type="submit" name="PostID" value="@AdminModel.POSTID_DECLINE_COMPANY">Decline</button>
-                            </div>
-                        </div>
-                    </form>
-
+                        }
+                    }
                 </div>
             </div>
         </div>
