@@ -33,10 +33,36 @@
 </div>
 
 @* MAIN CONTENT *@
-<div class="container">
+<div class="container" style="padding:10px">
     <div class="row">
         <div class="col rounded bg-secondary">
             <h5 class="decorated-header text-center">Contact</h5>
+            <form class="" action="#" method="post" style="text-align:left;">
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="name" class="form-control" id="name" placeholder="Enter name">
+                    <br>
+                    <label for="email">Email address</label>
+                    <input type="email" class="form-control" id="email" placeholder="Enter email">
+                    <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="dropdown">Subject</label>
+                    <select class="form-control" id="dropdown">
+                        <option>Eloquentiam</option>
+                        <option>Denique</option>
+                        <option>Atomorum</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="nameTextarea">Your message</label>
+                    <textarea class="form-control" id="nameTextarea" rows="15"></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="width:100%">Contact</button>
+            </form>
         </div>
     </div>
 </div>
