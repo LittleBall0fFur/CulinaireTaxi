@@ -1,5 +1,5 @@
 ﻿@page
-@model CustomerPageModel
+@model CustomerModel
 @{
     Layout = "~/Pages/App/_LayoutBase.cshtml";
 
@@ -44,20 +44,20 @@
                             <div class="cl_plan">
                                 <div class="cl_title" style="padding-left: 30px;">
                                     <form method="post">
-                                        <input asp-for="PostID" type="hidden" value="@CustomerPageModel.POSTID_CALENDAR_TODAY" required />
+                                        <input asp-for="PostID" type="hidden" value="@CustomerModel.POSTID_CALENDAR_TODAY" required />
                                         <input class="calendar_input" type="submit" value="Today" />
                                     </form>
                                 </div>
                                 <div class="cl_copy" style="padding-left: 45px;">@Model.GetDate().ToString("D")</div>
                                 <form method="post">
                                     <input asp-for="Date" type="hidden" value="@Model.Date" required>
-                                    <input asp-for="PostID" type="hidden" value="@CustomerPageModel.POSTID_CALENDAR_BACKWARDS" required />
+                                    <input asp-for="PostID" type="hidden" value="@CustomerModel.POSTID_CALENDAR_BACKWARDS" required />
 
                                     <input class="calendar_input" type="submit" value="<" style="float:left; margin-left: -25px;" id="submit">
                                 </form>
                                 <form method="post">
                                     <input asp-for="Date" type="hidden" value="@Model.Date" required>
-                                    <input asp-for="PostID" type="hidden" value="@CustomerPageModel.POSTID_CALENDAR_FORWARDS" required />
+                                    <input asp-for="PostID" type="hidden" value="@CustomerModel.POSTID_CALENDAR_FORWARDS" required />
 
                                     <input class="calendar_input" type="submit" value=">" style="float:right; margin-right: -25px;" id="submit">
                                 </form>
@@ -140,7 +140,7 @@
                                 <input type="text" name="phonenumber" style="margin:0px;" class="form-control" placeholder="0622334455" value="@user.Contact.PhoneNumber">
                             </div>
                             @*submit*@
-                            <input asp-for="PostID" type="hidden" value="@CustomerPageModel.POSTID_UPDATE_INFO" required />
+                            <input asp-for="PostID" type="hidden" value="@CustomerModel.POSTID_UPDATE_INFO" required />
                             <button type="submit" class="btn btn-primary">Save Details</button>
                         </form>
                     </div>
@@ -168,7 +168,7 @@
                         <p style="padding: 10px;">@notification.Message</p>
                         <form method="post">
                             <input id="NotificationID" type="hidden" asp-for="NotificationID" value="@notification.ID" />
-                            <input asp-for="PostID" type="hidden" value="@CustomerPageModel.POSTID_DELETE_NOTIFICATION" required />
+                            <input asp-for="PostID" type="hidden" value="@CustomerModel.POSTID_DELETE_NOTIFICATION" required />
                             <button class="btn btn-primary" type="submit" style="float:right; width: 70px; height: 40px; margin: 15px;">Delete</button>
                         </form>
                     </div>
@@ -192,7 +192,7 @@
             <p id="Status" style="padding-left: 30px;"></p>
             <form method="post">
                 <input id="ResID" type="hidden" asp-for="ResID" value="" />
-                <input asp-for="PostID" type="hidden" value="@CustomerPageModel.POSTID_DELETE_RESERVATION" required />
+                <input asp-for="PostID" type="hidden" value="@CustomerModel.POSTID_DELETE_RESERVATION" required />
                 <button class="btn btn-primary" id="Cancel" type="submit" style="float:right; margin-top:-15px; width:20%;">Cancel</button>
             </form>
         </div>
@@ -293,7 +293,7 @@
                     </div>
                 </div>
                 @*submit*@
-                <input asp-for="PostID" type="hidden" value="@CustomerPageModel.POSTID_CREATE_RESERVATION_UPDATE_INFO" required />
+                <input asp-for="PostID" type="hidden" value="@CustomerModel.POSTID_CREATE_RESERVATION_UPDATE_INFO" required />
                 <center><button type="submit" class="btn btn-primary">Place Reservation</button></center>
             </form>
         </div>

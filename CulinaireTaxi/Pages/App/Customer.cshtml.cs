@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace CulinaireTaxi.Pages
 {
-    public class CustomerPageModel : PageModel
+    public class CustomerModel : PageModel
     {
         public const string POSTID_CALENDAR_BACKWARDS = "sub_date";
         public const string POSTID_CALENDAR_TODAY = "today_date";
@@ -84,7 +84,7 @@ namespace CulinaireTaxi.Pages
             set;
         }
 
-        public CustomerPageModel(UserAgent userAgent)
+        public CustomerModel(UserAgent userAgent)
         {
             UserAgent = userAgent;
             Date = DateTime.Today;
