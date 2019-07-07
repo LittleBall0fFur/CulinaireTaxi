@@ -20,11 +20,11 @@ namespace CulinaireTaxi.Attributes
 
             if (password.Length < MIN_LENGTH)
             {
-                return new ValidationResult("Je wachtwoord moet minimaal 8 tekens lang zijn!");
+                return new ValidationResult($"Your password must be at least {MIN_LENGTH} characters long!");
             }
             else if (password.Length > MAX_LENGTH)
             {
-                return new ValidationResult("Je wachtwoord mag niet langer zijn dan 128 tekens!");
+                return new ValidationResult($"Your password cannot be longer than {MAX_LENGTH} characters!");
             }
 
             return ValidationResult.Success;
