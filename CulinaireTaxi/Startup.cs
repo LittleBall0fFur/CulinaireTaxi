@@ -39,8 +39,7 @@ namespace CulinaireTaxi
                 options.Cookie.IsEssential = true;
             });
 
-            CulinaireTaxiDB.InitializeDatabase("server=84.86.32.123;uid=dev_root;pwd=StupidAfricansTryingToHackIntoMyDatabaseShouldBeStopped_XD;database=culinairetaxi;");
-            //CulinaireTaxiDB.InitializeDatabase("server=127.0.0.1;uid=root;pwd=root;database=testing_database;");
+            CulinaireTaxiDB.InitializeDatabase("server=84.86.32.123;uid=dev_root;pwd=MySQL_Database_For_School;database=culinairetaxi;");
 
             services.AddHttpContextAccessor();
 
