@@ -65,9 +65,10 @@ namespace CulinaireTaxi.Authentication
         /// <param name="email">The email address of the account to register.</param>
         /// <param name="password">The password of the account to register.</param>
         /// <param name="contact">The contact details of the account to register.</param>
-        public void Register(AccountType accountType, string email, string password, ContactDetails contact)
+        /// <param name="companyId">OPTIONAL: The id of the company associated with the account to register.</param>
+        public void Register(AccountType accountType, string email, string password, ContactDetails contact, long? companyId = null)
         {
-            Account = AccountTable.CreateAccount(accountType, email, password, contact);
+            Account = AccountTable.CreateAccount(accountType, email, password, contact, companyId);
         }
 
         /// <summary>

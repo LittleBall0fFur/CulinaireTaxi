@@ -1,5 +1,6 @@
 ﻿using CulinaireTaxi.Attributes;
 using CulinaireTaxi.Authentication;
+using CulinaireTaxi.Database;
 using CulinaireTaxi.Database.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -9,8 +10,11 @@ using System.ComponentModel.DataAnnotations;
 namespace CulinaireTaxi.Pages
 {
 
-    public class RegisterModel : PageModel
+    public class RegisterCompanyModel : PageModel
     {
+
+        //QUICKFIX: Replace with location picker.
+        private static Random random = new Random();
 
         public UserAgent UserAgent
         {
@@ -27,6 +31,41 @@ namespace CulinaireTaxi.Pages
 
         [BindProperty, Required]
         public string LastName
+        {
+            get;
+            set;
+        }
+
+        [BindProperty, Required]
+        public CompanyType CompanyType
+        {
+            get;
+            set;
+        }
+
+        [BindProperty, Required]
+        public string CompanyName
+        {
+            get;
+            set;
+        }
+
+        [BindProperty, Required]
+        public string CompanyDescription
+        {
+            get;
+            set;
+        }
+
+        //[BindProperty, Required]
+        public double Latitude
+        {
+            get;
+            set;
+        }
+
+        //[BindProperty, Required]
+        public double Longitude
         {
             get;
             set;
@@ -60,9 +99,13 @@ namespace CulinaireTaxi.Pages
             set;
         }
 
-        public RegisterModel(UserAgent userAgent)
+        public RegisterCompanyModel(UserAgent userAgent)
         {
             UserAgent = userAgent;
+
+            //QUICKFIX: Replace with location picker.
+            Latitude = random.Next(-90, 90);
+            Longitude = random.Next(-180, 180);
         }
 
         public void OnPost()
@@ -72,7 +115,10 @@ namespace CulinaireTaxi.Pages
 
             if (ModelState.IsValid)
             {
-                UserAgent.Register(AccountType.CUSTOMER, Email, Password, new ContactDetails { FirstName = FirstName, LastName = LastName });
+                var company = CompanyTable.CreateCompany(CompanyType, CompanyName, CompanyDescription, Latitude, Longitude);
+
+                var accountType = (CompanyType == CompanyType.RESTAURANT) ? AccountType.RESTAURANT : AccountType.TAXI;
+                UserAgent.Register(accountType, Email, Password, new ContactDetails { FirstName = FirstName, LastName = LastName }, company.Id);
             }
         }
 

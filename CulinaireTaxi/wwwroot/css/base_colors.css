@@ -27,3 +27,8 @@
 {
     background-color: var(--middle-color) !important;
 }
+
+.border-secondary
+{
+    border-color: #563a2b !important;
+}
