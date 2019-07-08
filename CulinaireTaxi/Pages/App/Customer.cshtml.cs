@@ -66,7 +66,7 @@ namespace CulinaireTaxi.Pages
 
         // user detail form
         [BindProperty]
-        public string country
+        public string county
         {
             get;
             set;
@@ -239,7 +239,7 @@ namespace CulinaireTaxi.Pages
         {
             ContactDetails contact = UserAgent.Account.Contact;
 
-            contact.County = country;
+            contact.County = county;
             contact.City = city;
             contact.Street = streetname;
             contact.PostalCode = postalcode;
