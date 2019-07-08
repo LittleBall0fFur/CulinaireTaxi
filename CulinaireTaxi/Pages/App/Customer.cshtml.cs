@@ -13,6 +13,7 @@ namespace CulinaireTaxi.Pages
 {
     public class CustomerModel : PageModel
     {
+
         public const string POSTID_CALENDAR_BACKWARDS = "sub_date";
         public const string POSTID_CALENDAR_TODAY = "today_date";
         public const string POSTID_CALENDAR_FORWARDS = "add_date";
@@ -32,51 +33,115 @@ namespace CulinaireTaxi.Pages
 
         [BindProperty]
         [Required]
-        public string PostID { get; set; }
+        public string PostID
+        {
+            get;
+            set;
+        }
 
-        public DateTime Date { get; set; }
+        public DateTime Date
+        {
+            get;
+            set;
+        }
 
-        public UserAgent UserAgent { get; set; }
+        public UserAgent UserAgent
+        {
+            get;
+            set;
+        }
 
-        public long ResID{ get; set; }
+        public long ResID
+        {
+            get;
+            set;
+        }
 
         [BindProperty]
-        public string form_id { get; set; }
+        public string form_id
+        {
+            get;
+            set;
+        }
 
         // user detail form
         [BindProperty]
-        public string country { get; set; }
+        public string country
+        {
+            get;
+            set;
+        }
 
         [BindProperty]
-        public string city { get; set; }
+        public string city
+        {
+            get;
+            set;
+        }
 
         [BindProperty]
-        public string streetname { get; set; }
+        public string streetname
+        {
+            get;
+            set;
+        }
 
         [BindProperty]
-        public string postalcode { get; set; }
+        public string postalcode
+        {
+            get;
+            set;
+        }
 
         [BindProperty]
-        public string phonenumber { get; set; }
+        public string phonenumber
+        {
+            get;
+            set;
+        }
 
         // reseveer
         [BindProperty]
-        public long restaurant { get; set; }
+        public long restaurant
+        {
+            get;
+            set;
+        }
 
         [BindProperty]
-        public string fromdate { get; set; }
+        public string fromdate
+        {
+            get;
+            set;
+        }
 
         [BindProperty]
-        public string fromtime { get; set; }
+        public string fromtime
+        {
+            get;
+            set;
+        }
 
         [BindProperty]
-        public string tilldate { get; set; }
+        public string tilldate
+        {
+            get;
+            set;
+        }
 
         [BindProperty]
-        public string tilltime { get; set; }
+        public string tilltime
+        {
+            get;
+            set;
+        }
 
         [BindProperty]
-        public int guestsamount { get; set; }
+        public int guestsamount
+        {
+            get;
+            set;
+        }
 
         public long NotificationID
         {
@@ -172,19 +237,20 @@ namespace CulinaireTaxi.Pages
 
         private void POST_Update_Info()
         {
-            Database.Entities.ContactDetails contact = UserAgent.Account.Contact;
+            ContactDetails contact = UserAgent.Account.Contact;
+
             contact.County = country;
             contact.City = city;
             contact.Street = streetname;
             contact.PostalCode = postalcode;
             contact.PhoneNumber = phonenumber;
+
             AccountTable.UpdateAccountContactDetails(UserAgent.Account.Id, contact);
         }
 
         private void POST_Delete_Notification()
         {
-            bool b = NotificationTable.DeleteNotification(long.Parse(Request.Form["NotificationID"]));
-            System.Diagnostics.Debug.WriteLine(b);
+            NotificationTable.DeleteNotification(long.Parse(Request.Form["NotificationID"]));
         }
 
         public void AddReservation(Reservation res)
@@ -197,5 +263,7 @@ namespace CulinaireTaxi.Pages
         {
             ReservationTable.DeleteReservation(long.Parse(Request.Form["ResID"]));
         }
+
     }
+
 }

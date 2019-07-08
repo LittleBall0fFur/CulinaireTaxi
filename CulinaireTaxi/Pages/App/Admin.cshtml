@@ -27,19 +27,19 @@
                 <div class="card-body">
                     <h5 class="card-title">Confirm new companies</h5>
                     @{
-                        List<Company> disabledCompanys = CompanyTable.RetrieveCompaniesByIsConfirmed(false);
-                        if (disabledCompanys.Count > 0)
+                        List<Company> disabledCompanies = CompanyTable.RetrieveCompaniesByIsConfirmed(false);
+                        if (disabledCompanies.Count > 0)
                         {
-                            for (int i = 0; i < disabledCompanys.Count; i++)
+                            for (int i = 0; i < disabledCompanies.Count; i++)
                             {
                                 <form method="post">
-                                    <input asp-for="postID" type="hidden" value="CHECK_COMPANY" required />
-                                    <input asp-for="companyID" type="hidden" value="@disabledCompanys[i].Id" required />
+                                    <input asp-for="PostID" type="hidden" value="@AdminModel.POSTID_CHECK_COMPANY" required />
+                                    <input asp-for="CompanyID" type="hidden" value="@disabledCompanies[i].Id" required />
                                     <div class="input-group">
-                                        <h4 class="card-title">@disabledCompanys[i].Name</h4>
+                                        <h4 class="card-title">@disabledCompanies[i].Name</h4>
                                         <div class="input-group">
-                                            <button class="btn btn-primary" type="submit" name="confirmType" value="@AdminModel.POSTID_CONFIRM_COMPANY">Confirm</button>
-                                            <button class="btn btn-primary" type="submit" name="confirmType" value="@AdminModel.POSTID_DECLINE_COMPANY">Decline</button>
+                                            <button class="btn btn-primary" type="submit" name="confirmType" value="@AdminModel.CONFIRMTYPE_CONFIRM_COMPANY">Confirm</button>
+                                            <button class="btn btn-primary" type="submit" name="confirmType" value="@AdminModel.CONFIRMTYPE_DECLINE_COMPANY">Decline</button>
                                         </div>
                                     </div>
                                 </form>
